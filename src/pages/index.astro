@@ -1,0 +1,72 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import NewsletterSignup from '@components/NewsletterSignup.astro';
+import { buildPerformingGroupSchema, buildEventSchema } from '@utils/schema';
+import { getCurrentShow } from '@data/season';
+import { buildingHistory } from '@data/history';
+import { contact } from '@data/contact';
+
+const currentShow = getCurrentShow();
+const firstRunDate = currentShow?.runDates[0];
+
+const performingGroupSchema = buildPerformingGroupSchema({
+  name: 'Orangeburg Part-Time Players',
+  sameAs: contact.socials.map((s) => s.url).filter((url) => url !== '#'),
+});
+
+const eventSchema = currentShow && firstRunDate
+  ? buildEventSchema({
+      name: currentShow.title,
+      startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
+      url: `/shows/${currentShow.slug}`,
+      venueName: currentShow.venue,
+      offerUrl: currentShow.ticketUrl,
+      description: currentShow.synopsis,
+    })
+  : null;
+---
+
+<DefaultLayout
+  title="Home"
+  description="Orangeburg Part-Time Players is a community theater performing at the historic Blue Bird Theatre in Orangeburg, SC."
+>
+  <Schema schema={eventSchema ? [performingGroupSchema, eventSchema] : performingGroupSchema} />
+
+  {currentShow && (
+    <section class="bg-base-200">
+      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-16 md:grid-cols-2 md:items-center">
+        <div>
+          <p class="font-heading text-sm font-semibold uppercase tracking-wide text-primary">
+            Now Playing
+          </p>
+          <h1 class="font-heading mt-2 text-4xl font-bold">{currentShow.title}</h1>
+          {currentShow.subtitle && <p class="mt-1 text-lg opacity-70">{currentShow.subtitle}</p>}
+          <p class="mt-4">{currentShow.synopsis}</p>
+          {firstRunDate && (
+            <p class="mt-4 font-semibold">
+              {firstRunDate.date}
+              {currentShow.runDates.length > 1 &&
+                ` — ${currentShow.runDates[currentShow.runDates.length - 1].date}`}
+              {' · '}{currentShow.venue}
+            </p>
+          )}
+          <a href={currentShow.ticketUrl} class="btn btn-primary mt-6">Get Tickets</a>
+        </div>
+        <img
+          src={currentShow.posterImage}
+          alt={currentShow.posterAlt}
+          class="rounded-box aspect-2/3 w-full max-w-sm justify-self-center object-cover shadow-lg"
+        />
+      </div>
+    </section>
+  )}
+
+  <section class="mx-auto max-w-3xl px-4 py-16 text-center">
+    <h2 class="font-heading text-2xl font-bold">A Historic Stage</h2>
+    <p class="mt-4">{buildingHistory.intro}</p>
+    <a href="/about" class="link link-primary mt-4 inline-block">Read our story</a>
+  </section>
+
+  <NewsletterSignup />
+</DefaultLayout>

@@ -1,0 +1,30 @@
+---
+import type { Show } from '@data/season';
+
+interface Props {
+  show: Show;
+}
+
+const { show } = Astro.props as Props;
+const firstRunDate = show.runDates[0];
+---
+
+<a href={`/shows/${show.slug}`} class="card bg-base-100 border-base-300 border shadow-sm transition hover:shadow-md">
+  <figure class="aspect-2/3 overflow-hidden">
+    <img src={show.posterImage} alt={show.posterAlt} class="h-full w-full object-cover" loading="lazy" />
+  </figure>
+  <div class="card-body">
+    <h3 class="card-title font-heading">{show.title}</h3>
+    {show.subtitle && <p class="text-sm opacity-70">{show.subtitle}</p>}
+    <p class="line-clamp-3 text-sm">{show.synopsis}</p>
+    {firstRunDate && (
+      <p class="text-sm font-semibold">
+        {firstRunDate.date}
+        {show.runDates.length > 1 && ` — ${show.runDates[show.runDates.length - 1].date}`}
+      </p>
+    )}
+    <div class="card-actions mt-2">
+      <span class="btn btn-primary btn-sm">Learn More</span>
+    </div>
+  </div>
+</a>

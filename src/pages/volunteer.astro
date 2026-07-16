@@ -1,0 +1,38 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import { volunteerRoles, volunteerSignUpUrl } from '@data/volunteer';
+import { getInvolvedSteps } from '@data/processSteps';
+---
+
+<DefaultLayout title="Get Involved" description="Volunteer with OPTP — ushering, sets, costumes, box office, and more.">
+  <div class="mx-auto max-w-5xl px-4 py-16">
+    <h1 class="font-heading text-3xl font-bold">Get Involved</h1>
+
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      {volunteerRoles.map((role) => (
+        <div class="card bg-base-200">
+          <div class="card-body">
+            <h2 class="card-title font-heading">{role.title}</h2>
+            <p>{role.description}</p>
+            <p class="text-sm opacity-70">{role.commitment}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <h2 class="font-heading mt-16 text-2xl font-bold">How to Get Involved</h2>
+    <ol class="mt-6 space-y-4">
+      {getInvolvedSteps.map((step) => (
+        <li class="flex gap-4">
+          <span class="font-heading text-primary text-xl font-bold">{step.step}</span>
+          <div>
+            <p class="font-semibold">{step.title}</p>
+            <p class="text-sm opacity-70">{step.description}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <a href={volunteerSignUpUrl} class="btn btn-primary mt-10">Sign Up to Volunteer</a>
+  </div>
+</DefaultLayout>

@@ -1,0 +1,38 @@
+---
+const navLinks = [
+  { href: '/shows', label: 'Shows' },
+  { href: '/tickets', label: 'Tickets' },
+  { href: '/auditions', label: 'Auditions' },
+  { href: '/volunteer', label: 'Get Involved' },
+  { href: '/donate', label: 'Support Us' },
+  { href: '/about', label: 'About' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<header class="navbar bg-base-100 border-base-300 border-b px-4">
+  <div class="navbar-start">
+    <a href="/" class="font-heading text-xl font-bold text-primary">
+      Orangeburg Part-Time Players
+    </a>
+  </div>
+  <nav class="navbar-end hidden lg:flex">
+    <ul class="menu menu-horizontal gap-1 px-1">
+      {navLinks.map((link) => (
+        <li><a href={link.href}>{link.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+  <div class="navbar-end lg:hidden">
+    <details class="dropdown dropdown-end">
+      <summary class="btn btn-ghost">Menu</summary>
+      <ul class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-52 p-2 shadow">
+        {navLinks.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+    </details>
+  </div>
+</header>

@@ -1,0 +1,39 @@
+---
+import type { PageFrontmatter } from '@utils/types';
+export type { PageFrontmatter };
+
+interface Props extends PageFrontmatter {}
+
+const {
+  title,
+  description,
+  image = '/favicon.svg', // TODO: replace with a real default OG/social share image (1200x630)
+  imageAlt = '',
+  type = 'website',
+  noindex = false,
+  canonical,
+} = Astro.props as Props;
+
+const siteName = 'Orangeburg Part-Time Players';
+const pageTitle = `${title} | ${siteName}`;
+const canonicalURL = new URL(canonical ?? Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(image, Astro.site);
+---
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalURL} />
+<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:image" content={ogImageURL} />
+{imageAlt && <meta property="og:image:alt" content={imageAlt} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageURL} />

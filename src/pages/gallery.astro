@@ -1,0 +1,20 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+
+// TODO: replace with real production photos once supplied — placeholder grid only.
+const placeholderPhotos = Array.from({ length: 8 }, (_, i) => ({
+  src: '/images/gallery/placeholder.jpg',
+  alt: `[TODO: photo caption ${i + 1}]`,
+}));
+---
+
+<DefaultLayout title="Gallery" description="Production photos from Orangeburg Part-Time Players shows.">
+  <div class="mx-auto max-w-5xl px-4 py-16">
+    <h1 class="font-heading text-3xl font-bold">Gallery</h1>
+    <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+      {placeholderPhotos.map((photo) => (
+        <img src={photo.src} alt={photo.alt} class="aspect-square rounded-box w-full object-cover" loading="lazy" />
+      ))}
+    </div>
+  </div>
+</DefaultLayout>

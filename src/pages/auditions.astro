@@ -1,0 +1,33 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import { upcomingAuditions } from '@data/auditions';
+---
+
+<DefaultLayout title="Auditions" description="Audition dates, requirements, and sign-up info for OPTP productions.">
+  <div class="mx-auto max-w-3xl px-4 py-16">
+    <h1 class="font-heading text-3xl font-bold">Auditions</h1>
+
+    {upcomingAuditions.map((notice) => (
+      <div class="mt-8 border-b border-base-300 pb-8">
+        <h2 class="font-heading text-xl font-semibold">{notice.showTitle}</h2>
+
+        <h3 class="font-heading mt-4 font-semibold">Audition Dates</h3>
+        <ul class="mt-1 space-y-1">
+          {notice.auditionDates.map((d) => (
+            <li>{d.date} {d.time} — {d.location}</li>
+          ))}
+        </ul>
+
+        {notice.callbackDate && <p class="mt-2">Callbacks: {notice.callbackDate}</p>}
+
+        <h3 class="font-heading mt-4 font-semibold">Requirements</h3>
+        <ul class="mt-1 list-disc space-y-1 pl-5">
+          {notice.requirements.map((req) => <li>{req}</li>)}
+        </ul>
+
+        <a href={notice.signUpUrl} class="btn btn-primary mt-6">Sign Up</a>
+        <p class="mt-2 text-sm opacity-70">Questions? <a href={`mailto:${notice.contactEmail}`} class="link">{notice.contactEmail}</a></p>
+      </div>
+    ))}
+  </div>
+</DefaultLayout>

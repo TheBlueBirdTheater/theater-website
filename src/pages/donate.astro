@@ -1,0 +1,53 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import { givingLevels, sponsorshipTiers, donationPlatformUrl } from '@data/donate';
+import { valueProps } from '@data/valueProps';
+---
+
+<DefaultLayout title="Support Us" description="Support Orangeburg Part-Time Players through donations and sponsorship.">
+  <div class="mx-auto max-w-5xl px-4 py-16">
+    <h1 class="font-heading text-3xl font-bold">Support Us</h1>
+
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      {valueProps.map((vp) => (
+        <div class="text-center">
+          <h3 class="font-heading font-semibold">{vp.title}</h3>
+          <p class="mt-1 text-sm opacity-70">{vp.description}</p>
+        </div>
+      ))}
+    </div>
+
+    <h2 class="font-heading mt-16 text-2xl font-bold">Giving Levels</h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-3">
+      {givingLevels.map((level) => (
+        <div class="card bg-base-200">
+          <div class="card-body">
+            <h3 class="card-title font-heading">{level.name}</h3>
+            <p class="font-semibold">{level.amount}</p>
+            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+              {level.perks.map((perk) => <li>{perk}</li>)}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <h2 class="font-heading mt-16 text-2xl font-bold">Sponsorship</h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2">
+      {sponsorshipTiers.map((tier) => (
+        <div class="card bg-base-200">
+          <div class="card-body">
+            <h3 class="card-title font-heading">{tier.name}</h3>
+            <p class="font-semibold">{tier.amount}</p>
+            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+              {tier.benefits.map((benefit) => <li>{benefit}</li>)}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- TODO: donationPlatformUrl points to a third-party giving platform once one is chosen -->
+    <a href={donationPlatformUrl} class="btn btn-primary mt-10">Donate Now</a>
+  </div>
+</DefaultLayout>

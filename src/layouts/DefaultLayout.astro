@@ -1,0 +1,16 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import NavBar from '@components/NavBar.astro';
+import Footer from '@components/Footer.astro';
+import { resolveFrontmatter, type LayoutProps } from '@utils/frontmatter';
+
+const page = resolveFrontmatter(Astro.props as LayoutProps);
+---
+
+<BaseLayout frontmatter={page}>
+  <NavBar />
+  <main>
+    <slot />
+  </main>
+  <Footer />
+</BaseLayout>

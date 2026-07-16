@@ -1,0 +1,28 @@
+---
+import { contact } from '@data/contact';
+---
+
+<footer class="footer footer-horizontal bg-neutral text-neutral-content mt-16 p-10">
+  <nav>
+    <h3 class="footer-title">Orangeburg Part-Time Players</h3>
+    <p>Blue Bird Theatre</p>
+    <p>{contact.address.line1}</p>
+    <p>{contact.address.city}, {contact.address.state} {contact.address.zip}</p>
+  </nav>
+  <nav>
+    <h3 class="footer-title">Contact</h3>
+    <a href={`tel:${contact.phone}`} class="link link-hover">{contact.phone}</a>
+    <a href={`mailto:${contact.email}`} class="link link-hover">{contact.email}</a>
+  </nav>
+  <nav>
+    <h3 class="footer-title">Follow Us</h3>
+    {contact.socials.map((social) => (
+      <a href={social.url} class="link link-hover">{social.platform}</a>
+    ))}
+  </nav>
+  <nav>
+    <h3 class="footer-title">Legal</h3>
+    <a href="/privacy" class="link link-hover">Privacy Policy</a>
+    <a href="/terms" class="link link-hover">Terms</a>
+  </nav>
+</footer>
