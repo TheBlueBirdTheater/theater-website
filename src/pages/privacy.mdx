@@ -1,8 +1,18 @@
 ---
 title: "Privacy Policy"
-description: "How Orangeburg Part-Time Players collects, uses, and protects your information."
+description: "How the Blue Bird Theatre collects, uses, and protects your information."
 layout: "@layouts/LegalLayout.astro"
 ---
+
+import Schema from '@components/Schema.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
+
+export const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Privacy Policy', url: '/privacy' },
+]);
+
+<Schema schema={breadcrumbSchema} />
 
 ## Overview
 

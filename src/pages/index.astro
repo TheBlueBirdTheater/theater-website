@@ -6,7 +6,7 @@ import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
 import InfoRow from '@components/InfoRow.astro';
 import SectionHeading from '@components/SectionHeading.astro';
-import { buildPerformingGroupSchema, buildEventSchema } from '@utils/schema';
+import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, OPTP_NAME, THEATRE_NAME } from '@utils/schema';
 import { getCurrentShow } from '@utils/shows';
 import { getEntry } from 'astro:content';
 
@@ -16,9 +16,22 @@ const firstRunDate = currentShow?.data.runDates[0];
 const { data: history } = (await getEntry('history', 'history'))!;
 const { data: contact } = (await getEntry('contact', 'contact'))!;
 
+const theaterSchema = buildTheaterVenueSchema({
+  name: THEATRE_NAME,
+  telephone: contact.phone,
+  email: contact.email,
+  address: {
+    streetAddress: contact.address.line1,
+    addressLocality: contact.address.city,
+    addressRegion: contact.address.state,
+    postalCode: contact.address.zip,
+  },
+});
+
 const performingGroupSchema = buildPerformingGroupSchema({
-  name: 'Orangeburg Part-Time Players',
+  name: OPTP_NAME,
   sameAs: contact.socials.map((s) => s.url).filter((url) => url !== '#'),
+  locationName: THEATRE_NAME,
 });
 
 const eventSchema = currentShow && firstRunDate
@@ -27,7 +40,15 @@ const eventSchema = currentShow && firstRunDate
       startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
       url: `/shows/${currentShow.id}`,
       venueName: currentShow.data.venue,
+      venueAddress: {
+        streetAddress: contact.address.line1,
+        addressLocality: contact.address.city,
+        addressRegion: contact.address.state,
+        postalCode: contact.address.zip,
+      },
+      performerName: currentShow.data.performingGroup ?? OPTP_NAME,
       offerUrl: currentShow.data.ticketUrl,
+      offerPrice: currentShow.data.ticketPrice,
       description: currentShow.data.synopsis,
     })
   : null;
@@ -35,9 +56,9 @@ const eventSchema = currentShow && firstRunDate
 
 <DefaultLayout
   title="Home"
-  description="Orangeburg Part-Time Players is a community theater performing at the historic Blue Bird Theatre in Orangeburg, SC."
+  description="Blue Bird Theatre is a historic community theater in Orangeburg, SC, home to the Orangeburg Part-Time Players."
 >
-  <Schema schema={eventSchema ? [performingGroupSchema, eventSchema] : performingGroupSchema} />
+  <Schema schema={eventSchema ? [theaterSchema, performingGroupSchema, eventSchema] : [theaterSchema, performingGroupSchema]} />
 
   {currentShow && (
     <section class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-16">

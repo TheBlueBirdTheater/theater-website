@@ -1,15 +1,24 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
 
 // TODO: replace with real production photos once supplied — placeholder grid only.
 const placeholderPhotos = Array.from({ length: 8 }, (_, i) => ({
   src: '/images/gallery/placeholder.jpg',
   alt: `[TODO: photo caption ${i + 1}]`,
 }));
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Gallery', url: '/gallery' },
+]);
 ---
 
-<DefaultLayout title="Gallery" description="Production photos from Orangeburg Part-Time Players shows.">
+<DefaultLayout title="Gallery" description="Production photos from shows at the Blue Bird Theatre.">
+  <Schema schema={breadcrumbSchema} />
+
   <div class="mx-auto max-w-(--container-max) px-4 py-16">
     <SectionHeading title="Gallery" />
     <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">

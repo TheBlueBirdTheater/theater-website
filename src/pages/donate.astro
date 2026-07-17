@@ -1,15 +1,24 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
 const valueProps = await getCollection('valueProps');
 const { data: donate } = (await getEntry('donate', 'donate'))!;
 const { givingLevels, sponsorshipTiers, donationPlatformUrl } = donate;
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Support Us', url: '/donate' },
+]);
 ---
 
-<DefaultLayout title="Support Us" description="Support Orangeburg Part-Time Players through donations and sponsorship.">
+<DefaultLayout title="Support Us" description="Support the Blue Bird Theatre by donating to the Orangeburg Part-Time Players, the nonprofit that operates it.">
+  <Schema schema={breadcrumbSchema} />
+
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
     <SectionHeading eyebrow="Support Us" title="Keep the curtain up at the Blue Bird" align="center" />
     <div class="mt-6 grid gap-6 sm:grid-cols-3">

@@ -4,6 +4,13 @@ interface Props {
 }
 
 const { schema } = Astro.props as Props;
+
+// Escape characters that could break out of the <script> element when CMS-editable
+// text (synopses, titles, etc.) ends up inside this JSON before it's serialized.
+const json = JSON.stringify(schema)
+  .replace(/</g, '\\u003c')
+  .replace(/>/g, '\\u003e')
+  .replace(/&/g, '\\u0026');
 ---
 
-<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+<script is:inline type="application/ld+json" set:html={json} />

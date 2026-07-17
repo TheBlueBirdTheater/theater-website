@@ -14,6 +14,8 @@ runDates:
     label: Matinee
 venue: Blue Bird Theatre
 ticketUrl: "#"
+ticketPrice: "$15"
+performingGroup: Orangeburg Part-Time Players
 cast:
   - "[Actor Name] as [Character]"
   - "[Actor Name] as [Character]"

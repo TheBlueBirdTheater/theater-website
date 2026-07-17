@@ -1,54 +1,102 @@
 ---
-import Button from '@components/Button.astro';
+import { Image } from "astro:assets";
+import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
+import Icon from "@components/Icon.astro";
+import Button from "@components/Button.astro";
+import logo from "@assets/logo.png";
 
 const navLinks = [
-  { href: '/shows', label: 'Shows' },
-  { href: '/auditions', label: 'Auditions' },
-  { href: '/volunteer', label: 'Get Involved' },
-  { href: '/donate', label: 'Support Us' },
-  { href: '/about', label: 'About' },
-  { href: '/gallery', label: 'Gallery' },
-  { href: '/faq', label: 'FAQ' },
-  { href: '/contact', label: 'Contact' },
+  { href: "/", label: "Home" },
+  { href: "/shows", label: "Shows" },
+  { href: "/auditions", label: "Auditions" },
+  { href: "/about", label: "About" },
+  { href: "/volunteer", label: "Volunteer" },
+  { href: "/contact", label: "Contact" },
 ];
 
 const currentPath = Astro.url.pathname;
-const isActive = (href: string) => currentPath === href || currentPath.startsWith(`${href}/`);
+const isActive = (href: string) =>
+  href === "/"
+    ? currentPath === "/"
+    : currentPath === href || currentPath.startsWith(`${href}/`);
 ---
 
 <header class="bg-base-100 border-base-300 sticky top-0 z-20 border-b">
   <div class="navbar mx-auto max-w-(--container-max) px-4">
     <div class="navbar-start">
-      <a href="/" class="font-heading text-base-content text-xl font-bold tracking-[-0.01em]">
-        Orangeburg Part-Time Players
+      <a
+        href="/"
+        class="flex items-center gap-2"
+        aria-label="Blue Bird Theatre home"
+      >
+        <Image src={logo} alt="Blue Bird Theatre logo" width={40} height={60} />
+        <span
+          class="font-heading text-base-content text-xl font-bold tracking-[-0.01em]"
+        >
+          Blue Bird Theatre
+        </span>
       </a>
     </div>
-    <nav class="navbar-end hidden items-center gap-7 lg:flex">
+    <nav
+      class="navbar-end hidden items-center gap-7 lg:flex"
+      aria-label="Primary"
+    >
       <ul class="flex items-center gap-7">
-        {navLinks.map((link) => (
-          <li>
-            <a
-              href={link.href}
-              class:list={[
-                'font-body border-b-2 pb-1 text-sm font-medium',
-                isActive(link.href) ? 'border-primary text-primary' : 'border-transparent text-base-content',
-              ]}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
+        {
+          navLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                class:list={[
+                  "font-body border-b-2 pb-1 text-sm font-medium",
+                  isActive(link.href)
+                    ? "border-primary text-primary"
+                    : "border-transparent text-base-content",
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
       </ul>
+      <Button href="/donate" variant="secondary" size="sm">Donate</Button>
       <Button href="/tickets" variant="primary" size="sm">Get Tickets</Button>
     </nav>
     <div class="navbar-end gap-2 lg:hidden">
       <Button href="/tickets" variant="primary" size="sm">Tickets</Button>
-      <details class="dropdown dropdown-end">
-        <summary class="btn btn-ghost">Menu</summary>
-        <ul class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-52 p-2 shadow">
-          {navLinks.map((link) => (
-            <li><a href={link.href}>{link.label}</a></li>
-          ))}
+      <details class="dropdown dropdown-end group">
+        <summary
+          class="btn btn-ghost btn-square list-none [&::-webkit-details-marker]:hidden"
+          aria-label="Toggle menu"
+        >
+          <Icon icon={faBars} class="h-5 w-5 group-open:hidden" />
+          <Icon icon={faXmark} class="hidden h-5 w-5 group-open:block" />
+        </summary>
+        <ul
+          class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-56 p-2 shadow"
+          aria-label="Primary"
+        >
+          {
+            navLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  class:list={[
+                    "font-body text-sm font-medium",
+                    isActive(link.href) && "text-primary",
+                  ]}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="border-line mt-1 border-t pt-1">
+            <a href="/donate" class="font-body text-sm font-medium">Donate</a>
+          </li>
         </ul>
       </details>
     </div>

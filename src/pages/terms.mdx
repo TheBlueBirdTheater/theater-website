@@ -1,8 +1,18 @@
 ---
 title: "Terms of Use"
-description: "Terms of use for the Orangeburg Part-Time Players website."
+description: "Terms of use for the Blue Bird Theatre website."
 layout: "@layouts/LegalLayout.astro"
 ---
+
+import Schema from '@components/Schema.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
+
+export const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Terms of Use', url: '/terms' },
+]);
+
+<Schema schema={breadcrumbSchema} />
 
 ## Acceptance of Terms
 

@@ -5,8 +5,8 @@ import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Divider from '@components/Divider.astro';
-import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const shows = await getCollection('shows');
@@ -23,6 +23,9 @@ interface Props {
 const { show } = Astro.props as Props;
 const { data } = show;
 
+const { data: contact } = (await getEntry('contact', 'contact'))!;
+const performingGroup = data.performingGroup ?? OPTP_NAME;
+
 const eventSchemas = data.runDates.map((rd) =>
   buildEventSchema({
     name: data.title,
@@ -30,7 +33,15 @@ const eventSchemas = data.runDates.map((rd) =>
     startDate: `${rd.date}T${rd.time}:00`,
     url: `/shows/${show.id}`,
     venueName: data.venue,
+    venueAddress: {
+      streetAddress: contact.address.line1,
+      addressLocality: contact.address.city,
+      addressRegion: contact.address.state,
+      postalCode: contact.address.zip,
+    },
+    performerName: performingGroup,
     offerUrl: data.ticketUrl,
+    offerPrice: data.ticketPrice,
     description: data.synopsis,
     imageUrl: data.posterImage,
   })
@@ -69,6 +80,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
             .join(' · ')}
         />
         <InfoRow label="Venue" value={data.venue} />
+        <InfoRow label="Presented By" value={performingGroup} />
       </div>
 
       <Button href={data.ticketUrl} variant="primary" size="lg" class="mt-7">Get Tickets</Button>

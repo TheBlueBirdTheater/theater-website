@@ -38,6 +38,8 @@ collections:
           - { label: Label, name: label, widget: string, required: false, hint: 'e.g. "Opening Night", "Matinee"' }
       - { label: Venue, name: venue, widget: string }
       - { label: Ticket URL, name: ticketUrl, widget: string }
+      - { label: Ticket Price, name: ticketPrice, widget: string, required: false, hint: 'e.g. "$15" — leave blank if free or not yet set. Shown in ticket search results.' }
+      - { label: Performing Group, name: performingGroup, widget: string, required: false, hint: 'Only needed if this show is NOT an Orangeburg Part-Time Players production — e.g. a guest dance recital or comedy night hosted at the Blue Bird Theatre.' }
       - label: Cast
         name: cast
         widget: list

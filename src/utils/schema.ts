@@ -1,6 +1,11 @@
 // TODO: optp.org is unconfirmed per BRAND/CONTACT spec — mirrors `site` in astro.config.mjs
 export const SITE_URL = 'https://optp.org';
 
+// Orangeburg Part-Time Players — the resident volunteer troupe (a 501(c)(3) nonprofit)
+// that operates the Blue Bird Theatre and performs most, but not all, shows there.
+export const OPTP_NAME = 'Orangeburg Part-Time Players';
+export const THEATRE_NAME = 'Blue Bird Theatre';
+
 export interface BreadcrumbItem {
   name: string;
   url: string;
@@ -19,6 +24,13 @@ export function buildBreadcrumbSchema(items: BreadcrumbItem[]): Record<string, u
   };
 }
 
+export interface PostalAddressInput {
+  streetAddress: string;
+  addressLocality: string;
+  addressRegion: string;
+  postalCode: string;
+}
+
 export interface EventSchemaInput {
   name: string;
   /** ISO 8601 datetime, e.g. '2026-09-11T19:30:00-04:00' */
@@ -29,40 +41,94 @@ export interface EventSchemaInput {
   imageUrl?: string;
   description?: string;
   venueName: string;
-  venueAddress?: string;
+  venueAddress?: PostalAddressInput;
+  /** Name of the group performing this show — defaults to OPTP if omitted by the caller. */
+  performerName?: string;
   offerUrl?: string;
   offerPrice?: string;
   offerAvailability?: 'InStock' | 'SoldOut' | 'PreOrder';
 }
 
 export function buildEventSchema(input: EventSchemaInput): Record<string, unknown> {
+  const location: Record<string, unknown> = {
+    '@type': 'PerformingArtsTheater',
+    name: input.venueName,
+  };
+  if (input.venueAddress) {
+    location.address = {
+      '@type': 'PostalAddress',
+      streetAddress: input.venueAddress.streetAddress,
+      addressLocality: input.venueAddress.addressLocality,
+      addressRegion: input.venueAddress.addressRegion,
+      postalCode: input.venueAddress.postalCode,
+    };
+  }
+
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'TheaterEvent',
     name: input.name,
     startDate: input.startDate,
     url: new URL(input.url, SITE_URL).toString(),
-    location: {
+    eventStatus: 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location,
+    organizer: {
       '@type': 'PerformingArtsTheater',
-      name: input.venueName,
-      // TODO: real street address pending — see src/data/contact.ts
-      address: input.venueAddress ?? '[TODO: venue address]',
+      name: THEATRE_NAME,
+      url: SITE_URL,
     },
   };
 
   if (input.endDate) schema.endDate = input.endDate;
   if (input.imageUrl) schema.image = new URL(input.imageUrl, SITE_URL).toString();
   if (input.description) schema.description = input.description;
+  if (input.performerName) {
+    schema.performer = { '@type': 'PerformingGroup', name: input.performerName };
+  }
 
   if (input.offerUrl) {
-    schema.offers = {
+    const offers: Record<string, unknown> = {
       '@type': 'Offer',
-      url: input.offerUrl,
-      price: input.offerPrice ?? '0',
-      priceCurrency: 'USD',
+      url: new URL(input.offerUrl, SITE_URL).toString(),
       availability: `https://schema.org/${input.offerAvailability ?? 'InStock'}`,
     };
+    if (input.offerPrice) {
+      offers.price = input.offerPrice;
+      offers.priceCurrency = 'USD';
+    }
+    schema.offers = offers;
   }
+
+  return schema;
+}
+
+export interface TheaterVenueSchemaInput {
+  name: string;
+  url?: string;
+  telephone?: string;
+  email?: string;
+  address: PostalAddressInput;
+}
+
+export function buildTheaterVenueSchema(input: TheaterVenueSchemaInput): Record<string, unknown> {
+  const schema: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'PerformingArtsTheater',
+    '@id': `${SITE_URL}/#theatre`,
+    name: input.name,
+    url: input.url ?? SITE_URL,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: input.address.streetAddress,
+      addressLocality: input.address.addressLocality,
+      addressRegion: input.address.addressRegion,
+      postalCode: input.address.postalCode,
+    },
+  };
+
+  if (input.telephone) schema.telephone = input.telephone;
+  if (input.email) schema.email = input.email;
 
   return schema;
 }
@@ -73,18 +139,28 @@ export interface PerformingGroupSchemaInput {
   logoUrl?: string;
   /** Social profile URLs */
   sameAs?: string[];
+  /** Name of the venue this group is resident at, e.g. the Blue Bird Theatre. */
+  locationName?: string;
 }
 
 export function buildPerformingGroupSchema(input: PerformingGroupSchemaInput): Record<string, unknown> {
   const schema: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'PerformingGroup',
+    '@id': `${SITE_URL}/#optp`,
     name: input.name,
     url: input.url ?? SITE_URL,
   };
 
   if (input.logoUrl) schema.logo = new URL(input.logoUrl, SITE_URL).toString();
   if (input.sameAs?.length) schema.sameAs = input.sameAs;
+  if (input.locationName) {
+    schema.location = {
+      '@type': 'PerformingArtsTheater',
+      name: input.locationName,
+      '@id': `${SITE_URL}/#theatre`,
+    };
+  }
 
   return schema;
 }

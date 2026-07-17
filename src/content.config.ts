@@ -19,6 +19,9 @@ const shows = defineCollection({
     ),
     venue: z.string(),
     ticketUrl: z.string(),
+    ticketPrice: z.string().optional(),
+    /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
+    performingGroup: z.string().optional(),
     cast: z.array(z.string()).optional(),
     crew: z.array(z.string()).optional(),
     status: z.enum(['upcoming', 'current', 'past']),

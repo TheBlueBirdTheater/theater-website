@@ -1,13 +1,22 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import InfoRow from '@components/InfoRow.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
 import { getEntry } from 'astro:content';
 
 const { data: contact } = (await getEntry('contact', 'contact'))!;
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Contact', url: '/contact' },
+]);
 ---
 
-<DefaultLayout title="Contact" description="Get in touch with Orangeburg Part-Time Players.">
+<DefaultLayout title="Contact" description="Get in touch with the Blue Bird Theatre.">
+  <Schema schema={breadcrumbSchema} />
+
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
     <SectionHeading title="Contact Us" />
 

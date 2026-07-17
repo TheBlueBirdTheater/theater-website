@@ -8,7 +8,7 @@ const linkClass = 'text-light-blue-tint hover:text-secondary text-sm no-underlin
 ---
 
 <footer class="bg-primary text-primary-content">
-  <div class="mx-auto grid max-w-(--container-max) gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+  <div class="mx-auto grid max-w-(--container-max) gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1fr]">
     <div>
       <div class="mb-3.5 flex items-center gap-3.5">
         <div
@@ -16,20 +16,32 @@ const linkClass = 'text-light-blue-tint hover:text-secondary text-sm no-underlin
         >
           EST. 1981
         </div>
-        <div class="font-heading text-lg font-semibold">Orangeburg Part-Time Players</div>
+        <div class="font-heading text-lg font-semibold">Blue Bird Theatre</div>
       </div>
       <p class="max-w-[320px] text-sm text-light-blue-tint">
-        Community theater at the historic Blue Bird Theatre in downtown Orangeburg, SC. Founded in 1981.
+        A historic theater in downtown Orangeburg, SC, home to the Orangeburg Part-Time Players since 1981.
       </p>
     </div>
     <nav>
       <h3 class="font-body mb-3.5 text-[0.8125rem] font-semibold tracking-[0.09em] text-secondary uppercase">
-        Visit
+        Explore
       </h3>
       <div class="flex flex-col gap-2">
+        <a href="/" class={linkClass}>Home</a>
         <a href="/shows" class={linkClass}>Current Season</a>
+        <a href="/tickets" class={linkClass}>Tickets</a>
+        <a href="/gallery" class={linkClass}>Gallery</a>
         <a href="/about" class={linkClass}>About &amp; History</a>
-        <a href="/volunteer" class={linkClass}>Auditions &amp; Volunteering</a>
+      </div>
+    </nav>
+    <nav>
+      <h3 class="font-body mb-3.5 text-[0.8125rem] font-semibold tracking-[0.09em] text-secondary uppercase">
+        Get Involved
+      </h3>
+      <div class="flex flex-col gap-2">
+        <a href="/auditions" class={linkClass}>Auditions</a>
+        <a href="/volunteer" class={linkClass}>Volunteering</a>
+        <a href="/donate" class={linkClass}>Donate</a>
       </div>
     </nav>
     <nav>
@@ -37,6 +49,8 @@ const linkClass = 'text-light-blue-tint hover:text-secondary text-sm no-underlin
         Contact
       </h3>
       <div class="flex flex-col gap-2 text-sm text-light-blue-tint">
+        <a href="/faq" class={linkClass}>FAQ</a>
+        <a href="/contact" class={linkClass}>Contact Us</a>
         <span>{contact.address.line1}</span>
         <span>{contact.address.city}, {contact.address.state} {contact.address.zip}</span>
         <a href={`tel:${contact.phone}`} class={linkClass}>{contact.phone}</a>
@@ -56,7 +70,7 @@ const linkClass = 'text-light-blue-tint hover:text-secondary text-sm no-underlin
   </div>
   <div class="border-t border-accent">
     <div class="mx-auto flex max-w-(--container-max) flex-col gap-2 px-4 py-5 text-[0.8125rem] text-light-blue-tint sm:flex-row sm:justify-between">
-      <span>© 1981–{currentYear} Orangeburg Part-Time Players. A 501(c)(3) community theater.</span>
+      <span>© 1981–{currentYear} Orangeburg Part-Time Players, the 501(c)(3) nonprofit that operates the Blue Bird Theatre.</span>
       <div class="flex gap-5">
         <a href="/privacy" class={linkClass}>Privacy Policy</a>
         <a href="/terms" class={linkClass}>Terms</a>

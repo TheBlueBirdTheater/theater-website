@@ -1,7 +1,9 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import PersonCard from '@components/PersonCard.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
 const historyEntry = await getEntry('history', 'history');
@@ -10,12 +12,19 @@ const team = await getCollection('team');
 const boardMembers = team.filter((person) => person.data.group === 'board');
 const artisticStaff = team.filter((person) => person.data.group === 'staff');
 const foundingMilestone = history.milestones[history.milestones.length - 1];
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'About', url: '/about' },
+]);
 ---
 
 <DefaultLayout
   title="About"
-  description="The story of Orangeburg Part-Time Players and the historic Blue Bird Theatre."
+  description="The story of the Orangeburg Part-Time Players, the volunteer theater company behind the Blue Bird Theatre."
 >
+  <Schema schema={breadcrumbSchema} />
+
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
     <SectionHeading eyebrow="Est. 1981" title="Orangeburg Part-Time Players" align="center" />
     <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-[1.1875rem]">{history.intro}</p>

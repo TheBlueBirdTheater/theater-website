@@ -1,16 +1,25 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Button from '@components/Button.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
 const upcomingAuditions = await getCollection('auditions');
 const { data: extras } = (await getEntry('extras', 'extras'))!;
 const { juniorOptp } = extras;
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Auditions', url: '/auditions' },
+]);
 ---
 
 <DefaultLayout title="Auditions" description="Audition dates, requirements, and sign-up info for OPTP productions.">
+  <Schema schema={breadcrumbSchema} />
+
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
     <SectionHeading eyebrow="Get Involved" title="Auditions" align="center" />
   </div>

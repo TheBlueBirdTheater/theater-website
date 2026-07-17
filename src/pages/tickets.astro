@@ -3,11 +3,13 @@ import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
-import { buildEventSchema } from '@utils/schema';
+import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCurrentShow } from '@utils/shows';
+import { getEntry } from 'astro:content';
 
 const currentShow = await getCurrentShow();
 const firstRunDate = currentShow?.data.runDates[0];
+const { data: contact } = (await getEntry('contact', 'contact'))!;
 
 const eventSchema = currentShow && firstRunDate
   ? buildEventSchema({
@@ -15,14 +17,28 @@ const eventSchema = currentShow && firstRunDate
       startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
       url: `/shows/${currentShow.id}`,
       venueName: currentShow.data.venue,
+      venueAddress: {
+        streetAddress: contact.address.line1,
+        addressLocality: contact.address.city,
+        addressRegion: contact.address.state,
+        postalCode: contact.address.zip,
+      },
+      performerName: currentShow.data.performingGroup ?? OPTP_NAME,
       offerUrl: currentShow.data.ticketUrl,
+      offerPrice: currentShow.data.ticketPrice,
       description: currentShow.data.synopsis,
     })
   : null;
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Tickets', url: '/tickets' },
+]);
 ---
 
 <DefaultLayout title="Tickets" description="Buy tickets to OPTP's current production at the Blue Bird Theatre.">
   {eventSchema && <Schema schema={eventSchema} />}
+  <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
     <SectionHeading title="Tickets & Box Office" />
