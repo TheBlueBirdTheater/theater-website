@@ -1,13 +1,18 @@
-title: "LET IT BE ART! Harold Clurman's Life of Passion"
+title: LET IT BE ART! Harold Clurman's Life of Passion
 subtitle: Written and directed by U.S. Cultural Ambassador Ronald Rand
-synopsis: "An unforgettable evening of humor and storytelling as Ronald Rand takes the stage as theater legend Harold Clurman, the Elder Statesman of the American Theatre. Audiences are transported to New York City, Paris, and Hollywood to meet luminaries including Stella Adler, Lee Strasberg, Constantin Stanislavsky, Marlon Brando, Clifford Odets, Katharine Hepburn, and more. Date to be announced."
-posterImage: /images/shows/let-it-be-art.jpg
+synopsis: An unforgettable evening of humor and storytelling as Ronald Rand
+  takes the stage as theater legend Harold Clurman, the Elder Statesman of the
+  American Theatre. Audiences are transported to New York City, Paris, and
+  Hollywood to meet luminaries including Stella Adler, Lee Strasberg, Constantin
+  Stanislavsky, Marlon Brando, Clifford Odets, Katharine Hepburn, and more. Date
+  to be announced.
+posterImage: /images/shows/let-art-be-cover.png
 posterAlt: LET IT BE ART! poster
 runDates: []
 venue: Blue Bird Theatre
-ticketUrl: "https://www.ticketleap.events/events/bluebirdorangeburg"
-ticketPrice: "$20 adults, $15 students and seniors"
+ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg
+ticketPrice: $20 adults, $15 students and seniors
 performingGroup: Orangeburg Part-Time Players
 crew:
-  - "Written and Directed by Ronald Rand"
+  - Written and Directed by Ronald Rand
 status: upcoming
