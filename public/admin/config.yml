@@ -4,7 +4,7 @@ backend:
   name: github
   repo: TheBlueBirdTheater/theater-website
   branch: main
-  base_url: https://TODO-site-name.netlify.app
+  base_url: https://bluebirdtheater.netlify.app/
   auth_endpoint: auth
 
 # Lets editors test against the local git working tree via `npm run cms:local` (decap-server),
@@ -20,7 +20,7 @@ collections:
     label: Shows
     folder: src/content/shows
     create: true
-    slug: '{{slug}}'
+    slug: "{{slug}}"
     media_folder: /images/shows
     public_folder: /images/shows
     fields:
@@ -33,23 +33,65 @@ collections:
         name: runDates
         widget: list
         fields:
-          - { label: Date, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
-          - { label: Time, name: time, widget: datetime, date_format: false, time_format: 'HH:mm' }
-          - { label: Label, name: label, widget: string, required: false, hint: 'e.g. "Opening Night", "Matinee"' }
+          - {
+              label: Date,
+              name: date,
+              widget: datetime,
+              date_format: "YYYY-MM-DD",
+              time_format: false,
+            }
+          - {
+              label: Time,
+              name: time,
+              widget: datetime,
+              date_format: false,
+              time_format: "HH:mm",
+            }
+          - {
+              label: Label,
+              name: label,
+              widget: string,
+              required: false,
+              hint: 'e.g. "Opening Night", "Matinee"',
+            }
       - { label: Venue, name: venue, widget: string }
       - { label: Ticket URL, name: ticketUrl, widget: string }
-      - { label: Ticket Price, name: ticketPrice, widget: string, required: false, hint: 'e.g. "$15" — leave blank if free or not yet set. Shown in ticket search results.' }
-      - { label: Performing Group, name: performingGroup, widget: string, required: false, hint: 'Only needed if this show is NOT an Orangeburg Part-Time Players production — e.g. a guest dance recital or comedy night hosted at the Blue Bird Theatre.' }
+      - {
+          label: Ticket Price,
+          name: ticketPrice,
+          widget: string,
+          required: false,
+          hint: 'e.g. "$15" — leave blank if free or not yet set. Shown in ticket search results.',
+        }
+      - {
+          label: Performing Group,
+          name: performingGroup,
+          widget: string,
+          required: false,
+          hint: "Only needed if this show is NOT an Orangeburg Part-Time Players production — e.g. a guest dance recital or comedy night hosted at the Blue Bird Theatre.",
+        }
       - label: Cast
         name: cast
         widget: list
         required: false
-        field: { label: Cast Member, name: value, widget: string, hint: 'e.g. "[Actor Name] as [Character]"' }
+        field:
+          {
+            label: Cast Member,
+            name: value,
+            widget: string,
+            hint: 'e.g. "[Actor Name] as [Character]"',
+          }
       - label: Crew
         name: crew
         widget: list
         required: false
-        field: { label: Crew Member, name: value, widget: string, hint: 'e.g. "Director: [Name]"' }
+        field:
+          {
+            label: Crew Member,
+            name: value,
+            widget: string,
+            hint: 'e.g. "Director: [Name]"',
+          }
       - label: Status
         name: status
         widget: select
@@ -59,17 +101,36 @@ collections:
     label: Auditions
     folder: src/content/auditions
     create: true
-    slug: '{{slug}}'
+    slug: "{{slug}}"
     fields:
       - { label: Show Title, name: showTitle, widget: string }
       - label: Audition Dates
         name: auditionDates
         widget: list
         fields:
-          - { label: Date, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
-          - { label: Time, name: time, widget: datetime, date_format: false, time_format: 'HH:mm' }
+          - {
+              label: Date,
+              name: date,
+              widget: datetime,
+              date_format: "YYYY-MM-DD",
+              time_format: false,
+            }
+          - {
+              label: Time,
+              name: time,
+              widget: datetime,
+              date_format: false,
+              time_format: "HH:mm",
+            }
           - { label: Location, name: location, widget: string }
-      - { label: Callback Date, name: callbackDate, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, required: false }
+      - {
+          label: Callback Date,
+          name: callbackDate,
+          widget: datetime,
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+          required: false,
+        }
       - label: Requirements
         name: requirements
         widget: list
@@ -81,7 +142,7 @@ collections:
     label: Board & Staff
     folder: src/content/team
     create: true
-    slug: '{{slug}}'
+    slug: "{{slug}}"
     fields:
       - { label: Name, name: name, widget: string }
       - { label: Role, name: role, widget: string }
@@ -96,7 +157,7 @@ collections:
     label: FAQs
     folder: src/content/faqs
     create: true
-    slug: '{{slug}}'
+    slug: "{{slug}}"
     fields:
       - { label: Question, name: question, widget: string }
       - { label: Answer, name: answer, widget: text }
@@ -106,17 +167,23 @@ collections:
     label: Value Propositions
     folder: src/content/valueProps
     create: true
-    slug: '{{slug}}'
+    slug: "{{slug}}"
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Description, name: description, widget: text }
-      - { label: Icon, name: icon, widget: string, required: false, hint: 'Freeform label — not currently rendered on the site.' }
+      - {
+          label: Icon,
+          name: icon,
+          widget: string,
+          required: false,
+          hint: "Freeform label — not currently rendered on the site.",
+        }
 
   - name: testimonials
     label: Testimonials
     folder: src/content/testimonials
     create: true
-    slug: '{{slug}}'
+    slug: "{{slug}}"
     fields:
       - { label: Quote, name: quote, widget: text }
       - { label: Author, name: author, widget: string }
@@ -153,7 +220,12 @@ collections:
         label: Building & Company History
         file: src/content/history/history.yaml
         fields:
-          - { label: Intro, name: intro, widget: text, hint: 'Homepage teaser + About page opening line.' }
+          - {
+              label: Intro,
+              name: intro,
+              widget: text,
+              hint: "Homepage teaser + About page opening line.",
+            }
           - label: Milestones
             name: milestones
             widget: list
@@ -170,13 +242,23 @@ collections:
         label: Donate Page Settings
         file: src/content/donate/donate.yaml
         fields:
-          - { label: Donation Platform URL, name: donationPlatformUrl, widget: string, hint: 'Third-party giving-page link, e.g. a Givebutter or Classy URL.' }
+          - {
+              label: Donation Platform URL,
+              name: donationPlatformUrl,
+              widget: string,
+              hint: "Third-party giving-page link, e.g. a Givebutter or Classy URL.",
+            }
           - label: Giving Levels
             name: givingLevels
             widget: list
             fields:
               - { label: Name, name: name, widget: string }
-              - { label: Amount, name: amount, widget: string, hint: 'e.g. "$25+"' }
+              - {
+                  label: Amount,
+                  name: amount,
+                  widget: string,
+                  hint: 'e.g. "$25+"',
+                }
               - label: Perks
                 name: perks
                 widget: list
@@ -206,12 +288,23 @@ collections:
             fields:
               - { label: Title, name: title, widget: string }
               - { label: Description, name: description, widget: text }
-              - { label: Commitment, name: commitment, widget: string, hint: 'e.g. "one show night per production"' }
-              - { label: Icon, name: icon, widget: string, required: false, hint: 'Freeform label — not currently rendered on the site.' }
+              - {
+                  label: Commitment,
+                  name: commitment,
+                  widget: string,
+                  hint: 'e.g. "one show night per production"',
+                }
+              - {
+                  label: Icon,
+                  name: icon,
+                  widget: string,
+                  required: false,
+                  hint: "Freeform label — not currently rendered on the site.",
+                }
           - label: Steps
             name: steps
             widget: list
-            hint: 'Order here controls the numbered display order on the page — drag to reorder.'
+            hint: "Order here controls the numbered display order on the page — drag to reorder."
             fields:
               - { label: Title, name: title, widget: string }
               - { label: Description, name: description, widget: text }
@@ -223,7 +316,11 @@ collections:
         label: Extra Page Copy
         file: src/content/extras/extras.yaml
         fields:
-          - { label: 'Also at the Blue Bird (Shows page)', name: alsoAtTheBlueBird, widget: text }
+          - {
+              label: "Also at the Blue Bird (Shows page)",
+              name: alsoAtTheBlueBird,
+              widget: text,
+            }
           - label: Junior OPTP (Auditions page)
             name: juniorOptp
             widget: object
@@ -231,5 +328,9 @@ collections:
               - { label: Age Range, name: ageRange, widget: string }
               - { label: Description, name: description, widget: text }
               - { label: Audition Window, name: auditionWindow, widget: string }
-              - { label: Performance Window, name: performanceWindow, widget: string }
+              - {
+                  label: Performance Window,
+                  name: performanceWindow,
+                  widget: string,
+                }
               - { label: Contact Email, name: contactEmail, widget: string }
