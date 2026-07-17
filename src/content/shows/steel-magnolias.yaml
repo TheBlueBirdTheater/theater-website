@@ -8,14 +8,14 @@ synopsis: A close-knit group of women gathers at Truvy's beauty salon in
 posterImage: ../../assets/images/shows/steel-mag-cover.png
 posterAlt: Steel Magnolias poster
 runDates:
-  - date: 2026-10-08
+  - date: "2026-10-08"
     time: 19:30
     label: Opening Night
-  - date: 2026-10-09
+  - date: "2026-10-09"
     time: 19:30
-  - date: 2026-10-10
+  - date: "2026-10-10"
     time: 19:30
-  - date: 2026-10-11
+  - date: "2026-10-11"
     time: 15:00
     label: Matinee
 venue: Blue Bird Theatre

@@ -29,6 +29,28 @@ function optionalGlob(options: Parameters<typeof glob>[0]): Loader {
   };
 }
 
+/**
+ * YAML implicitly types unquoted date-like scalars (e.g. `2026-10-08`) as
+ * timestamps, so a CMS re-save of a `string` field can turn it into a JS
+ * Date. Accept both and normalize back to the ISO date string.
+ */
+const dateString = z
+  .union([z.string(), z.date()])
+  .transform((value) => (value instanceof Date ? value.toISOString().slice(0, 10) : value));
+
+/**
+ * YAML 1.1 also parses unquoted `HH:MM`-shaped scalars (e.g. `19:30`) as
+ * sexagesimal integers (19*60+30 = 1170), so a CMS re-save of a `string`
+ * time field can turn it into a number. Accept both and normalize back.
+ */
+const timeString = z
+  .union([z.string(), z.number()])
+  .transform((value) =>
+    typeof value === 'number'
+      ? `${String(Math.floor(value / 60)).padStart(2, '0')}:${String(value % 60).padStart(2, '0')}`
+      : value
+  );
+
 const shows = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/shows' }),
   schema: ({ image }) =>
@@ -40,7 +62,7 @@ const shows = defineCollection({
       posterAlt: z.string(),
       runDates: z.array(
         z.object({
-          date: z.string(),
+          date: dateString,
           time: z.string(),
           label: z.string().optional(),
         })
@@ -62,12 +84,12 @@ const auditions = defineCollection({
     showTitle: z.string(),
     auditionDates: z.array(
       z.object({
-        date: z.string(),
+        date: dateString,
         time: z.string(),
         location: z.string(),
       })
     ),
-    callbackDate: z.string().optional(),
+    callbackDate: dateString.optional(),
     requirements: z.array(z.string()),
     signUpUrl: z.string(),
     contactEmail: z.string(),
