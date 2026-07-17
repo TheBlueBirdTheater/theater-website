@@ -7,15 +7,15 @@ synopsis: A timeless holiday classic, A Christmas Carol follows the
 posterImage: /images/shows/christmas-carol-cover.png
 posterAlt: A Christmas Carol poster
 runDates:
-  - date: 2026-12-10
-    time: 19:30
+  - date: "2026-12-10"
+    time: "19:30"
     label: Opening Night
-  - date: 2026-12-11
-    time: 19:30
-  - date: 2026-12-12
-    time: 19:30
-  - date: 2026-12-13
-    time: 15:00
+  - date: "2026-12-11"
+    time: "19:30"
+  - date: "2026-12-12"
+    time: "19:30"
+  - date: "2026-12-13"
+    time: "15:00"
     label: Matinee
 venue: Blue Bird Theatre
 ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg
