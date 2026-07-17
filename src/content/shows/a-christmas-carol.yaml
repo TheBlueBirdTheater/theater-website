@@ -1,22 +1,25 @@
 title: A Christmas Carol
 subtitle: Written by Charles Dickens
-synopsis: "A timeless holiday classic, A Christmas Carol follows the transformation of Ebenezer Scrooge, a bitter man who is visited by spirits on Christmas Eve and given one last chance to embrace compassion, generosity, and the true meaning of the season."
-posterImage: /images/shows/a-christmas-carol.jpg
+synopsis: A timeless holiday classic, A Christmas Carol follows the
+  transformation of Ebenezer Scrooge, a bitter man who is visited by spirits on
+  Christmas Eve and given one last chance to embrace compassion, generosity, and
+  the true meaning of the season.
+posterImage: /images/shows/christmas-carol-cover.png
 posterAlt: A Christmas Carol poster
 runDates:
-  - date: "2026-12-10"
-    time: "19:30"
+  - date: 2026-12-10
+    time: 19:30
     label: Opening Night
-  - date: "2026-12-11"
-    time: "19:30"
-  - date: "2026-12-12"
-    time: "19:30"
-  - date: "2026-12-13"
-    time: "15:00"
+  - date: 2026-12-11
+    time: 19:30
+  - date: 2026-12-12
+    time: 19:30
+  - date: 2026-12-13
+    time: 15:00
     label: Matinee
 venue: Blue Bird Theatre
-ticketUrl: "https://www.ticketleap.events/events/bluebirdorangeburg"
-ticketPrice: "$20 adults, $15 students and seniors"
+ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg
+ticketPrice: $20 adults, $15 students and seniors
 performingGroup: Orangeburg Part-Time Players
 crew:
   - "Director: Anthony DeAloia"
