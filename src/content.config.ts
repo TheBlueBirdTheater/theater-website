@@ -74,7 +74,6 @@ const shows = defineCollection({
       performingGroup: z.string().optional(),
       cast: z.array(z.string()).optional(),
       crew: z.array(z.string()).optional(),
-      status: z.enum(['upcoming', 'current', 'past']),
     }),
 });
 

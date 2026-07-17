@@ -11,6 +11,7 @@ import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schem
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getVenueContact } from '@data/venue';
 import { formatDate } from '@utils/dates';
+import { getShowStatus } from '@utils/shows';
 
 export async function getStaticPaths() {
   const shows = await getCollection('shows');
@@ -76,7 +77,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
     )}
     <div>
-      <Badge status={data.status} />
+      <Badge status={getShowStatus(show)} />
       <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em]">
         {data.title}
       </h1>

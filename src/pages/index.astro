@@ -8,7 +8,7 @@ import Button from '@components/Button.astro';
 import InfoRow from '@components/InfoRow.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, OPTP_NAME, THEATRE_NAME } from '@utils/schema';
-import { getCurrentShow } from '@utils/shows';
+import { getCurrentShow, getShowStatus } from '@utils/shows';
 import { formatDateRange } from '@utils/dates';
 import { getVenueContact } from '@data/venue';
 import { getEntry } from 'astro:content';
@@ -56,7 +56,7 @@ const eventSchema = currentShow && firstRunDate
   {currentShow && (
     <section class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-16">
       <div>
-        <Badge status={currentShow.data.status} />
+        <Badge status={getShowStatus(currentShow)} />
         <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em] sm:text-[4rem]">
           {currentShow.data.title}
         </h1>

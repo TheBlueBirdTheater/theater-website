@@ -101,10 +101,6 @@ collections:
             widget: string,
             hint: 'e.g. "Director: [Name]"',
           }
-      - label: Status
-        name: status
-        widget: select
-        options: [upcoming, current, past]
 
   - name: auditions
     label: Auditions

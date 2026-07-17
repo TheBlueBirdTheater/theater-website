@@ -4,9 +4,24 @@ import Schema from '@components/Schema.astro';
 import ShowCard from '@components/ShowCard.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
+import { getShowStatus } from '@utils/shows';
 import { getCollection, getEntry } from 'astro:content';
 
-const shows = await getCollection('shows');
+const allShows = await getCollection('shows');
+
+const upcomingShows = allShows
+  .filter((show) => show.data.runDates.length > 0 && getShowStatus(show) !== 'past')
+  .sort((a, b) => a.data.runDates[0].date.localeCompare(b.data.runDates[0].date));
+
+const tbaShows = allShows
+  .filter((show) => show.data.runDates.length === 0)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+
+const pastShows = allShows
+  .filter((show) => getShowStatus(show) === 'past')
+  .sort((a, b) => b.data.runDates.at(-1)!.date.localeCompare(a.data.runDates.at(-1)!.date));
+
+const shows = [...upcomingShows, ...tbaShows, ...pastShows];
 const { data: extras } = (await getEntry('extras', 'extras'))!;
 
 const breadcrumbSchema = buildBreadcrumbSchema([
