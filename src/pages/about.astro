@@ -4,6 +4,7 @@ import Schema from '@components/Schema.astro';
 import { Image } from 'astro:assets';
 import SectionHeading from '@components/SectionHeading.astro';
 import PersonCard from '@components/PersonCard.astro';
+import GalleryPreview from '@components/GalleryPreview.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
@@ -66,6 +67,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
     </div>
   </section>
+
+  <GalleryPreview />
 
   <div class="mx-auto max-w-(--container-max) px-4 py-14">
     <SectionHeading eyebrow="The People" title="Artistic Staff" />

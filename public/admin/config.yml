@@ -1,5 +1,6 @@
-# TODO: replace base_url with the deployed Netlify site URL once the Netlify site exists
-# (see netlify/functions/auth.ts + netlify/functions/callback.ts for the OAuth proxy this points at).
+# base_url is the live Netlify site (see netlify/functions/auth.ts + netlify/functions/callback.ts
+# for the OAuth proxy this points at). If this ever moves to a custom domain, update base_url here
+# and the GitHub OAuth App's callback URL to match, or login will fail.
 backend:
   name: github
   repo: TheBlueBirdTheater/theater-website
@@ -11,6 +12,11 @@ backend:
 # without needing GitHub OAuth. Harmless to leave enabled in production config — Decap only
 # uses the local backend when the admin UI itself is opened from localhost.
 local_backend: true
+
+# Saves become drafts (Draft -> In Review -> Ready) on their own branch instead of committing
+# straight to `branch: main`. Lets editors make and save several changes across sections without
+# each save going live, then publish selected entries from the CMS's Workflow board when ready.
+publish_mode: editorial_workflow
 
 media_folder: public/images/uploads
 public_folder: /images/uploads
@@ -29,7 +35,7 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Subtitle, name: subtitle, widget: string, required: false }
       - { label: Synopsis, name: synopsis, widget: text }
-      - { label: Poster Image, name: posterImage, widget: image }
+      - { label: Poster Image, name: posterImage, widget: image, required: false }
       - { label: Poster Alt Text, name: posterAlt, widget: string }
       - label: Run Dates
         name: runDates
@@ -210,6 +216,29 @@ collections:
       - { label: Quote, name: quote, widget: text }
       - { label: Author, name: author, widget: string }
       - { label: Role, name: role, widget: string, required: false }
+
+  - name: gallery
+    label: Gallery
+    folder: src/content/gallery
+    create: true
+    slug: "{{slug}}"
+    extension: yaml
+    format: yaml
+    fields:
+      - {
+          label: Photo,
+          name: photo,
+          widget: image,
+          media_folder: /src/assets/images/gallery,
+          public_folder: ../../assets/images/gallery,
+        }
+      - {
+          label: Alt Text,
+          name: alt,
+          widget: string,
+          hint: "Describe the photo for accessibility.",
+        }
+      - { label: Caption, name: caption, widget: string, required: false }
 
   - name: contact
     label: Contact Info

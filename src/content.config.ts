@@ -63,7 +63,7 @@ const shows = defineCollection({
       runDates: z.array(
         z.object({
           date: dateString,
-          time: z.string(),
+          time: timeString,
           label: z.string().optional(),
         })
       ),
@@ -213,6 +213,16 @@ const getInvolved = defineCollection({
   }),
 });
 
+const gallery = defineCollection({
+  loader: optionalGlob({ pattern: '*.yaml', base: './src/content/gallery' }),
+  schema: ({ image }) =>
+    z.object({
+      photo: image(),
+      alt: z.string(),
+      caption: z.string().optional(),
+    }),
+});
+
 const extras = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/extras' }),
   schema: z.object({
@@ -239,4 +249,5 @@ export const collections = {
   donate,
   getInvolved,
   extras,
+  gallery,
 };

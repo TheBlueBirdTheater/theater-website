@@ -17,12 +17,12 @@
 <rect x="92" y="416" width="230" height="4" rx="2" fill="#6E9BC2"/>
 <text x="90" y="470" font-family="Inter" font-size="27" fill="#DCE7F0">A historic community theatre in</text>
 <text x="90" y="506" font-family="Inter" font-size="27" fill="#DCE7F0">downtown Orangeburg, South Carolina</text>
-<text x="90" y="562" font-family="Inter" font-size="17" letter-spacing="3" fill="#A3C8E3">EST. 1981 · ORANGEBURG PART-TIME PLAYERS</text>
+<text x="90" y="556" font-family="Inter" font-size="16" letter-spacing="2" fill="#A3C8E3">EST. 1981 · ORANGEBURG PART-TIME PLAYERS</text>
 
 <!-- ===== facade illustration ===== -->
 <g>
   <!-- ground -->
-  <rect x="590" y="558" width="530" height="8" rx="4" fill="#12304B"/>
+  <rect x="632" y="558" width="476" height="8" rx="4" fill="#12304B"/>
   <!-- building with stepped parapet -->
   <path d="M640,558 L640,205 L700,205 L700,178 L760,178 L760,148 L940,148 L940,178 L1000,178 L1000,205 L1060,205 L1060,558 Z" fill="#FAF7F2"/>
   <!-- parapet coping lines -->
