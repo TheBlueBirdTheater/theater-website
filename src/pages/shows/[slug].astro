@@ -6,7 +6,9 @@ import Button from '@components/Button.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Divider from '@components/Divider.astro';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
-import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getVenueContact } from '@data/venue';
+import { formatDate } from '@utils/dates';
 
 export async function getStaticPaths() {
   const shows = await getCollection('shows');
@@ -23,7 +25,7 @@ interface Props {
 const { show } = Astro.props as Props;
 const { data } = show;
 
-const { data: contact } = (await getEntry('contact', 'contact'))!;
+const contact = await getVenueContact();
 const performingGroup = data.performingGroup ?? OPTP_NAME;
 
 const eventSchemas = data.runDates.map((rd) =>
@@ -33,12 +35,7 @@ const eventSchemas = data.runDates.map((rd) =>
     startDate: `${rd.date}T${rd.time}:00`,
     url: `/shows/${show.id}`,
     venueName: data.venue,
-    venueAddress: {
-      streetAddress: contact.address.line1,
-      addressLocality: contact.address.city,
-      addressRegion: contact.address.state,
-      postalCode: contact.address.zip,
-    },
+    venueAddress: contact.address,
     performerName: performingGroup,
     offerUrl: data.ticketUrl,
     offerPrice: data.ticketPrice,
@@ -76,7 +73,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         <InfoRow
           label="Dates"
           value={data.runDates
-            .map((rd) => (rd.label ? `${rd.label}: ${rd.date}` : rd.date))
+            .map((rd) => (rd.label ? `${rd.label}: ${formatDate(rd.date)}` : formatDate(rd.date)))
             .join(' · ')}
         />
         <InfoRow label="Venue" value={data.venue} />

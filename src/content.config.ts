@@ -1,6 +1,33 @@
 import { defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { glob, type Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
+
+/**
+ * Same as `glob()`, but for collections that are legitimately empty at times
+ * (e.g. no auditions posted, no testimonials collected yet). Suppresses the
+ * loader's "No files found matching ..." warning; all other logging passes through.
+ */
+function optionalGlob(options: Parameters<typeof glob>[0]): Loader {
+  const loader = glob(options);
+  return {
+    ...loader,
+    load: (context) =>
+      loader.load({
+        ...context,
+        logger: new Proxy(context.logger, {
+          get(target, prop, receiver) {
+            if (prop === 'warn') {
+              return (message: string) => {
+                if (!message.includes('No files found matching')) target.warn(message);
+              };
+            }
+            const value = Reflect.get(target, prop, receiver);
+            return typeof value === 'function' ? value.bind(target) : value;
+          },
+        }),
+      }),
+  };
+}
 
 const shows = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/shows' }),
@@ -29,7 +56,7 @@ const shows = defineCollection({
 });
 
 const auditions = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/auditions' }),
+  loader: optionalGlob({ pattern: '*.yaml', base: './src/content/auditions' }),
   schema: z.object({
     showTitle: z.string(),
     auditionDates: z.array(
@@ -76,7 +103,7 @@ const valueProps = defineCollection({
 });
 
 const testimonials = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/testimonials' }),
+  loader: optionalGlob({ pattern: '*.yaml', base: './src/content/testimonials' }),
   schema: z.object({
     quote: z.string(),
     author: z.string(),

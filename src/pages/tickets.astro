@@ -3,13 +3,15 @@ import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
+import InfoRow from '@components/InfoRow.astro';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCurrentShow } from '@utils/shows';
-import { getEntry } from 'astro:content';
+import { getVenueContact } from '@data/venue';
+import { formatDateRange } from '@utils/dates';
 
 const currentShow = await getCurrentShow();
 const firstRunDate = currentShow?.data.runDates[0];
-const { data: contact } = (await getEntry('contact', 'contact'))!;
+const contact = await getVenueContact();
 
 const eventSchema = currentShow && firstRunDate
   ? buildEventSchema({
@@ -17,12 +19,7 @@ const eventSchema = currentShow && firstRunDate
       startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
       url: `/shows/${currentShow.id}`,
       venueName: currentShow.data.venue,
-      venueAddress: {
-        streetAddress: contact.address.line1,
-        addressLocality: contact.address.city,
-        addressRegion: contact.address.state,
-        postalCode: contact.address.zip,
-      },
+      venueAddress: contact.address,
       performerName: currentShow.data.performingGroup ?? OPTP_NAME,
       offerUrl: currentShow.data.ticketUrl,
       offerPrice: currentShow.data.ticketPrice,
@@ -47,6 +44,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       <div class="mt-8">
         <h2 class="font-heading text-base-content text-xl font-semibold">{currentShow.data.title}</h2>
         <p class="font-body text-base-content mt-2">{currentShow.data.synopsis}</p>
+        <div class="mt-4">
+          <InfoRow label="Dates" value={formatDateRange(currentShow.data.runDates)} />
+        </div>
         <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Buy Tickets</Button>
       </div>
     )}
@@ -54,5 +54,16 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <!-- TODO: embed a real third-party ticketing widget here once a platform is chosen
          (e.g. Eventbrite, Ticketleap, Showpass). Currently linking out via ticketUrl only. -->
     <p class="font-body text-base-content/60 mt-8 text-sm">[TODO: ticketing platform integration pending]</p>
+
+    <div class="border-line bg-base-200 mt-8 rounded-lg border p-6">
+      <h3 class="font-heading text-base-content text-lg font-semibold">Prefer to call or email?</h3>
+      <p class="font-body text-base-content mt-2">
+        Our online ticketing is still limited — reach the box office directly and we'll take care of you.
+      </p>
+      <div class="mt-4 flex flex-col gap-2">
+        <InfoRow label="Phone" value={contact.phone} href={`tel:${contact.phone}`} />
+        <InfoRow label="Email" value={contact.email} href={`mailto:${contact.email}`} />
+      </div>
+    </div>
   </div>
 </DefaultLayout>

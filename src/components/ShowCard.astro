@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import Badge from '@components/Badge.astro';
+import { formatDateRange } from '@utils/dates';
 
 interface Props {
   show: CollectionEntry<'shows'>;
@@ -8,7 +9,6 @@ interface Props {
 
 const { show } = Astro.props as Props;
 const { data } = show;
-const firstRunDate = data.runDates[0];
 ---
 
 <a
@@ -25,8 +25,7 @@ const firstRunDate = data.runDates[0];
     <h3 class="font-heading text-base-content text-[1.4rem] font-semibold tracking-[-0.01em]">{data.title}</h3>
     {data.subtitle && <p class="font-body text-base-content/60 text-sm italic">{data.subtitle}</p>}
     <p class="font-body text-base-content mt-1 text-sm font-medium">
-      {firstRunDate?.date}
-      {data.runDates.length > 1 && ` – ${data.runDates[data.runDates.length - 1].date}`}
+      {formatDateRange(data.runDates)}
       {' · '}{data.venue}
     </p>
   </div>

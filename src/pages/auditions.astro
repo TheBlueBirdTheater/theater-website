@@ -40,7 +40,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           {notice.data.callbackDate && <InfoRow label="Callbacks" value={notice.data.callbackDate} />}
         </div>
 
-        <p class="font-body text-base-content/60 mt-4 text-sm">
+        <p class="font-body text-base-content/60 mt-4">
           {notice.data.requirements.join(' ')}
         </p>
 
@@ -52,7 +52,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     ))}
 
     <div class="bg-primary text-primary-content rounded-lg p-8">
-      <p class="font-body text-secondary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+      <p class="font-body text-secondary-accessible text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
         Junior OPTP
       </p>
       <h2 class="font-heading mt-2 text-[1.3rem] font-semibold">{juniorOptp.ageRange}</h2>

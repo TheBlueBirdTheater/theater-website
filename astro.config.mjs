@@ -13,5 +13,14 @@ export default defineConfig({
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      watch: {
+        // WSL2 can't reliably see inotify events for files on the Windows
+        // filesystem (/mnt/d/...), so the dev server never picks up edits
+        // without falling back to polling.
+        usePolling: true,
+        interval: 100,
+      },
+    },
   },
 });

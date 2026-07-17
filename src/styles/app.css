@@ -37,6 +37,11 @@
   --color-line: #DAD1C0;
   --color-line-strong: #26221F;
 
+  /* Accessible stand-in for --color-secondary when used as text on the navy (--color-primary)
+     background — the official secondary swatch (#6E9BC2) is ~2.9:1 on navy, which fails WCAG AA.
+     This is only for text; buttons/borders/backgrounds keep using --color-secondary as-is. */
+  --color-secondary-accessible: #A3C8E3;
+
   /* Radius scale — overrides Tailwind's default rounded-md/rounded-lg values.
      rounded-sm (4px) already matches the design system's default, left as-is. */
   --radius-md: 8px;
@@ -68,4 +73,16 @@
      built-in max-w-max (max-content) utility if promoted to the --container-* namespace. */
   --container-max: 1200px;
   --container-narrow: 760px;
+}
+
+@layer base {
+  /* No component currently defines its own focus styling, so nav links, buttons, and other
+     interactive elements fall back to (inconsistent, sometimes invisible) browser defaults. */
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 }

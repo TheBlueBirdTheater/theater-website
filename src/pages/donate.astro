@@ -25,7 +25,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       {valueProps.map((vp) => (
         <div>
           <h3 class="font-heading text-base-content font-semibold">{vp.data.title}</h3>
-          <p class="font-body text-base-content/60 mt-1 text-sm">{vp.data.description}</p>
+          <p class="font-body text-base-content/60 mt-1">{vp.data.description}</p>
         </div>
       ))}
     </div>
@@ -48,7 +48,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
             ]}
           >
             <h3 class="font-heading font-semibold">{level.name}</h3>
-            <p class:list={['font-heading mt-1 text-[1.6rem] font-semibold', isPatron ? 'text-secondary' : 'text-primary']}>
+            <p class:list={['font-heading mt-1 text-[1.6rem] font-semibold', isPatron ? 'text-secondary-accessible' : 'text-primary']}>
               {level.amount}
             </p>
             <ul
@@ -75,7 +75,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           <div class="border-line rounded-lg border bg-base-100 p-6.5">
             <h3 class="font-heading text-base-content font-semibold">{tier.name}</h3>
             <p class="font-body text-primary mt-1 text-sm">{tier.amount}</p>
-            <ul class="font-body text-base-content/70 mt-3 space-y-1 text-sm">
+            <ul class="font-body text-base-content/70 mt-3 space-y-1">
               {tier.benefits.map((benefit) => <li>{benefit}</li>)}
             </ul>
           </div>

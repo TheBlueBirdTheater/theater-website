@@ -1,10 +1,7 @@
-// TODO: optp.org is unconfirmed per BRAND/CONTACT spec — mirrors `site` in astro.config.mjs
-export const SITE_URL = 'https://optp.org';
-
-// Orangeburg Part-Time Players — the resident volunteer troupe (a 501(c)(3) nonprofit)
-// that operates the Blue Bird Theatre and performs most, but not all, shows there.
-export const OPTP_NAME = 'Orangeburg Part-Time Players';
-export const THEATRE_NAME = 'Blue Bird Theatre';
+// Canonical site/venue identity constants live in @data/venue — re-exported here since
+// most callers already import them alongside the schema builders below.
+export { SITE_URL, THEATRE_NAME, OPTP_NAME } from '@data/venue';
+import { SITE_URL, THEATRE_NAME } from '@data/venue';
 
 export interface BreadcrumbItem {
   name: string;

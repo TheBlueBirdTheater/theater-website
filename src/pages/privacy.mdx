@@ -6,30 +6,45 @@ layout: "@layouts/LegalLayout.astro"
 
 import Schema from '@components/Schema.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
+import { getVenueContact, OPTP_NAME, THEATRE_NAME } from '@data/venue';
 
 export const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
   { name: 'Privacy Policy', url: '/privacy' },
 ]);
 
+export const contact = await getVenueContact();
+
 <Schema schema={breadcrumbSchema} />
+
+{/* TODO: this page is boilerplate pending review by the organization's legal counsel. */}
 
 ## Overview
 
-[TODO: privacy policy content pending legal review.]
+{OPTP_NAME}, the 501(c)(3) nonprofit that operates the {THEATRE_NAME}, respects your privacy. This
+policy describes what information we collect through this website and how we use it. We do not sell
+or rent your personal information to third parties.
 
 ## Information We Collect
 
-[TODO: describe what information is collected, e.g. via newsletter signup or ticket purchases.]
+We may collect information you provide directly to us, such as your name and email address when you
+sign up for our newsletter, or contact information submitted through our contact form. When you
+purchase tickets, that transaction is handled by our third-party ticketing provider under its own
+privacy policy — we do not collect or store your payment information.
 
 ## How We Use Your Information
 
-[TODO: describe usage of collected information.]
+We use the information we collect to send newsletters and show announcements (only if you've signed
+up), respond to inquiries submitted through our contact form, and understand how visitors use this
+site so we can improve it.
 
 ## Third-Party Services
 
-[TODO: list third-party services used, e.g. ticketing platform, newsletter provider, analytics.]
+This site links out to third-party services, including our ticketing provider and our email
+newsletter provider. Once you leave this site to use one of those services, your information is
+subject to that provider's own privacy policy, not this one.
 
 ## Contact Us
 
-[TODO: contact info for privacy questions — see /contact.]
+Questions about this privacy policy can be sent to <a href={`mailto:${contact.email}`}>{contact.email}</a>, or see
+our [Contact](/contact) page for other ways to reach us.

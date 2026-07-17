@@ -8,24 +8,21 @@ import InfoRow from '@components/InfoRow.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, OPTP_NAME, THEATRE_NAME } from '@utils/schema';
 import { getCurrentShow } from '@utils/shows';
+import { formatDateRange } from '@utils/dates';
+import { getVenueContact } from '@data/venue';
 import { getEntry } from 'astro:content';
 
 const currentShow = await getCurrentShow();
 const firstRunDate = currentShow?.data.runDates[0];
 
 const { data: history } = (await getEntry('history', 'history'))!;
-const { data: contact } = (await getEntry('contact', 'contact'))!;
+const contact = await getVenueContact();
 
 const theaterSchema = buildTheaterVenueSchema({
   name: THEATRE_NAME,
   telephone: contact.phone,
   email: contact.email,
-  address: {
-    streetAddress: contact.address.line1,
-    addressLocality: contact.address.city,
-    addressRegion: contact.address.state,
-    postalCode: contact.address.zip,
-  },
+  address: contact.address,
 });
 
 const performingGroupSchema = buildPerformingGroupSchema({
@@ -40,12 +37,7 @@ const eventSchema = currentShow && firstRunDate
       startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
       url: `/shows/${currentShow.id}`,
       venueName: currentShow.data.venue,
-      venueAddress: {
-        streetAddress: contact.address.line1,
-        addressLocality: contact.address.city,
-        addressRegion: contact.address.state,
-        postalCode: contact.address.zip,
-      },
+      venueAddress: contact.address,
       performerName: currentShow.data.performingGroup ?? OPTP_NAME,
       offerUrl: currentShow.data.ticketUrl,
       offerPrice: currentShow.data.ticketPrice,
@@ -73,14 +65,7 @@ const eventSchema = currentShow && firstRunDate
         <p class="font-body text-base-content mt-4 max-w-130">{currentShow.data.synopsis}</p>
         {firstRunDate && (
           <div class="mt-5 flex flex-wrap gap-5">
-            <InfoRow
-              label="Dates"
-              value={`${firstRunDate.date}${
-                currentShow.data.runDates.length > 1
-                  ? ` – ${currentShow.data.runDates[currentShow.data.runDates.length - 1].date}`
-                  : ''
-              }`}
-            />
+            <InfoRow label="Dates" value={formatDateRange(currentShow.data.runDates)} />
             <InfoRow label="Venue" value={currentShow.data.venue} />
           </div>
         )}

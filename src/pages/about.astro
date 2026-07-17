@@ -55,9 +55,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         {
           history.milestones.map((milestone) => (
             <div class="border-secondary border-l-2 pl-5">
-              <p class="font-heading text-secondary font-semibold">{milestone.year}</p>
+              <p class="font-heading text-secondary-accessible font-semibold">{milestone.year}</p>
               <p class="font-heading text-primary-content mt-1 text-[1.1rem] font-semibold">{milestone.heading}</p>
-              <p class="font-body text-light-blue-tint mt-1 text-sm">{milestone.body}</p>
+              <p class="font-body text-light-blue-tint mt-1">{milestone.body}</p>
             </div>
           ))
         }

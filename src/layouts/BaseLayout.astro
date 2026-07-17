@@ -4,6 +4,11 @@ import SEO from '@components/SEO.astro';
 import { resolveFrontmatter, type LayoutProps } from '@utils/frontmatter';
 
 const page = resolveFrontmatter(Astro.props as LayoutProps);
+
+// Netlify sets CONTEXT to 'production' | 'deploy-preview' | 'branch-deploy' at build time.
+// Force noindex on any non-production Netlify build (e.g. *.netlify.app previews) so they
+// never get indexed, regardless of what the page itself requests.
+const isPreviewDeploy = Boolean(process.env.CONTEXT) && process.env.CONTEXT !== 'production';
 ---
 
 <html lang="en" class="scroll-smooth" data-theme="bluebird">
@@ -13,7 +18,8 @@ const page = resolveFrontmatter(Astro.props as LayoutProps);
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <SEO {...page} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <SEO {...page} noindex={page.noindex || isPreviewDeploy} />
   </head>
   <body class="font-body bg-base-100 text-base-content" id="top">
     <slot />

@@ -6,30 +6,44 @@ layout: "@layouts/LegalLayout.astro"
 
 import Schema from '@components/Schema.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
+import { getVenueContact, OPTP_NAME, THEATRE_NAME } from '@data/venue';
 
 export const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
   { name: 'Terms of Use', url: '/terms' },
 ]);
 
+export const contact = await getVenueContact();
+
 <Schema schema={breadcrumbSchema} />
+
+{/* TODO: this page is boilerplate pending review by the organization's legal counsel. */}
 
 ## Acceptance of Terms
 
-[TODO: terms of use content pending legal review.]
+By using this website, you agree to these terms of use. This site is operated by {OPTP_NAME}, the
+501(c)(3) nonprofit that operates the {THEATRE_NAME}. If you do not agree with these terms, please
+don't use this site.
 
 ## Use of This Site
 
-[TODO: describe acceptable use of the website.]
+You agree to use this site only for lawful purposes and in a way that does not infringe the rights
+of, or restrict or inhibit the use and enjoyment of, this site by anyone else. Content on this site
+(text, photos, and other materials) belongs to {OPTP_NAME} or its licensors and may not be reproduced
+without permission.
 
 ## Ticket Purchases
 
-[TODO: describe ticket purchase terms, refund policy, etc.]
+Ticket sales are processed through our third-party ticketing provider and are subject to that
+provider's own terms, refund, and exchange policies. We are not responsible for issues arising from
+that provider's platform.
 
 ## Limitation of Liability
 
-[TODO: liability disclaimer.]
+This site and its content are provided "as is" without warranties of any kind. {OPTP_NAME} is not
+liable for any damages arising from your use of this site, to the fullest extent permitted by law.
 
 ## Contact Us
 
-[TODO: contact info for terms questions — see /contact.]
+Questions about these terms can be sent to <a href={`mailto:${contact.email}`}>{contact.email}</a>, or see
+our [Contact](/contact) page for other ways to reach us.

@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import { faBars, faXmark } from "@fortawesome/free-solid-svg-icons";
 import Icon from "@components/Icon.astro";
 import Button from "@components/Button.astro";
-import logo from "@assets/logo.png";
+import logoMark from "@assets/logo-mark.svg";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -29,7 +29,7 @@ const isActive = (href: string) =>
         class="flex items-center gap-2"
         aria-label="Blue Bird Theatre home"
       >
-        <Image src={logo} alt="Blue Bird Theatre logo" width={40} height={60} />
+        <Image src={logoMark} alt="Blue Bird Theatre logo" width={40} height={40} />
         <span
           class="font-heading text-base-content text-xl font-bold tracking-[-0.01em]"
         >
