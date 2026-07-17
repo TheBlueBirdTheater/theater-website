@@ -85,9 +85,11 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
         <InfoRow
           label="Dates"
-          value={data.runDates
-            .map((rd) => (rd.label ? `${rd.label}: ${formatDate(rd.date)}` : formatDate(rd.date)))
-            .join(' · ')}
+          value={data.runDates.length === 0
+            ? 'TBA'
+            : data.runDates
+                .map((rd) => (rd.label ? `${rd.label}: ${formatDate(rd.date)}` : formatDate(rd.date)))
+                .join(' · ')}
         />
         <InfoRow label="Venue" value={data.venue} />
         <InfoRow label="Presented By" value={performingGroup} />

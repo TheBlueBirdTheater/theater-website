@@ -10,7 +10,7 @@ export function formatDate(dateStr: string): string {
  * or, when the run spans months/years, "December 30, 2026 – January 2, 2027".
  */
 export function formatDateRange(runDates: { date: string }[]): string {
-  if (runDates.length === 0) return '';
+  if (runDates.length === 0) return 'TBA';
 
   const start = new Date(`${runDates[0].date}T00:00:00`);
   if (runDates.length === 1) return formatter.format(start);

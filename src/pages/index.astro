@@ -64,12 +64,10 @@ const eventSchema = currentShow && firstRunDate
           <p class="font-body text-base-content/60 mt-2 text-[1.1875rem] italic">{currentShow.data.subtitle}</p>
         )}
         <p class="font-body text-base-content mt-4 max-w-130">{currentShow.data.synopsis}</p>
-        {firstRunDate && (
-          <div class="mt-5 flex flex-wrap gap-5">
-            <InfoRow label="Dates" value={formatDateRange(currentShow.data.runDates)} />
-            <InfoRow label="Venue" value={currentShow.data.venue} />
-          </div>
-        )}
+        <div class="mt-5 flex flex-wrap gap-5">
+          <InfoRow label="Dates" value={formatDateRange(currentShow.data.runDates)} />
+          <InfoRow label="Venue" value={currentShow.data.venue} />
+        </div>
         <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Get Tickets</Button>
       </div>
       {currentShow.data.posterImage ? (
