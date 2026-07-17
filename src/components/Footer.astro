@@ -1,28 +1,66 @@
 ---
-import { contact } from '@data/contact';
+import { getEntry } from 'astro:content';
+
+const { data: contact } = (await getEntry('contact', 'contact'))!;
+const currentYear = new Date().getFullYear();
+
+const linkClass = 'text-light-blue-tint hover:text-secondary text-sm no-underline';
 ---
 
-<footer class="footer footer-horizontal bg-neutral text-neutral-content mt-16 p-10">
-  <nav>
-    <h3 class="footer-title">Orangeburg Part-Time Players</h3>
-    <p>Blue Bird Theatre</p>
-    <p>{contact.address.line1}</p>
-    <p>{contact.address.city}, {contact.address.state} {contact.address.zip}</p>
-  </nav>
-  <nav>
-    <h3 class="footer-title">Contact</h3>
-    <a href={`tel:${contact.phone}`} class="link link-hover">{contact.phone}</a>
-    <a href={`mailto:${contact.email}`} class="link link-hover">{contact.email}</a>
-  </nav>
-  <nav>
-    <h3 class="footer-title">Follow Us</h3>
-    {contact.socials.map((social) => (
-      <a href={social.url} class="link link-hover">{social.platform}</a>
-    ))}
-  </nav>
-  <nav>
-    <h3 class="footer-title">Legal</h3>
-    <a href="/privacy" class="link link-hover">Privacy Policy</a>
-    <a href="/terms" class="link link-hover">Terms</a>
-  </nav>
+<footer class="bg-primary text-primary-content">
+  <div class="mx-auto grid max-w-(--container-max) gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div>
+      <div class="mb-3.5 flex items-center gap-3.5">
+        <div
+          class="font-heading flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-secondary text-center text-[0.65rem] leading-[1.15] font-semibold tracking-[0.03em]"
+        >
+          EST. 1981
+        </div>
+        <div class="font-heading text-lg font-semibold">Orangeburg Part-Time Players</div>
+      </div>
+      <p class="max-w-[320px] text-sm text-light-blue-tint">
+        Community theater at the historic Blue Bird Theatre in downtown Orangeburg, SC. Founded in 1981.
+      </p>
+    </div>
+    <nav>
+      <h3 class="font-body mb-3.5 text-[0.8125rem] font-semibold tracking-[0.09em] text-secondary uppercase">
+        Visit
+      </h3>
+      <div class="flex flex-col gap-2">
+        <a href="/shows" class={linkClass}>Current Season</a>
+        <a href="/about" class={linkClass}>About &amp; History</a>
+        <a href="/volunteer" class={linkClass}>Auditions &amp; Volunteering</a>
+      </div>
+    </nav>
+    <nav>
+      <h3 class="font-body mb-3.5 text-[0.8125rem] font-semibold tracking-[0.09em] text-secondary uppercase">
+        Contact
+      </h3>
+      <div class="flex flex-col gap-2 text-sm text-light-blue-tint">
+        <span>{contact.address.line1}</span>
+        <span>{contact.address.city}, {contact.address.state} {contact.address.zip}</span>
+        <a href={`tel:${contact.phone}`} class={linkClass}>{contact.phone}</a>
+        <a href={`mailto:${contact.email}`} class={linkClass}>{contact.email}</a>
+      </div>
+    </nav>
+    <nav>
+      <h3 class="font-body mb-3.5 text-[0.8125rem] font-semibold tracking-[0.09em] text-secondary uppercase">
+        Follow
+      </h3>
+      <div class="flex flex-col gap-2">
+        {contact.socials.map((social) => (
+          <a href={social.url} class={linkClass}>{social.platform}</a>
+        ))}
+      </div>
+    </nav>
+  </div>
+  <div class="border-t border-accent">
+    <div class="mx-auto flex max-w-(--container-max) flex-col gap-2 px-4 py-5 text-[0.8125rem] text-light-blue-tint sm:flex-row sm:justify-between">
+      <span>© 1981–{currentYear} Orangeburg Part-Time Players. A 501(c)(3) community theater.</span>
+      <div class="flex gap-5">
+        <a href="/privacy" class={linkClass}>Privacy Policy</a>
+        <a href="/terms" class={linkClass}>Terms</a>
+      </div>
+    </div>
+  </div>
 </footer>

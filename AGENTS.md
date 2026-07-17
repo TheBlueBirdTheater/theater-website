@@ -35,8 +35,13 @@ Consult these guides before working on related tasks:
   (`src/utils/types.ts`) every layout/page reuses.
 - Structured data: `src/components/Schema.astro` + builder functions in `src/utils/schema.ts`
   (`buildBreadcrumbSchema`, `buildEventSchema`, `buildPerformingGroupSchema`). Inline per-page, not global.
-- ALL editable copy lives in typed files under `src/data/*.ts` — never hardcode marketing copy directly
-  in components or pages. See that directory for the full topic list.
+- ALL editable copy lives in Astro content collections under `src/content/*` (schemas in
+  `src/content.config.ts`) — never hardcode marketing copy directly in components or pages. Pages read
+  collections via `getCollection()`/`getEntry()` from `astro:content` (see `src/utils/shows.ts` for the
+  one non-trivial query helper, `getCurrentShow()`). Content is editable either by hand-editing the YAML
+  under `src/content/*` or through the Decap CMS admin at `/admin` (entry point `src/pages/admin.html`,
+  config at `public/admin/config.yml`) — see
+  [Astro + Decap CMS](https://docs.astro.build/en/guides/cms/decap-cms/) before touching either.
 - Icons: FontAwesome free-solid-svg-icons only, rendered via `src/components/Icon.astro` /
   `src/utils/icon.ts#iconToSvg` as inline SVG. No astro-icon, no sprite system, no React icon libs.
 - Brand constants (colors, theme name) live in `src/styles/app.css`. Several values are still TODO/

@@ -15,39 +15,57 @@
   --color-accent: #284A6C;
   --color-accent-content: #FAF7F2;
 
-  /* TODO: exact secondary light-blue hex not yet supplied — derived placeholder pending real brand value */
-  --color-secondary: #7FA8C9;
+  --color-secondary: #6E9BC2;
   --color-secondary-content: #26221F;
 
-  /* TODO: base-200/300, neutral, info/success/warning/error not specified in BRAND section;
-     using reasonable derived/default values until real brand guidance is provided */
-  --color-base-200: #F0EBE2;
-  --color-base-300: #E4DDD0;
+  --color-base-200: #F1EBE0;
+  --color-base-300: #E7DFCF;
   --color-neutral: #26221F;
   --color-neutral-content: #FAF7F2;
 }
 
 @theme {
-  /* TODO: no real font has been chosen yet (see BRAND section) — placeholder family names + safe fallbacks */
-  --font-heading: 'HeadingFontTODO', ui-serif, Georgia, serif;
-  --font-body: 'BodyFontTODO', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Fraunces', ui-serif, Georgia, serif;
+  --font-body: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Derived colors not covered by the DaisyUI theme block above — named to auto-generate
+     matching bg, text, and border utilities (e.g. bg-navy-hover, border-line). */
+  --color-navy-hover: #173B5C;
+  --color-navy-press: #12304B;
+  --color-navy-tint: #EAF0F6;
+  --color-light-blue-tint: #DCE7F0;
+  --color-line: #DAD1C0;
+  --color-line-strong: #26221F;
+
+  /* Radius scale — overrides Tailwind's default rounded-md/rounded-lg values.
+     rounded-sm (4px) already matches the design system's default, left as-is. */
+  --radius-md: 8px;
+  --radius-lg: 14px;
+
+  /* Shadows — auto-generate shadow-card / shadow-raised utilities */
+  --shadow-card: 0 1px 2px rgba(38, 34, 31, 0.06), 0 4px 12px rgba(38, 34, 31, 0.07);
+  --shadow-raised: 0 2px 4px rgba(38, 34, 31, 0.08), 0 10px 24px rgba(38, 34, 31, 0.1);
 }
 
-/*
- * TODO: self-hosted @font-face declarations, to be uncommented once real font files
- * are added to public/fonts/. See public/fonts/README.md.
- *
- * @font-face {
- *   font-family: 'HeadingFontTODO';
- *   src: url('/fonts/heading.woff2') format('woff2');
- *   font-weight: 400 700;
- *   font-display: swap;
- * }
- *
- * @font-face {
- *   font-family: 'BodyFontTODO';
- *   src: url('/fonts/body.woff2') format('woff2');
- *   font-weight: 400 700;
- *   font-display: swap;
- * }
- */
+@font-face {
+  font-family: 'Fraunces';
+  src: url('/fonts/heading.woff2') format('woff2');
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/body.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Layout — deliberately outside @theme: "max" would collide with Tailwind's
+     built-in max-w-max (max-content) utility if promoted to the --container-* namespace. */
+  --container-max: 1200px;
+  --container-narrow: 760px;
+}

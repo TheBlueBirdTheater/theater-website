@@ -1,23 +1,28 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
-import { contact } from '@data/contact';
+import SectionHeading from '@components/SectionHeading.astro';
+import InfoRow from '@components/InfoRow.astro';
+import { getEntry } from 'astro:content';
+
+const { data: contact } = (await getEntry('contact', 'contact'))!;
 ---
 
 <DefaultLayout title="Contact" description="Get in touch with Orangeburg Part-Time Players.">
-  <div class="mx-auto max-w-2xl px-4 py-16">
-    <h1 class="font-heading text-3xl font-bold">Contact Us</h1>
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
+    <SectionHeading title="Contact Us" />
 
-    <div class="mt-8 space-y-2">
-      <p><strong>Phone:</strong> <a href={`tel:${contact.phone}`} class="link">{contact.phone}</a></p>
-      <p><strong>Email:</strong> <a href={`mailto:${contact.email}`} class="link">{contact.email}</a></p>
-      <p>
-        <strong>Address:</strong> Blue Bird Theatre, {contact.address.line1}, {contact.address.city}, {contact.address.state} {contact.address.zip}
-      </p>
+    <div class="mt-8 flex flex-col gap-5">
+      <InfoRow label="Phone" value={contact.phone} href={`tel:${contact.phone}`} />
+      <InfoRow label="Email" value={contact.email} href={`mailto:${contact.email}`} />
+      <InfoRow
+        label="Address"
+        value={`Blue Bird Theatre, ${contact.address.line1}, ${contact.address.city}, ${contact.address.state} ${contact.address.zip}`}
+      />
     </div>
 
     <div class="mt-6 flex gap-4">
       {contact.socials.map((social) => (
-        <a href={social.url} class="link">{social.platform}</a>
+        <a href={social.url} class="link link-primary">{social.platform}</a>
       ))}
     </div>
   </div>

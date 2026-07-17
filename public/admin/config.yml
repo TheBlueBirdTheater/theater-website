@@ -1,0 +1,233 @@
+# TODO: replace base_url with the deployed Netlify site URL once the Netlify site exists
+# (see netlify/functions/auth.ts + netlify/functions/callback.ts for the OAuth proxy this points at).
+backend:
+  name: github
+  repo: TheBlueBirdTheater/theater-website
+  branch: main
+  base_url: https://TODO-site-name.netlify.app
+  auth_endpoint: auth
+
+# Lets editors test against the local git working tree via `npm run cms:local` (decap-server),
+# without needing GitHub OAuth. Harmless to leave enabled in production config — Decap only
+# uses the local backend when the admin UI itself is opened from localhost.
+local_backend: true
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+collections:
+  - name: shows
+    label: Shows
+    folder: src/content/shows
+    create: true
+    slug: '{{slug}}'
+    media_folder: /images/shows
+    public_folder: /images/shows
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Subtitle, name: subtitle, widget: string, required: false }
+      - { label: Synopsis, name: synopsis, widget: text }
+      - { label: Poster Image, name: posterImage, widget: image }
+      - { label: Poster Alt Text, name: posterAlt, widget: string }
+      - label: Run Dates
+        name: runDates
+        widget: list
+        fields:
+          - { label: Date, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
+          - { label: Time, name: time, widget: datetime, date_format: false, time_format: 'HH:mm' }
+          - { label: Label, name: label, widget: string, required: false, hint: 'e.g. "Opening Night", "Matinee"' }
+      - { label: Venue, name: venue, widget: string }
+      - { label: Ticket URL, name: ticketUrl, widget: string }
+      - label: Cast
+        name: cast
+        widget: list
+        required: false
+        field: { label: Cast Member, name: value, widget: string, hint: 'e.g. "[Actor Name] as [Character]"' }
+      - label: Crew
+        name: crew
+        widget: list
+        required: false
+        field: { label: Crew Member, name: value, widget: string, hint: 'e.g. "Director: [Name]"' }
+      - label: Status
+        name: status
+        widget: select
+        options: [upcoming, current, past]
+
+  - name: auditions
+    label: Auditions
+    folder: src/content/auditions
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: Show Title, name: showTitle, widget: string }
+      - label: Audition Dates
+        name: auditionDates
+        widget: list
+        fields:
+          - { label: Date, name: date, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false }
+          - { label: Time, name: time, widget: datetime, date_format: false, time_format: 'HH:mm' }
+          - { label: Location, name: location, widget: string }
+      - { label: Callback Date, name: callbackDate, widget: datetime, date_format: 'YYYY-MM-DD', time_format: false, required: false }
+      - label: Requirements
+        name: requirements
+        widget: list
+        field: { label: Requirement, name: value, widget: string }
+      - { label: Sign-Up URL, name: signUpUrl, widget: string }
+      - { label: Contact Email, name: contactEmail, widget: string }
+
+  - name: team
+    label: Board & Staff
+    folder: src/content/team
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Role, name: role, widget: string }
+      - label: Group
+        name: group
+        widget: select
+        options: [board, staff]
+      - { label: Bio, name: bio, widget: text, required: false }
+      - { label: Photo, name: photoUrl, widget: image, required: false }
+
+  - name: faqs
+    label: FAQs
+    folder: src/content/faqs
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: Question, name: question, widget: string }
+      - { label: Answer, name: answer, widget: text }
+      - { label: Category, name: category, widget: string, required: false }
+
+  - name: valueProps
+    label: Value Propositions
+    folder: src/content/valueProps
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Icon, name: icon, widget: string, required: false, hint: 'Freeform label — not currently rendered on the site.' }
+
+  - name: testimonials
+    label: Testimonials
+    folder: src/content/testimonials
+    create: true
+    slug: '{{slug}}'
+    fields:
+      - { label: Quote, name: quote, widget: text }
+      - { label: Author, name: author, widget: string }
+      - { label: Role, name: role, widget: string, required: false }
+
+  - name: contact
+    label: Contact Info
+    files:
+      - name: contact
+        label: Contact Info
+        file: src/content/contact/contact.yaml
+        fields:
+          - { label: Phone, name: phone, widget: string }
+          - { label: Email, name: email, widget: string }
+          - label: Address
+            name: address
+            widget: object
+            fields:
+              - { label: Street Address, name: line1, widget: string }
+              - { label: City, name: city, widget: string }
+              - { label: State, name: state, widget: string }
+              - { label: ZIP, name: zip, widget: string }
+          - label: Social Links
+            name: socials
+            widget: list
+            fields:
+              - { label: Platform, name: platform, widget: string }
+              - { label: URL, name: url, widget: string }
+
+  - name: history
+    label: History
+    files:
+      - name: history
+        label: Building & Company History
+        file: src/content/history/history.yaml
+        fields:
+          - { label: Intro, name: intro, widget: text, hint: 'Homepage teaser + About page opening line.' }
+          - label: Milestones
+            name: milestones
+            widget: list
+            fields:
+              - { label: Year, name: year, widget: string }
+              - { label: Heading, name: heading, widget: string }
+              - { label: Body, name: body, widget: text }
+              - { label: Image, name: imageUrl, widget: image, required: false }
+
+  - name: donate
+    label: Donate Page Settings
+    files:
+      - name: donate
+        label: Donate Page Settings
+        file: src/content/donate/donate.yaml
+        fields:
+          - { label: Donation Platform URL, name: donationPlatformUrl, widget: string, hint: 'Third-party giving-page link, e.g. a Givebutter or Classy URL.' }
+          - label: Giving Levels
+            name: givingLevels
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Amount, name: amount, widget: string, hint: 'e.g. "$25+"' }
+              - label: Perks
+                name: perks
+                widget: list
+                field: { label: Perk, name: value, widget: string }
+          - label: Sponsorship Tiers
+            name: sponsorshipTiers
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Amount, name: amount, widget: string }
+              - label: Benefits
+                name: benefits
+                widget: list
+                field: { label: Benefit, name: value, widget: string }
+
+  - name: getInvolved
+    label: Get Involved Page Settings
+    files:
+      - name: getInvolved
+        label: Get Involved Page Settings
+        file: src/content/getInvolved/getInvolved.yaml
+        fields:
+          - { label: Volunteer Sign-Up URL, name: signUpUrl, widget: string }
+          - label: Volunteer Roles
+            name: roles
+            widget: list
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: text }
+              - { label: Commitment, name: commitment, widget: string, hint: 'e.g. "one show night per production"' }
+              - { label: Icon, name: icon, widget: string, required: false, hint: 'Freeform label — not currently rendered on the site.' }
+          - label: Steps
+            name: steps
+            widget: list
+            hint: 'Order here controls the numbered display order on the page — drag to reorder.'
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: text }
+
+  - name: extras
+    label: Extra Page Copy
+    files:
+      - name: extras
+        label: Extra Page Copy
+        file: src/content/extras/extras.yaml
+        fields:
+          - { label: 'Also at the Blue Bird (Shows page)', name: alsoAtTheBlueBird, widget: text }
+          - label: Junior OPTP (Auditions page)
+            name: juniorOptp
+            widget: object
+            fields:
+              - { label: Age Range, name: ageRange, widget: string }
+              - { label: Description, name: description, widget: text }
+              - { label: Audition Window, name: auditionWindow, widget: string }
+              - { label: Performance Window, name: performanceWindow, widget: string }
+              - { label: Contact Email, name: contactEmail, widget: string }

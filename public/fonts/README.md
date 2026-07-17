@@ -1,4 +1,6 @@
-TODO: no real font files have been chosen yet. Once a heading and body font are
-selected, add their self-hosted `.woff2` files here (e.g. `heading.woff2`,
-`body.woff2`) and uncomment the matching `@font-face` rules in
-`src/styles/app.css`.
+Self-hosted brand fonts, per the Blue Bird Theatre design system:
+
+- `heading.woff2` — Fraunces (display/heading, weight 500–700)
+- `body.woff2` — Inter (body copy, weight 400–600)
+
+Referenced via `@font-face` in `src/styles/app.css`. Sourced from Google Fonts.

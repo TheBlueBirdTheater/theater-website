@@ -1,0 +1,74 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import PersonCard from '@components/PersonCard.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+const historyEntry = await getEntry('history', 'history');
+const history = historyEntry!.data;
+const team = await getCollection('team');
+const boardMembers = team.filter((person) => person.data.group === 'board');
+const artisticStaff = team.filter((person) => person.data.group === 'staff');
+const foundingMilestone = history.milestones[history.milestones.length - 1];
+---
+
+<DefaultLayout
+  title="About"
+  description="The story of Orangeburg Part-Time Players and the historic Blue Bird Theatre."
+>
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
+    <SectionHeading eyebrow="Est. 1981" title="Orangeburg Part-Time Players" align="center" />
+    <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-[1.1875rem]">{history.intro}</p>
+  </div>
+
+  <div class="mx-auto grid max-w-(--container-max) gap-12 px-4 py-14 md:grid-cols-2 md:items-center">
+    {foundingMilestone?.imageUrl ? (
+      <img
+        src={foundingMilestone.imageUrl}
+        alt={foundingMilestone.heading}
+        class="border-line rounded-lg aspect-square w-full border object-cover shadow-card"
+      />
+    ) : (
+      <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body flex aspect-square items-center justify-center border text-sm">
+        Archival photo
+      </div>
+    )}
+    <div>
+      <h3 class="font-heading text-base-content text-[1.5rem] font-semibold">{foundingMilestone?.heading}</h3>
+      <p class="font-body text-base-content mt-4">{foundingMilestone?.body}</p>
+    </div>
+  </div>
+
+  <section class="bg-primary">
+    <div class="mx-auto max-w-(--container-max) px-4 py-16">
+      <SectionHeading eyebrow="The Building" title="The Blue Bird Theatre" onNavy />
+      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+        {
+          history.milestones.map((milestone) => (
+            <div class="border-secondary border-l-2 pl-5">
+              <p class="font-heading text-secondary font-semibold">{milestone.year}</p>
+              <p class="font-heading text-primary-content mt-1 text-[1.1rem] font-semibold">{milestone.heading}</p>
+              <p class="font-body text-light-blue-tint mt-1 text-sm">{milestone.body}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="mx-auto max-w-(--container-max) px-4 py-14">
+    <SectionHeading eyebrow="The People" title="Artistic Staff" />
+    <div class="mt-7 flex flex-col gap-6">
+      {artisticStaff.map((person) => <PersonCard person={person} />)}
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-(--container-max) px-4 pb-20">
+    <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+      Board of Directors
+    </p>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2">
+      {boardMembers.map((person) => <PersonCard person={person} />)}
+    </div>
+  </div>
+</DefaultLayout>

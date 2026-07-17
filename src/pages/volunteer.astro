@@ -1,38 +1,45 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
-import { volunteerRoles, volunteerSignUpUrl } from '@data/volunteer';
-import { getInvolvedSteps } from '@data/processSteps';
+import SectionHeading from '@components/SectionHeading.astro';
+import Button from '@components/Button.astro';
+import { getEntry } from 'astro:content';
+
+const { data: getInvolved } = (await getEntry('getInvolved', 'getInvolved'))!;
+const { roles, steps, signUpUrl } = getInvolved;
 ---
 
 <DefaultLayout title="Get Involved" description="Volunteer with OPTP — ushering, sets, costumes, box office, and more.">
-  <div class="mx-auto max-w-5xl px-4 py-16">
-    <h1 class="font-heading text-3xl font-bold">Get Involved</h1>
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
+    <SectionHeading eyebrow="Get Involved" title="OPTP runs on volunteers" align="center" />
+  </div>
 
-    <div class="mt-8 grid gap-6 sm:grid-cols-2">
-      {volunteerRoles.map((role) => (
-        <div class="card bg-base-200">
-          <div class="card-body">
-            <h2 class="card-title font-heading">{role.title}</h2>
-            <p>{role.description}</p>
-            <p class="text-sm opacity-70">{role.commitment}</p>
-          </div>
+  <div class="mx-auto max-w-250 px-4 pb-16">
+    <SectionHeading eyebrow="Behind The Scenes" title="Volunteer roles" />
+    <div class="mt-7 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {roles.map((role) => (
+        <div class="border-line rounded-md border bg-base-100 p-5.5">
+          <h3 class="font-heading text-base-content font-semibold">{role.title}</h3>
+          <p class="font-body text-base-content/60 mt-2 text-sm">{role.description}</p>
+          <p class="font-body text-primary mt-2 text-[0.8125rem]">{role.commitment}</p>
         </div>
       ))}
     </div>
+  </div>
 
-    <h2 class="font-heading mt-16 text-2xl font-bold">How to Get Involved</h2>
+  <div class="mx-auto max-w-250 px-4 pb-20">
+    <h2 class="font-heading text-base-content text-2xl font-bold">How to Get Involved</h2>
     <ol class="mt-6 space-y-4">
-      {getInvolvedSteps.map((step) => (
+      {steps.map((step, index) => (
         <li class="flex gap-4">
-          <span class="font-heading text-primary text-xl font-bold">{step.step}</span>
+          <span class="font-heading text-primary text-xl font-bold">{index + 1}</span>
           <div>
-            <p class="font-semibold">{step.title}</p>
-            <p class="text-sm opacity-70">{step.description}</p>
+            <p class="font-body text-base-content font-semibold">{step.title}</p>
+            <p class="font-body text-base-content/60 text-sm">{step.description}</p>
           </div>
         </li>
       ))}
     </ol>
 
-    <a href={volunteerSignUpUrl} class="btn btn-primary mt-10">Sign Up to Volunteer</a>
+    <Button href={signUpUrl} variant="primary" class="mt-10">Sign Up to Volunteer</Button>
   </div>
 </DefaultLayout>

@@ -1,0 +1,31 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  align?: 'left' | 'center';
+  onNavy?: boolean;
+}
+
+const { eyebrow, title, align = 'left', onNavy = false } = Astro.props as Props;
+---
+
+<div class:list={[align === 'center' ? 'mx-auto max-w-[640px] text-center' : 'text-left']}>
+  {eyebrow && (
+    <p
+      class:list={[
+        'font-body mb-2.5 text-[0.8125rem] font-semibold tracking-[0.09em] uppercase',
+        onNavy ? 'text-secondary' : 'text-primary',
+      ]}
+    >
+      {eyebrow}
+    </p>
+  )}
+  <h2
+    class:list={[
+      'font-heading text-[2rem] leading-[1.2] font-semibold tracking-[-0.01em]',
+      onNavy ? 'text-primary-content' : 'text-base-content',
+    ]}
+  >
+    {title}
+  </h2>
+</div>

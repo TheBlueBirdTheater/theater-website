@@ -1,0 +1,22 @@
+---
+interface Props {
+  icon?: string;
+  label: string;
+  value: string;
+  href?: string;
+}
+
+const { icon = '◆', label, value, href } = Astro.props as Props;
+---
+
+<div class="font-body flex items-start gap-3">
+  <span class="text-primary w-[22px] shrink-0 text-center text-[1.1rem] leading-[1.4]">{icon}</span>
+  <div>
+    <div class="text-base-content/60 mb-0.5 text-[0.8125rem] tracking-[0.09em] uppercase">{label}</div>
+    {href ? (
+      <a href={href} class="link link-primary text-[1rem] font-medium">{value}</a>
+    ) : (
+      <div class="text-base-content text-[1rem] font-medium">{value}</div>
+    )}
+  </div>
+</div>

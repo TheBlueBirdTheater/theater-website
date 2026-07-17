@@ -12,21 +12,22 @@ export interface ContactInfo {
     state: string;
     zip: string;
   };
+  mailingAddress: string;
   socials: SocialLink[];
 }
 
-// TODO: replace every value below with real OPTP / Blue Bird Theatre contact info once confirmed.
+// Blue Bird Theatre / Orangeburg Part-Time Players (OPTP) contact information.
 export const contact: ContactInfo = {
-  phone: '555-000-0000',
-  email: 'info@example.com',
+  phone: '803-536-5454',
+  email: 'optp1981@gmail.com',
   address: {
-    line1: '[TODO: street address]',
+    line1: '1141 Russell Street',
     city: 'Orangeburg',
     state: 'SC',
-    zip: '[TODO: zip]',
+    zip: '29115',
   },
+  mailingAddress: 'P.O. Box 1291, Orangeburg, SC 29116',
   socials: [
-    { platform: 'Facebook', url: '#' },
-    { platform: 'Instagram', url: '#' },
+    { platform: 'Facebook', url: 'https://www.facebook.com/BluebirdtheatreOrangeburgSC' },
   ],
 };

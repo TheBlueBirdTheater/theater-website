@@ -1,17 +1,20 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
-import { faqs } from '@data/faqs';
+import SectionHeading from '@components/SectionHeading.astro';
+import { getCollection } from 'astro:content';
+
+const faqs = await getCollection('faqs');
 ---
 
 <DefaultLayout title="FAQ" description="Frequently asked questions about OPTP and the Blue Bird Theatre.">
-  <div class="mx-auto max-w-3xl px-4 py-16">
-    <h1 class="font-heading text-3xl font-bold">Frequently Asked Questions</h1>
-    <div class="mt-8 space-y-2">
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
+    <SectionHeading title="Frequently Asked Questions" />
+    <div class="mt-8 space-y-3">
       {faqs.map((faq) => (
-        <div class="collapse-arrow bg-base-200 collapse">
+        <div class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
           <input type="checkbox" />
-          <div class="collapse-title font-semibold">{faq.question}</div>
-          <div class="collapse-content"><p>{faq.answer}</p></div>
+          <div class="font-body text-base-content collapse-title font-semibold">{faq.data.question}</div>
+          <div class="collapse-content"><p class="font-body text-base-content/70">{faq.data.answer}</p></div>
         </div>
       ))}
     </div>

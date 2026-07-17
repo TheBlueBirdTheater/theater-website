@@ -1,0 +1,22 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.12.0"
+
+[functions]
+  directory = "netlify/functions"
+
+# Aliases so Decap's github backend (base_url = site root, default auth_endpoint = "auth")
+# and the GitHub OAuth App's callback URL can hit short, stable paths instead of the raw
+# /.netlify/functions/* URLs. Rewrites (status 200) preserve query strings.
+[[redirects]]
+  from = "/auth"
+  to = "/.netlify/functions/auth"
+  status = 200
+
+[[redirects]]
+  from = "/callback"
+  to = "/.netlify/functions/callback"
+  status = 200

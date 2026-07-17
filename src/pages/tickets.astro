@@ -1,20 +1,22 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import Button from '@components/Button.astro';
 import { buildEventSchema } from '@utils/schema';
-import { getCurrentShow } from '@data/season';
+import { getCurrentShow } from '@utils/shows';
 
-const currentShow = getCurrentShow();
-const firstRunDate = currentShow?.runDates[0];
+const currentShow = await getCurrentShow();
+const firstRunDate = currentShow?.data.runDates[0];
 
 const eventSchema = currentShow && firstRunDate
   ? buildEventSchema({
-      name: currentShow.title,
+      name: currentShow.data.title,
       startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
-      url: `/shows/${currentShow.slug}`,
-      venueName: currentShow.venue,
-      offerUrl: currentShow.ticketUrl,
-      description: currentShow.synopsis,
+      url: `/shows/${currentShow.id}`,
+      venueName: currentShow.data.venue,
+      offerUrl: currentShow.data.ticketUrl,
+      description: currentShow.data.synopsis,
     })
   : null;
 ---
@@ -22,19 +24,19 @@ const eventSchema = currentShow && firstRunDate
 <DefaultLayout title="Tickets" description="Buy tickets to OPTP's current production at the Blue Bird Theatre.">
   {eventSchema && <Schema schema={eventSchema} />}
 
-  <div class="mx-auto max-w-3xl px-4 py-16">
-    <h1 class="font-heading text-3xl font-bold">Tickets &amp; Box Office</h1>
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
+    <SectionHeading title="Tickets & Box Office" />
 
     {currentShow && (
       <div class="mt-8">
-        <h2 class="font-heading text-xl font-semibold">{currentShow.title}</h2>
-        <p class="mt-2">{currentShow.synopsis}</p>
-        <a href={currentShow.ticketUrl} class="btn btn-primary mt-6">Buy Tickets</a>
+        <h2 class="font-heading text-base-content text-xl font-semibold">{currentShow.data.title}</h2>
+        <p class="font-body text-base-content mt-2">{currentShow.data.synopsis}</p>
+        <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Buy Tickets</Button>
       </div>
     )}
 
     <!-- TODO: embed a real third-party ticketing widget here once a platform is chosen
          (e.g. Eventbrite, Ticketleap, Showpass). Currently linking out via ticketUrl only. -->
-    <p class="mt-8 text-sm opacity-70">[TODO: ticketing platform integration pending]</p>
+    <p class="font-body text-base-content/60 mt-8 text-sm">[TODO: ticketing platform integration pending]</p>
   </div>
 </DefaultLayout>

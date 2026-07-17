@@ -1,0 +1,26 @@
+slug: getInvolved
+signUpUrl: "#"
+roles:
+  - title: Ushering
+    description: "[TODO: role description]"
+    commitment: "[TODO: e.g. one show night per production]"
+    icon: ticket
+  - title: Set Construction
+    description: "[TODO: role description]"
+    commitment: "[TODO: commitment level]"
+    icon: hammer
+  - title: Costumes
+    description: "[TODO: role description]"
+    commitment: "[TODO: commitment level]"
+    icon: shirt
+  - title: Box Office
+    description: "[TODO: role description]"
+    commitment: "[TODO: commitment level]"
+    icon: ticket
+steps:
+  - title: "[TODO: step title]"
+    description: "[TODO: step description]"
+  - title: "[TODO: step title]"
+    description: "[TODO: step description]"
+  - title: "[TODO: step title]"
+    description: "[TODO: step description]"

@@ -1,84 +1,111 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
+import Badge from '@components/Badge.astro';
+import Button from '@components/Button.astro';
+import InfoRow from '@components/InfoRow.astro';
+import Divider from '@components/Divider.astro';
 import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
-import { shows, type Show } from '@data/season';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
+  const shows = await getCollection('shows');
   return shows.map((show) => ({
-    params: { slug: show.slug },
+    params: { slug: show.id },
     props: { show },
   }));
 }
 
 interface Props {
-  show: Show;
+  show: CollectionEntry<'shows'>;
 }
 
 const { show } = Astro.props as Props;
+const { data } = show;
 
-const eventSchemas = show.runDates.map((rd) =>
+const eventSchemas = data.runDates.map((rd) =>
   buildEventSchema({
-    name: show.title,
+    name: data.title,
     // TODO: normalize to full ISO with real timezone once real run-date times are known
     startDate: `${rd.date}T${rd.time}:00`,
-    url: `/shows/${show.slug}`,
-    venueName: show.venue,
-    offerUrl: show.ticketUrl,
-    description: show.synopsis,
-    imageUrl: show.posterImage,
+    url: `/shows/${show.id}`,
+    venueName: data.venue,
+    offerUrl: data.ticketUrl,
+    description: data.synopsis,
+    imageUrl: data.posterImage,
   })
 );
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
   { name: 'Shows', url: '/shows' },
-  { name: show.title, url: `/shows/${show.slug}` },
+  { name: data.title, url: `/shows/${show.id}` },
 ]);
 ---
 
-<DefaultLayout title={show.title} description={show.synopsis} image={show.posterImage} imageAlt={show.posterAlt}>
+<DefaultLayout title={data.title} description={data.synopsis} image={data.posterImage} imageAlt={data.posterAlt}>
   <Schema schema={eventSchemas} />
   <Schema schema={breadcrumbSchema} />
 
-  <div class="mx-auto grid max-w-5xl gap-8 px-4 py-16 md:grid-cols-[2fr_3fr]">
+  <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr]">
     <img
-      src={show.posterImage}
-      alt={show.posterAlt}
-      class="rounded-box aspect-2/3 w-full object-cover shadow-lg"
+      src={data.posterImage}
+      alt={data.posterAlt}
+      class="border-line rounded-lg aspect-4/5 w-full border object-cover shadow-card"
     />
     <div>
-      <h1 class="font-heading text-3xl font-bold">{show.title}</h1>
-      {show.subtitle && <p class="mt-1 text-lg opacity-70">{show.subtitle}</p>}
-      <p class="mt-4">{show.synopsis}</p>
+      <Badge status={data.status} />
+      <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em]">
+        {data.title}
+      </h1>
+      {data.subtitle && <p class="font-body text-base-content/60 mt-2 text-[1.1875rem] italic">{data.subtitle}</p>}
+      <p class="font-body text-base-content mt-4">{data.synopsis}</p>
 
-      <h2 class="font-heading mt-8 text-xl font-semibold">Performance Dates</h2>
-      <ul class="mt-2 space-y-1">
-        {show.runDates.map((rd) => (
-          <li>{rd.date} {rd.time}{rd.label && ` — ${rd.label}`}</li>
-        ))}
-      </ul>
-      <p class="mt-2 text-sm opacity-70">{show.venue}</p>
+      <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
+        <InfoRow
+          label="Dates"
+          value={data.runDates
+            .map((rd) => (rd.label ? `${rd.label}: ${rd.date}` : rd.date))
+            .join(' · ')}
+        />
+        <InfoRow label="Venue" value={data.venue} />
+      </div>
 
-      {show.cast && show.cast.length > 0 && (
-        <>
-          <h2 class="font-heading mt-8 text-xl font-semibold">Cast</h2>
-          <ul class="mt-2 space-y-1">
-            {show.cast.map((member) => <li>{member}</li>)}
-          </ul>
-        </>
-      )}
+      <Button href={data.ticketUrl} variant="primary" size="lg" class="mt-7">Get Tickets</Button>
 
-      {show.crew && show.crew.length > 0 && (
-        <>
-          <h2 class="font-heading mt-8 text-xl font-semibold">Crew</h2>
-          <ul class="mt-2 space-y-1">
-            {show.crew.map((member) => <li>{member}</li>)}
-          </ul>
-        </>
-      )}
+      <div class="mt-10">
+        <Divider />
+      </div>
 
-      <a href={show.ticketUrl} class="btn btn-primary mt-8">Get Tickets</a>
+      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+        {data.cast && data.cast.length > 0 && (
+          <div>
+            <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Cast</p>
+            <p class="font-body text-base-content mt-2 leading-[1.9]">
+              {data.cast.map((member, i) => (
+                <>
+                  {member}
+                  {i < data.cast!.length - 1 && <br />}
+                </>
+              ))}
+            </p>
+          </div>
+        )}
+
+        {data.crew && data.crew.length > 0 && (
+          <div>
+            <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Crew</p>
+            <p class="font-body text-base-content mt-2 leading-[1.9]">
+              {data.crew.map((member, i) => (
+                <>
+                  {member}
+                  {i < data.crew!.length - 1 && <br />}
+                </>
+              ))}
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   </div>
 </DefaultLayout>

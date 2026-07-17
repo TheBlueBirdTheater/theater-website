@@ -1,33 +1,60 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
-import { upcomingAuditions } from '@data/auditions';
+import SectionHeading from '@components/SectionHeading.astro';
+import InfoRow from '@components/InfoRow.astro';
+import Button from '@components/Button.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+const upcomingAuditions = await getCollection('auditions');
+const { data: extras } = (await getEntry('extras', 'extras'))!;
+const { juniorOptp } = extras;
 ---
 
 <DefaultLayout title="Auditions" description="Audition dates, requirements, and sign-up info for OPTP productions.">
-  <div class="mx-auto max-w-3xl px-4 py-16">
-    <h1 class="font-heading text-3xl font-bold">Auditions</h1>
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
+    <SectionHeading eyebrow="Get Involved" title="Auditions" align="center" />
+  </div>
 
+  <div class="mx-auto grid max-w-250 gap-8 px-4 pb-20 md:grid-cols-2">
     {upcomingAuditions.map((notice) => (
-      <div class="mt-8 border-b border-base-300 pb-8">
-        <h2 class="font-heading text-xl font-semibold">{notice.showTitle}</h2>
+      <div class="border-line rounded-lg border bg-base-100 p-8 shadow-card">
+        <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+          Adult Auditions
+        </p>
+        <h2 class="font-heading text-base-content mt-2 text-[1.3rem] font-semibold">{notice.data.showTitle}</h2>
 
-        <h3 class="font-heading mt-4 font-semibold">Audition Dates</h3>
-        <ul class="mt-1 space-y-1">
-          {notice.auditionDates.map((d) => (
-            <li>{d.date} {d.time} — {d.location}</li>
-          ))}
-        </ul>
+        <div class="mt-5 flex flex-col gap-3.5">
+          <InfoRow
+            label="Audition Dates"
+            value={notice.data.auditionDates.map((d) => `${d.date}, ${d.time} — ${d.location}`).join(' · ')}
+          />
+          {notice.data.callbackDate && <InfoRow label="Callbacks" value={notice.data.callbackDate} />}
+        </div>
 
-        {notice.callbackDate && <p class="mt-2">Callbacks: {notice.callbackDate}</p>}
+        <p class="font-body text-base-content/60 mt-4 text-sm">
+          {notice.data.requirements.join(' ')}
+        </p>
 
-        <h3 class="font-heading mt-4 font-semibold">Requirements</h3>
-        <ul class="mt-1 list-disc space-y-1 pl-5">
-          {notice.requirements.map((req) => <li>{req}</li>)}
-        </ul>
-
-        <a href={notice.signUpUrl} class="btn btn-primary mt-6">Sign Up</a>
-        <p class="mt-2 text-sm opacity-70">Questions? <a href={`mailto:${notice.contactEmail}`} class="link">{notice.contactEmail}</a></p>
+        <Button href={notice.data.signUpUrl} variant="secondary" class="mt-6">Sign Up to Audition</Button>
+        <p class="font-body text-base-content/60 mt-3 text-sm">
+          Questions? <a href={`mailto:${notice.data.contactEmail}`} class="link">{notice.data.contactEmail}</a>
+        </p>
       </div>
     ))}
+
+    <div class="bg-primary text-primary-content rounded-lg p-8">
+      <p class="font-body text-secondary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+        Junior OPTP
+      </p>
+      <h2 class="font-heading mt-2 text-[1.3rem] font-semibold">{juniorOptp.ageRange}</h2>
+      <p class="font-body text-light-blue-tint mt-3">{juniorOptp.description}</p>
+      <div class="mt-5 flex flex-col gap-3.5">
+        <InfoRow label="Auditions" value={juniorOptp.auditionWindow} />
+        <InfoRow label="Performances" value={juniorOptp.performanceWindow} />
+      </div>
+      <Button href={`mailto:${juniorOptp.contactEmail}`} variant="inverse" class="mt-6">
+        Ask About Junior OPTP
+      </Button>
+    </div>
   </div>
 </DefaultLayout>

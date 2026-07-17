@@ -2,8 +2,12 @@
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import ShowCard from '@components/ShowCard.astro';
+import SectionHeading from '@components/SectionHeading.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
-import { shows } from '@data/season';
+import { getCollection, getEntry } from 'astro:content';
+
+const shows = await getCollection('shows');
+const { data: extras } = (await getEntry('extras', 'extras'))!;
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -14,10 +18,17 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 <DefaultLayout title="Shows" description="See what's currently playing and what's coming up at the Blue Bird Theatre.">
   <Schema schema={breadcrumbSchema} />
 
-  <div class="mx-auto max-w-5xl px-4 py-16">
-    <h1 class="font-heading text-3xl font-bold">Our Season</h1>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+  <div class="mx-auto max-w-(--container-max) px-4 py-14">
+    <SectionHeading eyebrow="2026–2027 Season" title="On Stage at the Blue Bird" />
+    <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {shows.map((show) => <ShowCard show={show} />)}
     </div>
   </div>
+
+  <section class="bg-base-200">
+    <div class="mx-auto max-w-(--container-max) px-4 py-16">
+      <SectionHeading eyebrow="Beyond OPTP" title="Also at the Blue Bird Theatre" />
+      <p class="font-body text-base-content mt-4 max-w-160">{extras.alsoAtTheBlueBird}</p>
+    </div>
+  </section>
 </DefaultLayout>

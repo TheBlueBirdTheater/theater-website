@@ -1,0 +1,12 @@
+phone: 555-000-0000
+email: info@example.com
+address:
+  line1: "[TODO: street address]"
+  city: Orangeburg
+  state: SC
+  zip: "[TODO: zip]"
+socials:
+  - platform: Facebook
+    url: "#"
+  - platform: Instagram
+    url: "#"

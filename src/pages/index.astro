@@ -2,13 +2,19 @@
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import NewsletterSignup from '@components/NewsletterSignup.astro';
+import Badge from '@components/Badge.astro';
+import Button from '@components/Button.astro';
+import InfoRow from '@components/InfoRow.astro';
+import SectionHeading from '@components/SectionHeading.astro';
 import { buildPerformingGroupSchema, buildEventSchema } from '@utils/schema';
-import { getCurrentShow } from '@data/season';
-import { buildingHistory } from '@data/history';
-import { contact } from '@data/contact';
+import { getCurrentShow } from '@utils/shows';
+import { getEntry } from 'astro:content';
 
-const currentShow = getCurrentShow();
-const firstRunDate = currentShow?.runDates[0];
+const currentShow = await getCurrentShow();
+const firstRunDate = currentShow?.data.runDates[0];
+
+const { data: history } = (await getEntry('history', 'history'))!;
+const { data: contact } = (await getEntry('contact', 'contact'))!;
 
 const performingGroupSchema = buildPerformingGroupSchema({
   name: 'Orangeburg Part-Time Players',
@@ -17,12 +23,12 @@ const performingGroupSchema = buildPerformingGroupSchema({
 
 const eventSchema = currentShow && firstRunDate
   ? buildEventSchema({
-      name: currentShow.title,
+      name: currentShow.data.title,
       startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
-      url: `/shows/${currentShow.slug}`,
-      venueName: currentShow.venue,
-      offerUrl: currentShow.ticketUrl,
-      description: currentShow.synopsis,
+      url: `/shows/${currentShow.id}`,
+      venueName: currentShow.data.venue,
+      offerUrl: currentShow.data.ticketUrl,
+      description: currentShow.data.synopsis,
     })
   : null;
 ---
@@ -34,38 +40,50 @@ const eventSchema = currentShow && firstRunDate
   <Schema schema={eventSchema ? [performingGroupSchema, eventSchema] : performingGroupSchema} />
 
   {currentShow && (
-    <section class="bg-base-200">
-      <div class="mx-auto grid max-w-5xl gap-8 px-4 py-16 md:grid-cols-2 md:items-center">
-        <div>
-          <p class="font-heading text-sm font-semibold uppercase tracking-wide text-primary">
-            Now Playing
-          </p>
-          <h1 class="font-heading mt-2 text-4xl font-bold">{currentShow.title}</h1>
-          {currentShow.subtitle && <p class="mt-1 text-lg opacity-70">{currentShow.subtitle}</p>}
-          <p class="mt-4">{currentShow.synopsis}</p>
-          {firstRunDate && (
-            <p class="mt-4 font-semibold">
-              {firstRunDate.date}
-              {currentShow.runDates.length > 1 &&
-                ` — ${currentShow.runDates[currentShow.runDates.length - 1].date}`}
-              {' · '}{currentShow.venue}
-            </p>
-          )}
-          <a href={currentShow.ticketUrl} class="btn btn-primary mt-6">Get Tickets</a>
-        </div>
-        <img
-          src={currentShow.posterImage}
-          alt={currentShow.posterAlt}
-          class="rounded-box aspect-2/3 w-full max-w-sm justify-self-center object-cover shadow-lg"
-        />
+    <section class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-16">
+      <div>
+        <Badge status={currentShow.data.status} />
+        <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em] sm:text-[4rem]">
+          {currentShow.data.title}
+        </h1>
+        {currentShow.data.subtitle && (
+          <p class="font-body text-base-content/60 mt-2 text-[1.1875rem] italic">{currentShow.data.subtitle}</p>
+        )}
+        <p class="font-body text-base-content mt-4 max-w-130">{currentShow.data.synopsis}</p>
+        {firstRunDate && (
+          <div class="mt-5 flex flex-wrap gap-5">
+            <InfoRow
+              label="Dates"
+              value={`${firstRunDate.date}${
+                currentShow.data.runDates.length > 1
+                  ? ` – ${currentShow.data.runDates[currentShow.data.runDates.length - 1].date}`
+                  : ''
+              }`}
+            />
+            <InfoRow label="Venue" value={currentShow.data.venue} />
+          </div>
+        )}
+        <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Get Tickets</Button>
       </div>
+      <img
+        src={currentShow.data.posterImage}
+        alt={currentShow.data.posterAlt}
+        class="border-line rounded-lg aspect-4/5 w-full max-w-sm justify-self-center border object-cover shadow-card"
+      />
     </section>
   )}
 
-  <section class="mx-auto max-w-3xl px-4 py-16 text-center">
-    <h2 class="font-heading text-2xl font-bold">A Historic Stage</h2>
-    <p class="mt-4">{buildingHistory.intro}</p>
-    <a href="/about" class="link link-primary mt-4 inline-block">Read our story</a>
+  <section class="bg-primary">
+    <div class="mx-auto max-w-(--container-narrow) px-4 py-18 text-center">
+      <SectionHeading
+        eyebrow="Since 1981"
+        title="The largest community theater between Columbia and Charleston"
+        align="center"
+        onNavy
+      />
+      <p class="font-body text-light-blue-tint mx-auto mt-4 max-w-170 text-[1.1875rem]">{history.intro}</p>
+      <Button href="/about" variant="inverse" class="mt-6">Read Our Story</Button>
+    </div>
   </section>
 
   <NewsletterSignup />

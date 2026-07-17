@@ -1,0 +1,14 @@
+title: "[SHOW TITLE]"
+subtitle: "[SHOW SUBTITLE/TAGLINE]"
+synopsis: "[SHOW SYNOPSIS — one to two sentences describing the production.]"
+posterImage: /images/shows/placeholder-poster.jpg
+posterAlt: "[SHOW TITLE] poster"
+runDates:
+  - date: "2026-11-06"
+    time: "19:30"
+    label: Opening Night
+  - date: "2026-11-07"
+    time: "19:30"
+venue: Blue Bird Theatre
+ticketUrl: "#"
+status: upcoming

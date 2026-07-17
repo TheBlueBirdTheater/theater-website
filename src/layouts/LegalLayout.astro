@@ -13,9 +13,9 @@ const headings = (props.headings ?? []).filter((h) => h.depth === 2);
 
 <BaseLayout frontmatter={page}>
   <NavBar />
-  <div class="mx-auto grid max-w-5xl gap-8 px-4 py-10 md:grid-cols-[1fr_240px]">
+  <div class="mx-auto grid max-w-(--container-max) gap-8 px-4 py-10 md:grid-cols-[1fr_240px]">
     <main class="prose max-w-none">
-      <h1>{page.title}</h1>
+      <h1 class="font-heading text-base-content">{page.title}</h1>
       <slot />
     </main>
     <TocSidebar headings={headings} />

@@ -1,30 +1,33 @@
 ---
-import type { Show } from '@data/season';
+import type { CollectionEntry } from 'astro:content';
+import Badge from '@components/Badge.astro';
 
 interface Props {
-  show: Show;
+  show: CollectionEntry<'shows'>;
 }
 
 const { show } = Astro.props as Props;
-const firstRunDate = show.runDates[0];
+const { data } = show;
+const firstRunDate = data.runDates[0];
 ---
 
-<a href={`/shows/${show.slug}`} class="card bg-base-100 border-base-300 border shadow-sm transition hover:shadow-md">
-  <figure class="aspect-2/3 overflow-hidden">
-    <img src={show.posterImage} alt={show.posterAlt} class="h-full w-full object-cover" loading="lazy" />
-  </figure>
-  <div class="card-body">
-    <h3 class="card-title font-heading">{show.title}</h3>
-    {show.subtitle && <p class="text-sm opacity-70">{show.subtitle}</p>}
-    <p class="line-clamp-3 text-sm">{show.synopsis}</p>
-    {firstRunDate && (
-      <p class="text-sm font-semibold">
-        {firstRunDate.date}
-        {show.runDates.length > 1 && ` — ${show.runDates[show.runDates.length - 1].date}`}
-      </p>
-    )}
-    <div class="card-actions mt-2">
-      <span class="btn btn-primary btn-sm">Learn More</span>
+<a
+  href={`/shows/${show.id}`}
+  class="border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card"
+>
+  <div class="relative aspect-4/3 overflow-hidden">
+    <img src={data.posterImage} alt={data.posterAlt} class="h-full w-full object-cover" loading="lazy" />
+    <div class="absolute top-3.5 left-3.5">
+      <Badge status={data.status} />
     </div>
+  </div>
+  <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
+    <h3 class="font-heading text-base-content text-[1.4rem] font-semibold tracking-[-0.01em]">{data.title}</h3>
+    {data.subtitle && <p class="font-body text-base-content/60 text-sm italic">{data.subtitle}</p>}
+    <p class="font-body text-base-content mt-1 text-sm font-medium">
+      {firstRunDate?.date}
+      {data.runDates.length > 1 && ` – ${data.runDates[data.runDates.length - 1].date}`}
+      {' · '}{data.venue}
+    </p>
   </div>
 </a>

@@ -4,8 +4,9 @@ export interface Testimonial {
   role?: string;
 }
 
-// TODO: replace with real patron/community quotes.
-export const testimonials: Testimonial[] = [
-  { quote: '[TODO: patron quote]', author: '[TODO: name]', role: 'Patron' },
-  { quote: '[TODO: patron quote]', author: '[TODO: name]', role: 'Season Ticket Holder' },
-];
+// Patron and community testimonials.
+// Leave this array empty until real, attributable quotes have been gathered and
+// approved by the patrons who gave them. Do not publish invented quotes. When a
+// real quote is available, add it using the shape:
+//   { quote: 'Their words here.', author: 'First Last', role: 'Season Ticket Holder' }
+export const testimonials: Testimonial[] = [];

@@ -1,53 +1,77 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
-import { givingLevels, sponsorshipTiers, donationPlatformUrl } from '@data/donate';
-import { valueProps } from '@data/valueProps';
+import SectionHeading from '@components/SectionHeading.astro';
+import Button from '@components/Button.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+const valueProps = await getCollection('valueProps');
+const { data: donate } = (await getEntry('donate', 'donate'))!;
+const { givingLevels, sponsorshipTiers, donationPlatformUrl } = donate;
 ---
 
 <DefaultLayout title="Support Us" description="Support Orangeburg Part-Time Players through donations and sponsorship.">
-  <div class="mx-auto max-w-5xl px-4 py-16">
-    <h1 class="font-heading text-3xl font-bold">Support Us</h1>
-
-    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
+    <SectionHeading eyebrow="Support Us" title="Keep the curtain up at the Blue Bird" align="center" />
+    <div class="mt-6 grid gap-6 sm:grid-cols-3">
       {valueProps.map((vp) => (
-        <div class="text-center">
-          <h3 class="font-heading font-semibold">{vp.title}</h3>
-          <p class="mt-1 text-sm opacity-70">{vp.description}</p>
+        <div>
+          <h3 class="font-heading text-base-content font-semibold">{vp.data.title}</h3>
+          <p class="font-body text-base-content/60 mt-1 text-sm">{vp.data.description}</p>
         </div>
       ))}
     </div>
+    <!-- TODO: donationPlatformUrl points to a third-party giving platform once one is chosen -->
+    <Button href={donationPlatformUrl} variant="primary" size="lg" class="mt-8">Give Now</Button>
+  </div>
 
-    <h2 class="font-heading mt-16 text-2xl font-bold">Giving Levels</h2>
+  <div class="mx-auto max-w-250 px-4 pb-14">
+    <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Giving Levels</p>
     <div class="mt-6 grid gap-6 sm:grid-cols-3">
-      {givingLevels.map((level) => (
-        <div class="card bg-base-200">
-          <div class="card-body">
-            <h3 class="card-title font-heading">{level.name}</h3>
-            <p class="font-semibold">{level.amount}</p>
-            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+      {givingLevels.map((level, i) => {
+        const isPatron = i === givingLevels.length - 1 && givingLevels.length > 1;
+        return (
+          <div
+            class:list={[
+              'rounded-lg p-7',
+              isPatron
+                ? 'bg-primary text-primary-content'
+                : 'border-line bg-base-100 border shadow-card',
+            ]}
+          >
+            <h3 class="font-heading font-semibold">{level.name}</h3>
+            <p class:list={['font-heading mt-1 text-[1.6rem] font-semibold', isPatron ? 'text-secondary' : 'text-primary']}>
+              {level.amount}
+            </p>
+            <ul
+              class:list={[
+                'font-body mt-3 space-y-1 text-sm',
+                isPatron ? 'text-light-blue-tint' : 'text-base-content/70',
+              ]}
+            >
               {level.perks.map((perk) => <li>{perk}</li>)}
             </ul>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
+  </div>
 
-    <h2 class="font-heading mt-16 text-2xl font-bold">Sponsorship</h2>
-    <div class="mt-6 grid gap-6 sm:grid-cols-2">
-      {sponsorshipTiers.map((tier) => (
-        <div class="card bg-base-200">
-          <div class="card-body">
-            <h3 class="card-title font-heading">{tier.name}</h3>
-            <p class="font-semibold">{tier.amount}</p>
-            <ul class="mt-2 list-disc space-y-1 pl-5 text-sm">
+  <section class="bg-base-200">
+    <div class="mx-auto max-w-250 px-4 py-14">
+      <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+        Business Sponsorship
+      </p>
+      <div class="mt-6 grid gap-6 sm:grid-cols-2">
+        {sponsorshipTiers.map((tier) => (
+          <div class="border-line rounded-lg border bg-base-100 p-6.5">
+            <h3 class="font-heading text-base-content font-semibold">{tier.name}</h3>
+            <p class="font-body text-primary mt-1 text-sm">{tier.amount}</p>
+            <ul class="font-body text-base-content/70 mt-3 space-y-1 text-sm">
               {tier.benefits.map((benefit) => <li>{benefit}</li>)}
             </ul>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-
-    <!-- TODO: donationPlatformUrl points to a third-party giving platform once one is chosen -->
-    <a href={donationPlatformUrl} class="btn btn-primary mt-10">Donate Now</a>
-  </div>
+  </section>
 </DefaultLayout>

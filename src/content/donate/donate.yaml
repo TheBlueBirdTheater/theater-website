@@ -1,0 +1,27 @@
+donationPlatformUrl: "#"
+givingLevels:
+  - name: Friend
+    amount: $25+
+    perks:
+      - "[TODO: perk]"
+  - name: Supporter
+    amount: $100+
+    perks:
+      - "[TODO: perk]"
+      - "[TODO: perk]"
+  - name: Patron
+    amount: $250+
+    perks:
+      - "[TODO: perk]"
+      - "[TODO: perk]"
+      - "[TODO: perk]"
+sponsorshipTiers:
+  - name: Show Sponsor
+    amount: "[TODO: amount]"
+    benefits:
+      - "[TODO: benefit]"
+  - name: Season Sponsor
+    amount: "[TODO: amount]"
+    benefits:
+      - "[TODO: benefit]"
+      - "[TODO: benefit]"
