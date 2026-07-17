@@ -1,0 +1,62 @@
+---
+import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
+import Icon from '@components/Icon.astro';
+
+interface Props {
+  title: string;
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+}
+
+const { title, size = 'md', class: className } = Astro.props as Props;
+
+const sizeClasses = {
+  sm: 'btn-sm',
+  md: '',
+  lg: 'btn-lg',
+};
+---
+
+<button
+  type="button"
+  class:list={['btn btn-outline btn-primary gap-2', sizeClasses[size], className]}
+  data-share-button
+  data-share-title={title}
+>
+  <Icon icon={faShareNodes} class="h-4 w-4" />
+  <span data-share-label>Share</span>
+</button>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-share-button]');
+
+  buttons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const url = window.location.href;
+      const title = button.dataset.shareTitle ?? document.title;
+      const label = button.querySelector<HTMLElement>('[data-share-label]');
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, url });
+        } catch {
+          // user cancelled the share sheet; nothing to do
+        }
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(url);
+        if (label) {
+          const original = label.textContent;
+          label.textContent = 'Link copied!';
+          setTimeout(() => {
+            label.textContent = original;
+          }, 2000);
+        }
+      } catch {
+        // clipboard unavailable; nothing more we can do
+      }
+    });
+  });
+</script>

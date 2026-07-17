@@ -4,6 +4,7 @@ import Schema from '@components/Schema.astro';
 import { Image } from 'astro:assets';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
+import ShareButton from '@components/ShareButton.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Divider from '@components/Divider.astro';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
@@ -95,7 +96,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         <InfoRow label="Presented By" value={performingGroup} />
       </div>
 
-      <Button href={data.ticketUrl} variant="primary" size="lg" class="mt-7">Get Tickets</Button>
+      <div class="mt-7 flex flex-wrap items-center gap-3">
+        <Button href={data.ticketUrl} variant="primary" size="lg">Get Tickets</Button>
+        <ShareButton title={data.title} size="lg" />
+      </div>
 
       <div class="mt-10">
         <Divider />
