@@ -55,7 +55,7 @@ const eventSchema = currentShow && firstRunDate
 
   {currentShow && (
     <section class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-16">
-      <div>
+      <div class="order-2 md:order-1">
         <Badge status={getShowStatus(currentShow)} />
         <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em] sm:text-[4rem]">
           {currentShow.data.title}
@@ -75,10 +75,10 @@ const eventSchema = currentShow && firstRunDate
           src={currentShow.data.posterImage}
           alt={currentShow.data.posterAlt}
           format="webp"
-          class="border-line rounded-lg aspect-4/5 w-full max-w-sm justify-self-center border object-cover shadow-card"
+          class="border-line rounded-lg aspect-square w-full max-w-sm order-1 justify-self-center border object-cover shadow-card md:order-2"
         />
       ) : (
-        <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body flex aspect-4/5 w-full max-w-sm items-center justify-center justify-self-center border text-sm">
+        <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body order-1 flex aspect-square w-full max-w-sm items-center justify-center justify-self-center border text-sm md:order-2">
           Poster coming soon
         </div>
       )}
