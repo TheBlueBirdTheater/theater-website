@@ -1,5 +1,7 @@
 ---
+import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
+import logo from '@assets/logo.png';
 
 const { data: contact } = (await getEntry('contact', 'contact'))!;
 const currentYear = new Date().getFullYear();
@@ -11,6 +13,7 @@ const linkClass = 'text-light-blue-tint hover:text-secondary text-sm no-underlin
   <div class="mx-auto grid max-w-(--container-max) gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1fr]">
     <div>
       <div class="mb-3.5 flex items-center gap-3.5">
+        <Image src={logo} alt="Blue Bird Theatre logo" width={40} height={60} />
         <div
           class="font-heading flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-[1.5px] border-secondary text-center text-[0.65rem] leading-[1.15] font-semibold tracking-[0.03em]"
         >

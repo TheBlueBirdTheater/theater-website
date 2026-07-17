@@ -1,0 +1,23 @@
+title: Steel Magnolias
+subtitle: Written by Robert Harling
+synopsis: "A close-knit group of women gathers at Truvy's beauty salon in Chinquapin, Louisiana, sharing sharp wit, heartfelt advice, and unbreakable bonds. Amid weddings, laughter, and lively banter, joy gives way to heartbreak, revealing the resilience, love, and strength that carry these women through life's toughest moments."
+posterImage: /images/shows/steel-magnolias.jpg
+posterAlt: Steel Magnolias poster
+runDates:
+  - date: "2026-10-08"
+    time: "19:30"
+    label: Opening Night
+  - date: "2026-10-09"
+    time: "19:30"
+  - date: "2026-10-10"
+    time: "19:30"
+  - date: "2026-10-11"
+    time: "15:00"
+    label: Matinee
+venue: Blue Bird Theatre
+ticketUrl: "https://www.ticketleap.events/events/bluebirdorangeburg"
+ticketPrice: "$20 adults, $15 students and seniors"
+performingGroup: Orangeburg Part-Time Players
+crew:
+  - "Director: Coe Dantzler"
+status: current

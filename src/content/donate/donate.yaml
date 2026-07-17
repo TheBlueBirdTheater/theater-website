@@ -1,27 +1,32 @@
-donationPlatformUrl: "#"
+donationPlatformUrl: "https://www.ticketleap.events/tickets/bluebirdorangeburg/optp-2025-membership"
+mailingAddress: "Orangeburg Part-Time Players, P.O. Box 1291, Orangeburg, SC 29116"
+cashApp: "$OPTP1981"
+nonprofitNote: "The Orangeburg Part-Time Players is a self-supporting, all-volunteer nonprofit 501(c)(3) organization. All donations are tax-deductible and are applied to the operation and upkeep of the theater's home, the Blue Bird."
 givingLevels:
   - name: Friend
     amount: $25+
     perks:
-      - "[TODO: perk]"
+      - "Our sincere thanks and recognition as a supporter of the Blue Bird Theatre"
   - name: Supporter
     amount: $100+
     perks:
-      - "[TODO: perk]"
-      - "[TODO: perk]"
-  - name: Patron
+      - "Recognition as a supporter of the Blue Bird Theatre"
+      - "Acknowledgment in our season program"
+  - name: BlueBird Patron
     amount: $250+
     perks:
-      - "[TODO: perk]"
-      - "[TODO: perk]"
-      - "[TODO: perk]"
+      - "Your name, photo, and/or business logo displayed digitally in the auditorium prior to all Blue Bird events"
+      - "Recognition on the screen in the main lobby"
+      - "Recognition on our website and social media"
 sponsorshipTiers:
   - name: Show Sponsor
-    amount: "[TODO: amount]"
+    amount: Contact us
     benefits:
-      - "[TODO: benefit]"
+      - "Recognition as a sponsor of a single production"
+      - "Logo placement in the show program and on Blue Bird screens"
   - name: Season Sponsor
-    amount: "[TODO: amount]"
+    amount: Contact us
     benefits:
-      - "[TODO: benefit]"
-      - "[TODO: benefit]"
+      - "Recognition as a sponsor across the full season"
+      - "Premium logo placement in all show programs and on Blue Bird screens"
+      - "Recognition on our website and social media throughout the year"
