@@ -1,6 +1,7 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
+import { Image } from 'astro:assets';
 import NewsletterSignup from '@components/NewsletterSignup.astro';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
@@ -71,11 +72,18 @@ const eventSchema = currentShow && firstRunDate
         )}
         <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Get Tickets</Button>
       </div>
-      <img
-        src={currentShow.data.posterImage}
-        alt={currentShow.data.posterAlt}
-        class="border-line rounded-lg aspect-4/5 w-full max-w-sm justify-self-center border object-cover shadow-card"
-      />
+      {currentShow.data.posterImage ? (
+        <Image
+          src={currentShow.data.posterImage}
+          alt={currentShow.data.posterAlt}
+          format="webp"
+          class="border-line rounded-lg aspect-4/5 w-full max-w-sm justify-self-center border object-cover shadow-card"
+        />
+      ) : (
+        <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body flex aspect-4/5 w-full max-w-sm items-center justify-center justify-self-center border text-sm">
+          Poster coming soon
+        </div>
+      )}
     </section>
   )}
 

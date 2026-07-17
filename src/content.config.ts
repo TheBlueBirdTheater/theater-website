@@ -31,28 +31,29 @@ function optionalGlob(options: Parameters<typeof glob>[0]): Loader {
 
 const shows = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/shows' }),
-  schema: z.object({
-    title: z.string(),
-    subtitle: z.string().optional(),
-    synopsis: z.string(),
-    posterImage: z.string(),
-    posterAlt: z.string(),
-    runDates: z.array(
-      z.object({
-        date: z.string(),
-        time: z.string(),
-        label: z.string().optional(),
-      })
-    ),
-    venue: z.string(),
-    ticketUrl: z.string(),
-    ticketPrice: z.string().optional(),
-    /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
-    performingGroup: z.string().optional(),
-    cast: z.array(z.string()).optional(),
-    crew: z.array(z.string()).optional(),
-    status: z.enum(['upcoming', 'current', 'past']),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      subtitle: z.string().optional(),
+      synopsis: z.string(),
+      posterImage: image().optional(),
+      posterAlt: z.string(),
+      runDates: z.array(
+        z.object({
+          date: z.string(),
+          time: z.string(),
+          label: z.string().optional(),
+        })
+      ),
+      venue: z.string(),
+      ticketUrl: z.string(),
+      ticketPrice: z.string().optional(),
+      /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
+      performingGroup: z.string().optional(),
+      cast: z.array(z.string()).optional(),
+      crew: z.array(z.string()).optional(),
+      status: z.enum(['upcoming', 'current', 'past']),
+    }),
 });
 
 const auditions = defineCollection({
@@ -75,13 +76,14 @@ const auditions = defineCollection({
 
 const team = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/team' }),
-  schema: z.object({
-    name: z.string(),
-    role: z.string(),
-    group: z.enum(['board', 'staff']),
-    bio: z.string().optional(),
-    photoUrl: z.string().optional(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      role: z.string(),
+      group: z.enum(['board', 'staff']),
+      bio: z.string().optional(),
+      photoUrl: image().optional(),
+    }),
 });
 
 const faqs = defineCollection({
@@ -133,17 +135,18 @@ const contact = defineCollection({
 
 const history = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/history' }),
-  schema: z.object({
-    intro: z.string(),
-    milestones: z.array(
-      z.object({
-        year: z.string(),
-        heading: z.string(),
-        body: z.string(),
-        imageUrl: z.string().optional(),
-      })
-    ),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      intro: z.string(),
+      milestones: z.array(
+        z.object({
+          year: z.string(),
+          heading: z.string(),
+          body: z.string(),
+          imageUrl: image().optional(),
+        })
+      ),
+    }),
 });
 
 const donate = defineCollection({

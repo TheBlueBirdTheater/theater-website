@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
 import Badge from '@components/Badge.astro';
 import { formatDateRange } from '@utils/dates';
 
@@ -16,7 +17,19 @@ const { data } = show;
   class="border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card"
 >
   <div class="relative aspect-4/3 overflow-hidden">
-    <img src={data.posterImage} alt={data.posterAlt} class="h-full w-full object-cover" loading="lazy" />
+    {data.posterImage ? (
+      <Image
+        src={data.posterImage}
+        alt={data.posterAlt}
+        format="webp"
+        class="h-full w-full object-cover"
+        loading="lazy"
+      />
+    ) : (
+      <div class="bg-base-200 text-base-content/60 font-body flex h-full w-full items-center justify-center text-sm">
+        Poster coming soon
+      </div>
+    )}
     <div class="absolute top-3.5 left-3.5">
       <Badge status={data.status} />
     </div>

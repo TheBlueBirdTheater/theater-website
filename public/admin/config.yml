@@ -23,8 +23,8 @@ collections:
     slug: "{{slug}}"
     extension: yaml
     format: yaml
-    media_folder: /public/images/shows
-    public_folder: /images/shows
+    media_folder: /src/assets/images/shows
+    public_folder: ../../assets/images/shows
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Subtitle, name: subtitle, widget: string, required: false }
@@ -160,7 +160,14 @@ collections:
         widget: select
         options: [board, staff]
       - { label: Bio, name: bio, widget: text, required: false }
-      - { label: Photo, name: photoUrl, widget: image, required: false }
+      - {
+          label: Photo,
+          name: photoUrl,
+          widget: image,
+          required: false,
+          media_folder: /src/assets/images/team,
+          public_folder: ../../assets/images/team,
+        }
 
   - name: faqs
     label: FAQs
@@ -258,7 +265,14 @@ collections:
                 }
               - { label: Heading, name: heading, widget: string }
               - { label: Body, name: body, widget: text }
-              - { label: Image, name: imageUrl, widget: image, required: false }
+              - {
+                  label: Image,
+                  name: imageUrl,
+                  widget: image,
+                  required: false,
+                  media_folder: /src/assets/images/history,
+                  public_folder: ../../assets/images/history,
+                }
 
   - name: donate
     label: Donate Page Settings

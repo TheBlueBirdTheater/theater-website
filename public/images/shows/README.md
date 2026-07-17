@@ -1,4 +1,6 @@
-TODO: no real show poster images have been supplied yet.
-`src/data/season.ts` currently references `/images/shows/placeholder-poster.jpg`,
-which does not exist — add a real placeholder or production posters here and
-update the paths in `season.ts` accordingly.
+Show posters no longer live here. `posterImage` in the `shows` content collection
+uses Astro's `image()` schema helper for automatic webp optimization, which
+requires source files under `src/`, not `public/`. Real posters (and CMS
+uploads) now go in `src/assets/images/shows/` — see `public/admin/config.yml`'s
+`shows` collection `media_folder`. This directory is unused; safe to remove
+once confirmed empty.

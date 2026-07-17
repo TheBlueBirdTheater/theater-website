@@ -4,7 +4,7 @@ synopsis: A timeless holiday classic, A Christmas Carol follows the
   transformation of Ebenezer Scrooge, a bitter man who is visited by spirits on
   Christmas Eve and given one last chance to embrace compassion, generosity, and
   the true meaning of the season.
-posterImage: /images/shows/christmas-carol-cover.png
+posterImage: ../../assets/images/shows/christmas-carol-cover.png
 posterAlt: A Christmas Carol poster
 runDates:
   - date: "2026-12-10"

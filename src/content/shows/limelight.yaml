@@ -5,18 +5,17 @@ synopsis: An original musical by Beth Watkins-Brown, with music by Donald Lee,
   playwrights. Set in a late-night jazz club, club owner Alice Jackson fights to
   keep her business and her marriage intact as ambition, jealousy, and betrayal
   surface among performers and staff.
-posterImage: /images/shows/lime-light-cover.png
 posterAlt: "BlueBird Spotlight Series: Limelight poster"
 runDates:
-  - date: 2026-06-18
-    time: 19:30
+  - date: "2026-06-18"
+    time: "19:30"
     label: Opening Night
-  - date: 2026-06-19
-    time: 19:30
-  - date: 2026-06-20
-    time: 19:30
-  - date: 2026-06-21
-    time: 15:00
+  - date: "2026-06-19"
+    time: "19:30"
+  - date: "2026-06-20"
+    time: "19:30"
+  - date: "2026-06-21"
+    time: "15:00"
     label: Matinee
 venue: Blue Bird Theatre
 ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg

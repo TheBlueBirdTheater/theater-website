@@ -1,6 +1,7 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
+import { Image } from 'astro:assets';
 import SectionHeading from '@components/SectionHeading.astro';
 import PersonCard from '@components/PersonCard.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
@@ -32,9 +33,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <div class="mx-auto grid max-w-(--container-max) gap-12 px-4 py-14 md:grid-cols-2 md:items-center">
     {foundingMilestone?.imageUrl ? (
-      <img
+      <Image
         src={foundingMilestone.imageUrl}
         alt={foundingMilestone.heading}
+        format="webp"
         class="border-line rounded-lg aspect-square w-full border object-cover shadow-card"
       />
     ) : (

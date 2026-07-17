@@ -1,6 +1,7 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
+import { Image } from 'astro:assets';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
 import InfoRow from '@components/InfoRow.astro';
@@ -40,7 +41,7 @@ const eventSchemas = data.runDates.map((rd) =>
     offerUrl: data.ticketUrl,
     offerPrice: data.ticketPrice,
     description: data.synopsis,
-    imageUrl: data.posterImage,
+    imageUrl: data.posterImage?.src,
   })
 );
 
@@ -51,16 +52,28 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 ]);
 ---
 
-<DefaultLayout title={data.title} description={data.synopsis} image={data.posterImage} imageAlt={data.posterAlt}>
+<DefaultLayout
+  title={data.title}
+  description={data.synopsis}
+  image={data.posterImage?.src}
+  imageAlt={data.posterAlt}
+>
   <Schema schema={eventSchemas} />
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr]">
-    <img
-      src={data.posterImage}
-      alt={data.posterAlt}
-      class="border-line rounded-lg aspect-4/5 w-full border object-cover shadow-card"
-    />
+    {data.posterImage ? (
+      <Image
+        src={data.posterImage}
+        alt={data.posterAlt}
+        format="webp"
+        class="border-line rounded-lg aspect-4/5 w-full border object-cover shadow-card"
+      />
+    ) : (
+      <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body flex aspect-4/5 w-full items-center justify-center border text-sm">
+        Poster coming soon
+      </div>
+    )}
     <div>
       <Badge status={data.status} />
       <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em]">

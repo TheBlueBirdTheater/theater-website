@@ -6,18 +6,17 @@ synopsis: Frozen is the timeless tale of two sisters, Elsa and Anna, torn apart
   on an epic journey to save her sister and their kingdom. With all the beloved
   songs from the film plus new music written for Broadway, Frozen is a thrilling
   adventure filled with heart, humor, and theatrical magic.
-posterImage: /images/shows/frozen-broadway-cover.png
 posterAlt: Disney's Frozen The Broadway Musical poster
 runDates:
-  - date: 2026-03-19
-    time: 19:30
+  - date: "2026-03-19"
+    time: "19:30"
     label: Opening Night
-  - date: 2026-03-20
-    time: 19:30
-  - date: 2026-03-21
-    time: 19:30
-  - date: 2026-03-22
-    time: 15:00
+  - date: "2026-03-20"
+    time: "19:30"
+  - date: "2026-03-21"
+    time: "19:30"
+  - date: "2026-03-22"
+    time: "15:00"
     label: Matinee
 venue: Blue Bird Theatre
 ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg
