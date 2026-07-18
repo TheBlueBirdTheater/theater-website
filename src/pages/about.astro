@@ -29,7 +29,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
     <SectionHeading eyebrow="Est. 1981" title="Orangeburg Part-Time Players" align="center" />
-    <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-[1.1875rem]">{history.intro}</p>
+    <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-lead">{history.intro}</p>
   </div>
 
   <div class="mx-auto grid max-w-(--container-max) gap-12 px-4 py-14 md:grid-cols-2 md:items-center">
@@ -46,7 +46,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
     )}
     <div>
-      <h3 class="font-heading text-base-content text-[1.5rem] font-semibold">{foundingMilestone?.heading}</h3>
+      <h3 class="font-heading text-base-content text-2xl font-semibold">{foundingMilestone?.heading}</h3>
       <p class="font-body text-base-content mt-4">{foundingMilestone?.body}</p>
     </div>
   </div>
@@ -59,7 +59,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           history.milestones.map((milestone) => (
             <div class="border-secondary border-l-2 pl-5">
               <p class="font-heading text-secondary-accessible font-semibold">{milestone.year}</p>
-              <p class="font-heading text-primary-content mt-1 text-[1.1rem] font-semibold">{milestone.heading}</p>
+              <p class="font-heading text-primary-content mt-1 text-callout font-semibold">{milestone.heading}</p>
               <p class="font-body text-light-blue-tint mt-1">{milestone.body}</p>
             </div>
           ))
@@ -80,7 +80,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   )}
 
   <div class="mx-auto max-w-(--container-max) px-4 pb-20">
-    <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+    <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
       Board of Directors
     </p>
     <div class="mt-6 grid gap-6 sm:grid-cols-2">

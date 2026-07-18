@@ -50,6 +50,24 @@
   /* Shadows — auto-generate shadow-card / shadow-raised utilities */
   --shadow-card: 0 1px 2px rgba(38, 34, 31, 0.06), 0 4px 12px rgba(38, 34, 31, 0.07);
   --shadow-raised: 0 2px 4px rgba(38, 34, 31, 0.08), 0 10px 24px rgba(38, 34, 31, 0.1);
+
+  /* Named type scale — replaces one-off text-[...] arbitrary values that had accumulated
+     across components. Named for role rather than size so intent stays clear at call sites.
+     Values match what was already in use; this is a rename, not a resize. Two former arbitrary
+     values (1rem, 1.5rem) already matched Tailwind's built-in text-base/text-2xl and were
+     switched to those instead of getting a redundant token. */
+  --text-fineprint: 0.65rem;
+  --text-tag: 0.6875rem;
+  --text-eyebrow: 0.8125rem;
+  --text-caption: 0.9375rem;
+  --text-callout: 1.1rem;
+  --text-lead: 1.1875rem;
+  --text-feature: 1.3rem;
+  --text-card-title: 1.4rem;
+  --text-stat: 1.6rem;
+  --text-display-sm: 2rem;
+  --text-display: 2.75rem;
+  --text-display-lg: 4rem;
 }
 
 @font-face {

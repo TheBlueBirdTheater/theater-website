@@ -96,10 +96,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
     )}
     <div>
-      <h1 class="font-heading text-base-content text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em]">
+      <h1 class="font-heading text-base-content text-display leading-[1.08] font-semibold tracking-[-0.01em]">
         {data.title}
       </h1>
-      {data.host && <p class="font-body text-base-content/70 mt-2 text-[1.1875rem] italic">Presented by {data.host}</p>}
+      {data.host && <p class="font-body text-base-content/70 mt-2 text-lead italic">Presented by {data.host}</p>}
       <p class="font-body text-base-content mt-4">{data.description}</p>
 
       <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
@@ -108,7 +108,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
 
       <div class="mt-4.5">
-        <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Showtimes</p>
+        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Showtimes</p>
         <ul class="font-body text-base-content mt-2 space-y-1">
           {data.showDates.map((sd) => (
             <li>

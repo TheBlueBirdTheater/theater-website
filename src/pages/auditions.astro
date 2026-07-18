@@ -27,10 +27,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <div class="mx-auto grid max-w-250 gap-8 px-4 pb-20 md:grid-cols-2">
     {upcomingAuditions.map((notice) => (
       <div class="border-line rounded-lg border bg-base-100 p-8 shadow-card">
-        <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
           Adult Auditions
         </p>
-        <h2 class="font-heading text-base-content mt-2 text-[1.3rem] font-semibold">{notice.data.showTitle}</h2>
+        <h2 class="font-heading text-base-content mt-2 text-feature font-semibold">{notice.data.showTitle}</h2>
 
         <div class="mt-5 flex flex-col gap-3.5">
           <InfoRow
@@ -52,10 +52,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     ))}
 
     <div class="bg-primary text-primary-content rounded-lg p-8">
-      <p class="font-body text-secondary-accessible text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+      <p class="font-body text-secondary-accessible text-eyebrow font-semibold tracking-[0.09em] uppercase">
         Junior OPTP
       </p>
-      <h2 class="font-heading mt-2 text-[1.3rem] font-semibold">{juniorOptp.ageRange}</h2>
+      <h2 class="font-heading mt-2 text-feature font-semibold">{juniorOptp.ageRange}</h2>
       <p class="font-body text-light-blue-tint mt-3">{juniorOptp.description}</p>
       <div class="mt-5 flex flex-col gap-3.5">
         <InfoRow label="Auditions" value={juniorOptp.auditionWindow} />

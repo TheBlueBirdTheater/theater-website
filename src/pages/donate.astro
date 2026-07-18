@@ -34,7 +34,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   </div>
 
   <div class="mx-auto max-w-250 px-4 pb-14">
-    <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Giving Levels</p>
+    <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Giving Levels</p>
     <div class="mt-6 grid gap-6 sm:grid-cols-3">
       {givingLevels.map((level, i) => {
         const isPatron = i === givingLevels.length - 1 && givingLevels.length > 1;
@@ -48,7 +48,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
             ]}
           >
             <h3 class="font-heading font-semibold">{level.name}</h3>
-            <p class:list={['font-heading mt-1 text-[1.6rem] font-semibold', isPatron ? 'text-secondary-accessible' : 'text-primary']}>
+            <p class:list={['font-heading mt-1 text-stat font-semibold', isPatron ? 'text-secondary-accessible' : 'text-primary']}>
               {level.amount}
             </p>
             <ul
@@ -67,7 +67,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <section class="bg-base-200">
     <div class="mx-auto max-w-250 px-4 py-14">
-      <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+      <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
         Business Sponsorship
       </p>
       <div class="mt-6 grid gap-6 sm:grid-cols-2">

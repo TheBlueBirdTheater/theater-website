@@ -17,7 +17,7 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
   href={`/events/${event.id}`}
   class="border-line bg-base-100 hover:shadow-raised flex flex-col overflow-hidden rounded-lg border no-underline shadow-card transition-all duration-200 hover:-translate-y-1"
 >
-  <div class="relative aspect-4/3 overflow-hidden">
+  <div class="border-line relative aspect-4/3 overflow-hidden border-b">
     {data.image ? (
       <Image
         src={data.image}
@@ -33,7 +33,7 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
     )}
   </div>
   <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
-    <h3 class="font-heading text-base-content text-[1.4rem] font-semibold tracking-[-0.01em]">{data.title}</h3>
+    <h3 class="font-heading text-base-content text-card-title font-semibold tracking-[-0.01em]">{data.title}</h3>
     {data.host && <p class="font-body text-base-content/70 text-sm italic">Presented by {data.host}</p>}
     <p class="font-body text-base-content mt-1 text-sm font-medium">
       {formatEventDates(data.showDates)}

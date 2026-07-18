@@ -58,11 +58,11 @@ const eventSchema = currentShow && firstRunDate
     <section class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-16">
       <div class="order-2 md:order-1">
         <Badge status={getShowStatus(currentShow)} />
-        <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em] sm:text-[4rem]">
+        <h1 class="font-heading text-base-content mt-4 text-display leading-[1.08] font-semibold tracking-[-0.01em] sm:text-display-lg">
           {currentShow.data.title}
         </h1>
         {currentShow.data.subtitle && (
-          <p class="font-body text-base-content/70 mt-2 text-[1.1875rem] italic">{currentShow.data.subtitle}</p>
+          <p class="font-body text-base-content/70 mt-2 text-lead italic">{currentShow.data.subtitle}</p>
         )}
         <p class="font-body text-base-content mt-4 max-w-130">{currentShow.data.synopsis}</p>
         <div class="mt-5 flex flex-wrap gap-5">
@@ -97,7 +97,7 @@ const eventSchema = currentShow && firstRunDate
           title="The largest community theater between Columbia and Charleston"
           onNavy
         />
-        <p class="font-body text-light-blue-tint mt-4 max-w-170 text-[1.1875rem]">{history.intro}</p>
+        <p class="font-body text-light-blue-tint mt-4 max-w-170 text-lead">{history.intro}</p>
         <Button href="/about" variant="inverse" class="mt-6">Read Our Story</Button>
       </div>
     </div>

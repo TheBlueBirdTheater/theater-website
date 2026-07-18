@@ -13,7 +13,7 @@ const { eyebrow, title, align = 'left', onNavy = false } = Astro.props as Props;
   {eyebrow && (
     <p
       class:list={[
-        'font-body mb-2.5 text-[0.8125rem] font-semibold tracking-[0.09em] uppercase',
+        'font-body mb-2.5 text-eyebrow font-semibold tracking-[0.09em] uppercase',
         onNavy ? 'text-secondary-accessible' : 'text-primary',
       ]}
     >
@@ -22,7 +22,7 @@ const { eyebrow, title, align = 'left', onNavy = false } = Astro.props as Props;
   )}
   <h2
     class:list={[
-      'font-heading text-[2rem] leading-[1.2] font-semibold tracking-[-0.01em]',
+      'font-heading text-display-sm leading-[1.2] font-semibold tracking-[-0.01em]',
       onNavy ? 'text-primary-content' : 'text-base-content',
     ]}
   >

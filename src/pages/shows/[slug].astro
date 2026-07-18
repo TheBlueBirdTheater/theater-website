@@ -100,10 +100,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     )}
     <div>
       <Badge status={getShowStatus(show)} />
-      <h1 class="font-heading text-base-content mt-4 text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em]">
+      <h1 class="font-heading text-base-content mt-4 text-display leading-[1.08] font-semibold tracking-[-0.01em]">
         {data.title}
       </h1>
-      {data.subtitle && <p class="font-body text-base-content/70 mt-2 text-[1.1875rem] italic">{data.subtitle}</p>}
+      {data.subtitle && <p class="font-body text-base-content/70 mt-2 text-lead italic">{data.subtitle}</p>}
       <p class="font-body text-base-content mt-4">{data.synopsis}</p>
 
       <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
@@ -158,7 +158,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       <div class="mt-8 grid gap-8 sm:grid-cols-2">
         {data.cast && data.cast.length > 0 && (
           <div>
-            <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Cast</p>
+            <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Cast</p>
             <p class="font-body text-base-content mt-2 leading-[1.9]">
               {data.cast.map((member, i) => (
                 <>
@@ -172,7 +172,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
         {data.crew && data.crew.length > 0 && (
           <div>
-            <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Crew</p>
+            <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Crew</p>
             <p class="font-body text-base-content mt-2 leading-[1.9]">
               {data.crew.map((member, i) => (
                 <>
