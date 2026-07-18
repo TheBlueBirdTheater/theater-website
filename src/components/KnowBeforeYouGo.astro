@@ -1,0 +1,51 @@
+---
+interface Props {
+  doorsOpenMinutesBefore?: number;
+  runTime?: string;
+  parkingAnswer?: string;
+  locationAnswer?: string;
+  accessibilityNote?: string;
+  concessionsNote?: string;
+  dressCode?: string;
+}
+
+const {
+  doorsOpenMinutesBefore,
+  runTime,
+  parkingAnswer,
+  locationAnswer,
+  accessibilityNote,
+  concessionsNote,
+  dressCode,
+} = Astro.props as Props;
+
+const rows = [
+  doorsOpenMinutesBefore != null && {
+    title: 'Doors Open',
+    body: `Doors open ${doorsOpenMinutesBefore} minutes before showtime.`,
+  },
+  runTime && { title: 'Run Time', body: runTime },
+  parkingAnswer && { title: 'Parking', body: parkingAnswer },
+  locationAnswer && { title: 'Location', body: locationAnswer },
+  accessibilityNote && { title: 'Accessibility', body: accessibilityNote },
+  concessionsNote && { title: 'Concessions', body: concessionsNote },
+  dressCode && { title: 'Dress Code', body: dressCode },
+].filter((row): row is { title: string; body: string } => Boolean(row));
+---
+
+{rows.length > 0 && (
+  <div>
+    <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">
+      Know Before You Go
+    </p>
+    <div class="mt-3 space-y-3">
+      {rows.map((row) => (
+        <div class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
+          <input type="checkbox" />
+          <div class="font-body text-base-content collapse-title font-semibold">{row.title}</div>
+          <div class="collapse-content"><p class="font-body text-base-content/70">{row.body}</p></div>
+        </div>
+      ))}
+    </div>
+  </div>
+)}

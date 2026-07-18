@@ -41,7 +41,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         class="border-line rounded-lg aspect-square w-full border object-cover shadow-card"
       />
     ) : (
-      <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body flex aspect-square items-center justify-center border text-sm">
+      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-square items-center justify-center border text-sm">
         Archival photo
       </div>
     )}
@@ -70,12 +70,14 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <GalleryPreview />
 
-  <div class="mx-auto max-w-(--container-max) px-4 py-14">
-    <SectionHeading eyebrow="The People" title="Artistic Staff" />
-    <div class="mt-7 flex flex-col gap-6">
-      {artisticStaff.map((person) => <PersonCard person={person} />)}
+  {artisticStaff.length > 0 && (
+    <div class="mx-auto max-w-(--container-max) px-4 py-14">
+      <SectionHeading eyebrow="The People" title="Artistic Staff" />
+      <div class="mt-7 flex flex-col gap-6">
+        {artisticStaff.map((person) => <PersonCard person={person} />)}
+      </div>
     </div>
-  </div>
+  )}
 
   <div class="mx-auto max-w-(--container-max) px-4 pb-20">
     <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">

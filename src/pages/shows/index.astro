@@ -2,6 +2,7 @@
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import ShowCard from '@components/ShowCard.astro';
+import EventCard from '@components/EventCard.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getShowStatus } from '@utils/shows';
@@ -23,6 +24,11 @@ const pastShows = allShows
 
 const shows = [...upcomingShows, ...tbaShows, ...pastShows];
 const { data: extras } = (await getEntry('extras', 'extras'))!;
+
+const todayStr = new Date().toISOString().slice(0, 10);
+const upcomingEvents = (await getCollection('events'))
+  .filter((event) => event.data.showDates.at(-1)!.date >= todayStr)
+  .sort((a, b) => a.data.showDates[0].date.localeCompare(b.data.showDates[0].date));
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -48,6 +54,12 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         Interested in renting the Blue Bird Theatre for your own production or event?{' '}
         <a href="/contact" class="link link-primary font-semibold">Get in touch</a>.
       </p>
+
+      {upcomingEvents.length > 0 && (
+        <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {upcomingEvents.map((event) => <EventCard event={event} />)}
+        </div>
+      )}
     </div>
   </section>
 </DefaultLayout>

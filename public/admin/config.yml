@@ -63,6 +63,13 @@ collections:
               required: false,
               hint: 'e.g. "Opening Night", "Matinee"',
             }
+          - {
+              label: Accessibility Tag,
+              name: accessibilityTag,
+              widget: string,
+              required: false,
+              hint: 'e.g. "ASL-Interpreted", "Sensory-Friendly" — leave blank if not applicable to this specific performance.',
+            }
       - { label: Venue, name: venue, widget: string }
       - { label: Ticket URL, name: ticketUrl, widget: string }
       - {
@@ -72,6 +79,75 @@ collections:
           required: false,
           hint: 'e.g. "$15" — leave blank if free or not yet set. Shown in ticket search results.',
         }
+      - {
+          label: Dress Code,
+          name: dressCode,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Cocktail attire" — leave blank if there is no dress code.',
+        }
+      - {
+          label: Doors Open (minutes before showtime),
+          name: doorsOpenMinutesBefore,
+          widget: number,
+          value_type: int,
+          required: false,
+          hint: 'e.g. "30" — leave blank if unknown.',
+        }
+      - {
+          label: Run Time,
+          name: runTime,
+          widget: string,
+          required: false,
+          hint: 'e.g. "2 hours, incl. one 15-minute intermission" — leave blank if unknown.',
+        }
+      - {
+          label: Concessions Note,
+          name: concessionsNote,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Snacks and drinks available in the lobby" — leave blank if not applicable.',
+        }
+      - label: Accessibility
+        name: accessibility
+        widget: object
+        required: false
+        fields:
+          - {
+              label: Wheelchair-Accessible Seating,
+              name: wheelchairSeating,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: Assistive Listening Devices,
+              name: assistiveListening,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: ASL Interpretation Available on Request,
+              name: aslAvailable,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: Audio Description Available on Request,
+              name: audioDescriptionAvailable,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: Additional Note,
+              name: note,
+              widget: string,
+              required: false,
+              hint: "Anything not covered above.",
+            }
       - {
           label: Performing Group,
           name: performingGroup,
@@ -213,6 +289,146 @@ collections:
       - { label: Author, name: author, widget: string }
       - { label: Role, name: role, widget: string, required: false }
 
+  - name: events
+    label: Other Events
+    folder: src/content/events
+    create: true
+    slug: "{{slug}}"
+    extension: yaml
+    format: yaml
+    media_folder: /src/assets/images/events
+    public_folder: ../../assets/images/events
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - label: Show Dates
+        name: showDates
+        widget: list
+        hint: "Add one entry per date this event happens. Within a date, add one or more times if it repeats that day (e.g. a matinee and an evening show)."
+        fields:
+          - {
+              label: Date,
+              name: date,
+              widget: string,
+              pattern:
+                ["^\\d{4}-\\d{2}-\\d{2}$", "Format: YYYY-MM-DD, e.g. 2026-12-10"],
+              hint: "Format: YYYY-MM-DD, e.g. 2026-12-10",
+            }
+          - label: Times
+            name: times
+            widget: list
+            required: false
+            hint: "Leave empty if the time is still TBA."
+            fields:
+              - {
+                  label: Time,
+                  name: time,
+                  widget: string,
+                  pattern:
+                    ["^\\d{2}:\\d{2}$", "Format: HH:mm (24-hour), e.g. 19:30"],
+                  hint: "Format: HH:mm (24-hour), e.g. 19:30",
+                }
+              - {
+                  label: Label,
+                  name: label,
+                  widget: string,
+                  required: false,
+                  hint: 'e.g. "Matinee", "Evening"',
+                }
+              - {
+                  label: Accessibility Tag,
+                  name: accessibilityTag,
+                  widget: string,
+                  required: false,
+                  hint: 'e.g. "ASL-Interpreted", "Sensory-Friendly" — leave blank if not applicable to this specific showtime.',
+                }
+      - {
+          label: Host,
+          name: host,
+          widget: string,
+          required: false,
+          hint: "Who's presenting this event, e.g. a guest choir or a private rental — leave blank for venue-hosted events.",
+        }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image Alt Text, name: imageAlt, widget: string, required: false }
+      - { label: Ticket/Info URL, name: ticketUrl, widget: string, required: false }
+      - {
+          label: Ticket Price,
+          name: ticketPrice,
+          widget: string,
+          required: false,
+          hint: 'e.g. "$15" — leave blank if free or not yet set.',
+        }
+      - {
+          label: Dress Code,
+          name: dressCode,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Cocktail attire" — leave blank if there is no dress code.',
+        }
+      - {
+          label: Doors Open (minutes before showtime),
+          name: doorsOpenMinutesBefore,
+          widget: number,
+          value_type: int,
+          required: false,
+          hint: 'e.g. "30" — leave blank if unknown.',
+        }
+      - {
+          label: Run Time,
+          name: runTime,
+          widget: string,
+          required: false,
+          hint: 'e.g. "2 hours, incl. one 15-minute intermission" — leave blank if unknown.',
+        }
+      - {
+          label: Concessions Note,
+          name: concessionsNote,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Snacks and drinks available in the lobby" — leave blank if not applicable.',
+        }
+      - label: Accessibility
+        name: accessibility
+        widget: object
+        required: false
+        fields:
+          - {
+              label: Wheelchair-Accessible Seating,
+              name: wheelchairSeating,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: Assistive Listening Devices,
+              name: assistiveListening,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: ASL Interpretation Available on Request,
+              name: aslAvailable,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: Audio Description Available on Request,
+              name: audioDescriptionAvailable,
+              widget: boolean,
+              default: false,
+              required: false,
+            }
+          - {
+              label: Additional Note,
+              name: note,
+              widget: string,
+              required: false,
+              hint: "Anything not covered above.",
+            }
+
   - name: gallery
     label: Gallery
     folder: src/content/gallery
@@ -258,6 +474,26 @@ collections:
                   widget: string,
                   pattern: ["^\\d{5}(-\\d{4})?$", "Format: 12345 or 12345-6789"],
                 }
+          - {
+              label: Map Latitude,
+              name: mapLat,
+              widget: number,
+              value_type: float,
+              min: -90,
+              max: 90,
+              required: false,
+              hint: "Used for the venue map embed. Leave blank to hide the map.",
+            }
+          - {
+              label: Map Longitude,
+              name: mapLng,
+              widget: number,
+              value_type: float,
+              min: -180,
+              max: 180,
+              required: false,
+              hint: "Used for the venue map embed. Leave blank to hide the map.",
+            }
           - label: Social Links
             name: socials
             widget: list

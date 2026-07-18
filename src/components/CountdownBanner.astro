@@ -1,0 +1,74 @@
+---
+import { toUtcInstant, type Showing } from '@utils/showings';
+import { formatDate } from '@utils/dates';
+
+interface Props {
+  next: Showing | null;
+  isPast: boolean;
+}
+
+const { next, isPast } = Astro.props as Props;
+const targetUtc = !isPast && next ? toUtcInstant(next) : null;
+---
+
+{targetUtc && next && (
+  <div class="bg-primary text-primary-content">
+    <div class="mx-auto flex max-w-(--container-max) flex-wrap items-center justify-between gap-3 px-4 py-4">
+      <p class="font-body text-[0.9375rem] font-semibold">
+        {next.label ? `${next.label}: ` : 'Next showing: '}{formatDate(next.date)}
+      </p>
+      <noscript>
+        <p class="font-body text-sm">{next.time}</p>
+      </noscript>
+      <div class="hidden items-end gap-4" data-countdown data-countdown-target={targetUtc.toISOString()}>
+        <div class="flex flex-col items-center">
+          <span class="countdown font-mono text-3xl"><span data-countdown-days style="--value:0;">0</span></span>
+          <span class="text-[0.6875rem] tracking-[0.09em] uppercase opacity-80">Days</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="countdown font-mono text-3xl"><span data-countdown-hours style="--value:0;">0</span></span>
+          <span class="text-[0.6875rem] tracking-[0.09em] uppercase opacity-80">Hrs</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="countdown font-mono text-3xl"><span data-countdown-minutes style="--value:0;">0</span></span>
+          <span class="text-[0.6875rem] tracking-[0.09em] uppercase opacity-80">Min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+<script>
+  function updateCountdown(root: HTMLElement): boolean {
+    const target = new Date(root.dataset.countdownTarget ?? '');
+    const diffMs = target.getTime() - Date.now();
+    if (diffMs <= 0) {
+      root.classList.add('hidden');
+      return false;
+    }
+
+    const days = Math.floor(diffMs / 86400000);
+    const hours = Math.floor((diffMs % 86400000) / 3600000);
+    const minutes = Math.floor((diffMs % 3600000) / 60000);
+
+    const setUnit = (selector: string, value: number) => {
+      const el = root.querySelector<HTMLElement>(selector);
+      if (!el) return;
+      el.textContent = String(value);
+      el.style.setProperty('--value', String(value));
+    };
+
+    setUnit('[data-countdown-days]', days);
+    setUnit('[data-countdown-hours]', hours);
+    setUnit('[data-countdown-minutes]', minutes);
+    return true;
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((root) => {
+    root.classList.remove('hidden');
+    if (!updateCountdown(root)) return;
+    const interval = setInterval(() => {
+      if (!updateCountdown(root)) clearInterval(interval);
+    }, 30000);
+  });
+</script>

@@ -1,0 +1,183 @@
+---
+import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
+import Icon from '@components/Icon.astro';
+import { toUtcInstant, type Showing } from '@utils/showings';
+
+interface Props {
+  title: string;
+  address: string;
+  showings: Showing[];
+  ticketUrl?: string;
+  description?: string;
+}
+
+const { title, address, showings, ticketUrl, description } = Astro.props as Props;
+
+const CALENDAR_DURATION_HOURS = 2.5;
+
+const optionFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+
+function formatTime(time: string): string {
+  const [h, m] = time.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hour12 = h % 12 === 0 ? 12 : h % 12;
+  return `${hour12}:${String(m).padStart(2, '0')} ${period}`;
+}
+
+function formatShowingOption(showing: Showing): string {
+  const dateLabel = optionFormatter.format(new Date(`${showing.date}T00:00:00`));
+  const parts = [dateLabel, showing.time ? formatTime(showing.time) : 'Time TBA'];
+  if (showing.label) parts.push(showing.label);
+  if (showing.accessibilityTag) parts.push(showing.accessibilityTag);
+  return parts.join(' · ');
+}
+
+const payload = {
+  title,
+  address,
+  ticketUrl,
+  description,
+  showings: showings.map((showing) => {
+    const start = toUtcInstant(showing);
+    const end = start ? new Date(start.getTime() + CALENDAR_DURATION_HOURS * 3600000) : null;
+    return {
+      date: showing.date,
+      startUtc: start?.toISOString(),
+      endUtc: end?.toISOString(),
+    };
+  }),
+};
+---
+
+{showings.length > 0 && (
+  <div data-atc-root>
+    <details class="dropdown">
+      <summary class="btn btn-outline btn-primary btn-lg list-none [&::-webkit-details-marker]:hidden">
+        <Icon icon={faCalendarPlus} class="h-4 w-4" />
+        Add to Calendar
+      </summary>
+      <div class="dropdown-content bg-base-100 border-line rounded-box z-10 mt-2 w-72 border p-4 shadow">
+        {showings.length > 1 && (
+          <div class="mb-3">
+            <span class="text-base-content/70 mb-1 block text-[0.8125rem] font-medium">Choose a showing</span>
+            <select class="select select-bordered select-sm w-full" data-atc-select>
+              {showings.map((showing, i) => <option value={i}>{formatShowingOption(showing)}</option>)}
+            </select>
+          </div>
+        )}
+        <div class="flex flex-col gap-2">
+          <button type="button" class="btn btn-sm btn-outline" data-atc-google>Google Calendar</button>
+          <button type="button" class="btn btn-sm btn-outline" data-atc-ics>Download .ics</button>
+        </div>
+      </div>
+    </details>
+    <script type="application/json" data-atc-data set:html={JSON.stringify(payload)} />
+  </div>
+)}
+
+<script>
+  function pad(n: number): string {
+    return String(n).padStart(2, '0');
+  }
+
+  function toUtcStamp(iso: string): string {
+    const d = new Date(iso);
+    return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(
+      d.getUTCMinutes()
+    )}${pad(d.getUTCSeconds())}Z`;
+  }
+
+  function toDateStamp(dateStr: string): string {
+    return dateStr.replaceAll('-', '');
+  }
+
+  function addDays(dateStr: string, n: number): string {
+    const d = new Date(`${dateStr}T00:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + n);
+    return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}`;
+  }
+
+  interface CalendarShowing {
+    date: string;
+    startUtc?: string;
+    endUtc?: string;
+  }
+
+  interface CalendarPayload {
+    title: string;
+    address: string;
+    ticketUrl?: string;
+    description?: string;
+    showings: CalendarShowing[];
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-atc-root]').forEach((root) => {
+    const dataEl = root.querySelector('script[data-atc-data]');
+    if (!dataEl?.textContent) return;
+    const payload: CalendarPayload = JSON.parse(dataEl.textContent);
+
+    const select = root.querySelector<HTMLSelectElement>('[data-atc-select]');
+    const googleBtn = root.querySelector<HTMLButtonElement>('[data-atc-google]');
+    const icsBtn = root.querySelector<HTMLButtonElement>('[data-atc-ics]');
+
+    function selectedShowing(): CalendarShowing {
+      const index = select ? Number(select.value) : 0;
+      return payload.showings[index];
+    }
+
+    function buildDescription(showing: CalendarShowing, timeTbaLine: string): string {
+      const lines = [payload.description, payload.ticketUrl ? `Tickets: ${payload.ticketUrl}` : undefined];
+      if (!showing.startUtc) lines.push(timeTbaLine);
+      return lines.filter(Boolean).join('\n\n');
+    }
+
+    googleBtn?.addEventListener('click', () => {
+      const showing = selectedShowing();
+      const params = new URLSearchParams({ action: 'TEMPLATE', text: payload.title, location: payload.address });
+
+      if (showing.startUtc && showing.endUtc) {
+        params.set('dates', `${toUtcStamp(showing.startUtc)}/${toUtcStamp(showing.endUtc)}`);
+        params.set('ctz', 'America/New_York');
+      } else {
+        params.set('dates', `${toDateStamp(showing.date)}/${addDays(showing.date, 1)}`);
+      }
+      params.set('details', buildDescription(showing, 'Time TBA'));
+
+      window.open(`https://calendar.google.com/calendar/render?${params.toString()}`, '_blank', 'noopener');
+    });
+
+    icsBtn?.addEventListener('click', () => {
+      const showing = selectedShowing();
+      const description = buildDescription(showing, 'Time TBA').replaceAll('\n', '\\n');
+
+      const lines = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//Blue Bird Theatre//Add to Calendar//EN',
+        'BEGIN:VEVENT',
+        `UID:${crypto.randomUUID()}@bluebirdtheater`,
+        `SUMMARY:${payload.title}`,
+        `LOCATION:${payload.address}`,
+      ];
+
+      if (showing.startUtc && showing.endUtc) {
+        lines.push(`DTSTART:${toUtcStamp(showing.startUtc)}`, `DTEND:${toUtcStamp(showing.endUtc)}`);
+      } else {
+        lines.push(
+          `DTSTART;VALUE=DATE:${toDateStamp(showing.date)}`,
+          `DTEND;VALUE=DATE:${addDays(showing.date, 1)}`
+        );
+      }
+      if (description) lines.push(`DESCRIPTION:${description}`);
+      lines.push('END:VEVENT', 'END:VCALENDAR');
+
+      const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${payload.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.ics`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  });
+</script>

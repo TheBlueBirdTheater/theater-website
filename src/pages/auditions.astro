@@ -40,12 +40,12 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           {notice.data.callbackDate && <InfoRow label="Callbacks" value={notice.data.callbackDate} />}
         </div>
 
-        <p class="font-body text-base-content/60 mt-4">
+        <p class="font-body text-base-content/70 mt-4">
           {notice.data.requirements.join(' ')}
         </p>
 
         <Button href={notice.data.signUpUrl} variant="secondary" class="mt-6">Sign Up to Audition</Button>
-        <p class="font-body text-base-content/60 mt-3 text-sm">
+        <p class="font-body text-base-content/70 mt-3 text-sm">
           Questions? <a href={`mailto:${notice.data.contactEmail}`} class="link">{notice.data.contactEmail}</a>
         </p>
       </div>

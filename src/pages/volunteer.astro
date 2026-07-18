@@ -28,7 +28,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       {roles.map((role) => (
         <div class="border-line rounded-md border bg-base-100 p-5.5">
           <h3 class="font-heading text-base-content font-semibold">{role.title}</h3>
-          <p class="font-body text-base-content/60 mt-2">{role.description}</p>
+          <p class="font-body text-base-content/70 mt-2">{role.description}</p>
           <p class="font-body text-primary mt-2 text-[0.8125rem]">{role.commitment}</p>
         </div>
       ))}
@@ -43,7 +43,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           <span class="font-heading text-primary text-xl font-bold">{index + 1}</span>
           <div>
             <p class="font-body text-base-content font-semibold">{step.title}</p>
-            <p class="font-body text-base-content/60">{step.description}</p>
+            <p class="font-body text-base-content/70">{step.description}</p>
           </div>
         </li>
       ))}

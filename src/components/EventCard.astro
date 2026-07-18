@@ -1,47 +1,43 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import Badge from '@components/Badge.astro';
-import Divider from '@components/Divider.astro';
-import { formatDateRange } from '@utils/dates';
-import { getShowStatus } from '@utils/shows';
+import { formatEventDates } from '@utils/dates';
 
 interface Props {
-  show: CollectionEntry<'shows'>;
+  event: CollectionEntry<'events'>;
 }
 
-const { show } = Astro.props as Props;
-const { data } = show;
+const { event } = Astro.props as Props;
+const { data } = event;
+
+const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : undefined;
 ---
 
 <a
-  href={`/shows/${show.id}`}
+  href={`/events/${event.id}`}
   class="border-line bg-base-100 hover:shadow-raised flex flex-col overflow-hidden rounded-lg border no-underline shadow-card transition-all duration-200 hover:-translate-y-1"
 >
   <div class="relative aspect-4/3 overflow-hidden">
-    {data.posterImage ? (
+    {data.image ? (
       <Image
-        src={data.posterImage}
-        alt={data.posterAlt}
+        src={data.image}
+        alt={data.imageAlt ?? data.title}
         format="webp"
         class="h-full w-full object-cover"
         loading="lazy"
       />
     ) : (
       <div class="bg-base-200 text-base-content/70 font-body flex h-full w-full items-center justify-center text-sm">
-        Poster coming soon
+        {formatEventDates(data.showDates)}
       </div>
     )}
-    <div class="absolute top-3.5 left-3.5">
-      <Badge status={getShowStatus(show)} />
-    </div>
   </div>
   <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
     <h3 class="font-heading text-base-content text-[1.4rem] font-semibold tracking-[-0.01em]">{data.title}</h3>
-    {data.subtitle && <p class="font-body text-base-content/70 text-sm italic">{data.subtitle}</p>}
+    {data.host && <p class="font-body text-base-content/70 text-sm italic">Presented by {data.host}</p>}
     <p class="font-body text-base-content mt-1 text-sm font-medium">
-      {formatDateRange(data.runDates)}
-      {' · '}{data.venue}
+      {formatEventDates(data.showDates)}
+      {singleDateTimes && singleDateTimes.length > 0 && ` · ${singleDateTimes.map((t) => t.time).join(' & ')}`}
     </p>
   </div>
 </a>
