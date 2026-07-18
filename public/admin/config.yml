@@ -73,6 +73,42 @@ collections:
           hint: 'e.g. "$15" — leave blank if free or not yet set. Shown in ticket search results.',
         }
       - {
+          label: Dress Code,
+          name: dressCode,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Cocktail attire" — leave blank if there is no dress code.',
+        }
+      - {
+          label: Doors Open (minutes before showtime),
+          name: doorsOpenMinutesBefore,
+          widget: number,
+          value_type: int,
+          required: false,
+          hint: 'e.g. "30" — leave blank if unknown.',
+        }
+      - {
+          label: Run Time,
+          name: runTime,
+          widget: string,
+          required: false,
+          hint: 'e.g. "2 hours, incl. one 15-minute intermission" — leave blank if unknown.',
+        }
+      - {
+          label: Concessions Note,
+          name: concessionsNote,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Snacks and drinks available in the lobby" — leave blank if not applicable.',
+        }
+      - {
+          label: Accessibility Note,
+          name: accessibilityNote,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Wheelchair-accessible seating available" — leave blank if unknown.',
+        }
+      - {
           label: Performing Group,
           name: performingGroup,
           widget: string,
@@ -276,6 +312,42 @@ collections:
           required: false,
           hint: 'e.g. "$15" — leave blank if free or not yet set.',
         }
+      - {
+          label: Dress Code,
+          name: dressCode,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Cocktail attire" — leave blank if there is no dress code.',
+        }
+      - {
+          label: Doors Open (minutes before showtime),
+          name: doorsOpenMinutesBefore,
+          widget: number,
+          value_type: int,
+          required: false,
+          hint: 'e.g. "30" — leave blank if unknown.',
+        }
+      - {
+          label: Run Time,
+          name: runTime,
+          widget: string,
+          required: false,
+          hint: 'e.g. "2 hours, incl. one 15-minute intermission" — leave blank if unknown.',
+        }
+      - {
+          label: Concessions Note,
+          name: concessionsNote,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Snacks and drinks available in the lobby" — leave blank if not applicable.',
+        }
+      - {
+          label: Accessibility Note,
+          name: accessibilityNote,
+          widget: string,
+          required: false,
+          hint: 'e.g. "Wheelchair-accessible seating available" — leave blank if unknown.',
+        }
 
   - name: gallery
     label: Gallery
@@ -322,6 +394,26 @@ collections:
                   widget: string,
                   pattern: ["^\\d{5}(-\\d{4})?$", "Format: 12345 or 12345-6789"],
                 }
+          - {
+              label: Map Latitude,
+              name: mapLat,
+              widget: number,
+              value_type: float,
+              min: -90,
+              max: 90,
+              required: false,
+              hint: "Used for the venue map embed. Leave blank to hide the map.",
+            }
+          - {
+              label: Map Longitude,
+              name: mapLng,
+              widget: number,
+              value_type: float,
+              min: -180,
+              max: 180,
+              required: false,
+              hint: "Used for the venue map embed. Leave blank to hide the map.",
+            }
           - label: Social Links
             name: socials
             widget: list

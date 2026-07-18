@@ -5,6 +5,8 @@ address:
   city: Orangeburg
   state: SC
   zip: "29115"
+mapLat: 33.4895301
+mapLng: -80.8651166
 mailingAddress: "P.O. Box 1291, Orangeburg, SC 29116"
 socials:
   - platform: Facebook

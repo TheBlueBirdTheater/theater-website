@@ -51,6 +51,15 @@ const timeString = z
       : value
   );
 
+/** Optional venue-logistics fields shared by shows and events — surfaced via InfoRow/KnowBeforeYouGo. */
+const visitInfoFields = {
+  dressCode: z.string().optional(),
+  doorsOpenMinutesBefore: z.number().optional(),
+  runTime: z.string().optional(),
+  concessionsNote: z.string().optional(),
+  accessibilityNote: z.string().optional(),
+};
+
 const shows = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/shows' }),
   schema: ({ image }) =>
@@ -70,6 +79,7 @@ const shows = defineCollection({
       venue: z.string(),
       ticketUrl: z.string(),
       ticketPrice: z.string().optional(),
+      ...visitInfoFields,
       /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
       performingGroup: z.string().optional(),
       cast: z.array(z.string()).optional(),
@@ -145,6 +155,8 @@ const contact = defineCollection({
       state: z.string(),
       zip: z.string(),
     }),
+    mapLat: z.number().optional(),
+    mapLng: z.number().optional(),
     socials: z.array(
       z.object({
         platform: z.string(),
@@ -240,6 +252,7 @@ const events = defineCollection({
       imageAlt: z.string().optional(),
       ticketUrl: z.string().optional(),
       ticketPrice: z.string().optional(),
+      ...visitInfoFields,
     }),
 });
 

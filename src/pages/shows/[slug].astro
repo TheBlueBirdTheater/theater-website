@@ -7,11 +7,17 @@ import Button from '@components/Button.astro';
 import ShareButton from '@components/ShareButton.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Divider from '@components/Divider.astro';
+import VenueMap from '@components/VenueMap.astro';
+import AddToCalendar from '@components/AddToCalendar.astro';
+import KnowBeforeYouGo from '@components/KnowBeforeYouGo.astro';
+import CountdownBanner from '@components/CountdownBanner.astro';
+import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import { getVenueContact } from '@data/venue';
 import { formatDate } from '@utils/dates';
 import { getShowStatus } from '@utils/shows';
+import { getNextShowing, type Showing } from '@utils/showings';
 
 export async function getStaticPaths() {
   const shows = await getCollection('shows');
@@ -30,6 +36,14 @@ const { data } = show;
 
 const contact = await getVenueContact();
 const performingGroup = data.performingGroup ?? OPTP_NAME;
+
+const venueAddress = `${data.venue}, ${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`;
+
+const showings: Showing[] = data.runDates.map((rd) => ({ date: rd.date, time: rd.time, label: rd.label }));
+const { next: nextShowing, isPast: allShowingsPast } = getNextShowing(showings);
+
+const parkingFaq = await getEntry('faqs', 'venue-parking');
+const locationFaq = await getEntry('faqs', 'venue-location');
 
 const eventSchemas = data.runDates.map((rd) =>
   buildEventSchema({
@@ -63,6 +77,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <Schema schema={eventSchemas} />
   <Schema schema={breadcrumbSchema} />
 
+  <CountdownBanner next={nextShowing} isPast={allShowingsPast} />
+
   <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr]">
     {data.posterImage ? (
       <Image
@@ -95,11 +111,35 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         />
         <InfoRow label="Venue" value={data.venue} />
         <InfoRow label="Presented By" value={performingGroup} />
+        {data.dressCode && <InfoRow label="Dress Code" value={data.dressCode} iconDef={faShirt} />}
+      </div>
+
+      <div class="mt-7">
+        <VenueMap address={venueAddress} lat={contact.mapLat} lng={contact.mapLng} />
       </div>
 
       <div class="mt-7 flex flex-wrap items-center gap-3">
         <Button href={data.ticketUrl} variant="primary" size="lg">Get Tickets</Button>
+        <AddToCalendar
+          title={data.title}
+          address={venueAddress}
+          showings={showings}
+          ticketUrl={data.ticketUrl}
+          description={data.synopsis}
+        />
         <ShareButton title={data.title} size="lg" />
+      </div>
+
+      <div class="mt-7">
+        <KnowBeforeYouGo
+          doorsOpenMinutesBefore={data.doorsOpenMinutesBefore}
+          runTime={data.runTime}
+          parkingAnswer={parkingFaq?.data.answer}
+          locationAnswer={locationFaq?.data.answer}
+          accessibilityNote={data.accessibilityNote}
+          concessionsNote={data.concessionsNote}
+          dressCode={data.dressCode}
+        />
       </div>
 
       <div class="mt-10">

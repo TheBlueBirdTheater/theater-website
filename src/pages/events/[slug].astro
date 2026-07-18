@@ -5,10 +5,16 @@ import { Image } from 'astro:assets';
 import Button from '@components/Button.astro';
 import ShareButton from '@components/ShareButton.astro';
 import InfoRow from '@components/InfoRow.astro';
+import VenueMap from '@components/VenueMap.astro';
+import AddToCalendar from '@components/AddToCalendar.astro';
+import KnowBeforeYouGo from '@components/KnowBeforeYouGo.astro';
+import CountdownBanner from '@components/CountdownBanner.astro';
+import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import { getVenueContact, THEATRE_NAME } from '@data/venue';
 import { formatDate, formatEventDates } from '@utils/dates';
+import { getNextShowing, type Showing } from '@utils/showings';
 
 export async function getStaticPaths() {
   const events = await getCollection('events');
@@ -26,6 +32,18 @@ const { event } = Astro.props as Props;
 const { data } = event;
 
 const contact = await getVenueContact();
+
+const venueAddress = `${THEATRE_NAME}, ${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`;
+
+const showings: Showing[] = data.showDates.flatMap((sd) =>
+  sd.times && sd.times.length > 0
+    ? sd.times.map((t) => ({ date: sd.date, time: t.time, label: t.label }))
+    : [{ date: sd.date }]
+);
+const { next: nextShowing, isPast: allShowingsPast } = getNextShowing(showings);
+
+const parkingFaq = await getEntry('faqs', 'venue-parking');
+const locationFaq = await getEntry('faqs', 'venue-location');
 
 const eventSchemas = data.showDates.flatMap((sd) =>
   (sd.times && sd.times.length > 0 ? sd.times : [undefined]).map((t) =>
@@ -61,6 +79,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <Schema schema={eventSchemas} />
   <Schema schema={breadcrumbSchema} />
 
+  <CountdownBanner next={nextShowing} isPast={allShowingsPast} />
+
   <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr]">
     {data.image ? (
       <Image
@@ -83,6 +103,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
       <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
         <InfoRow label="Venue" value={THEATRE_NAME} />
+        {data.dressCode && <InfoRow label="Dress Code" value={data.dressCode} iconDef={faShirt} />}
       </div>
 
       <div class="mt-4.5">
@@ -107,13 +128,36 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         </ul>
       </div>
 
+      <div class="mt-7">
+        <VenueMap address={venueAddress} lat={contact.mapLat} lng={contact.mapLng} />
+      </div>
+
       <div class="mt-7 flex flex-wrap items-center gap-3">
         {data.ticketUrl && (
           <Button href={data.ticketUrl} variant="primary" size="lg">
             {data.ticketPrice ? `Get Tickets · ${data.ticketPrice}` : 'Get Tickets'}
           </Button>
         )}
+        <AddToCalendar
+          title={data.title}
+          address={venueAddress}
+          showings={showings}
+          ticketUrl={data.ticketUrl}
+          description={data.description}
+        />
         <ShareButton title={data.title} size="lg" />
+      </div>
+
+      <div class="mt-7">
+        <KnowBeforeYouGo
+          doorsOpenMinutesBefore={data.doorsOpenMinutesBefore}
+          runTime={data.runTime}
+          parkingAnswer={parkingFaq?.data.answer}
+          locationAnswer={locationFaq?.data.answer}
+          accessibilityNote={data.accessibilityNote}
+          concessionsNote={data.concessionsNote}
+          dressCode={data.dressCode}
+        />
       </div>
     </div>
   </div>
