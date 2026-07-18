@@ -8,7 +8,7 @@ import InfoRow from '@components/InfoRow.astro';
 import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getVenueContact, THEATRE_NAME } from '@data/venue';
-import { formatDate } from '@utils/dates';
+import { formatDate, formatEventDates } from '@utils/dates';
 
 export async function getStaticPaths() {
   const events = await getCollection('events');
@@ -27,19 +27,23 @@ const { data } = event;
 
 const contact = await getVenueContact();
 
-const eventSchema = buildEventSchema({
-  name: data.title,
-  // TODO: normalize to full ISO with real timezone once real event times are known
-  startDate: data.time ? `${data.date}T${data.time}:00` : data.date,
-  url: `/events/${event.id}`,
-  venueName: THEATRE_NAME,
-  venueAddress: contact.address,
-  performerName: data.host,
-  offerUrl: data.ticketUrl,
-  offerPrice: data.ticketPrice,
-  description: data.description,
-  imageUrl: data.image?.src,
-});
+const eventSchemas = data.showDates.flatMap((sd) =>
+  (sd.times && sd.times.length > 0 ? sd.times : [undefined]).map((t) =>
+    buildEventSchema({
+      name: data.title,
+      // TODO: normalize to full ISO with real timezone once real event times are known
+      startDate: t ? `${sd.date}T${t.time}:00` : sd.date,
+      url: `/events/${event.id}`,
+      venueName: THEATRE_NAME,
+      venueAddress: contact.address,
+      performerName: data.host,
+      offerUrl: data.ticketUrl,
+      offerPrice: data.ticketPrice,
+      description: data.description,
+      imageUrl: data.image?.src,
+    })
+  )
+);
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -54,7 +58,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   image={data.image?.src}
   imageAlt={data.imageAlt}
 >
-  <Schema schema={eventSchema} />
+  <Schema schema={eventSchemas} />
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr]">
@@ -67,7 +71,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       />
     ) : (
       <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body flex aspect-4/5 w-full items-center justify-center border text-sm">
-        {formatDate(data.date)}
+        {formatEventDates(data.showDates)}
       </div>
     )}
     <div>
@@ -78,8 +82,29 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       <p class="font-body text-base-content mt-4">{data.description}</p>
 
       <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
-        <InfoRow label="Date" value={data.time ? `${formatDate(data.date)} · ${data.time}` : formatDate(data.date)} />
         <InfoRow label="Venue" value={THEATRE_NAME} />
+      </div>
+
+      <div class="mt-4.5">
+        <p class="font-body text-primary text-[0.8125rem] font-semibold tracking-[0.09em] uppercase">Showtimes</p>
+        <ul class="font-body text-base-content mt-2 space-y-1">
+          {data.showDates.map((sd) => (
+            <li>
+              {formatDate(sd.date)}
+              {sd.times && sd.times.length > 0 && (
+                <>
+                  {' — '}
+                  {sd.times.map((t, i) => (
+                    <>
+                      {t.label ? `${t.label}: ${t.time}` : t.time}
+                      {i < sd.times!.length - 1 && ' & '}
+                    </>
+                  ))}
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <div class="mt-7 flex flex-wrap items-center gap-3">

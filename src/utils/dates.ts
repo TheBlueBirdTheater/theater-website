@@ -18,3 +18,18 @@ export function formatDateRange(runDates: { date: string }[]): string {
   const end = new Date(`${runDates[runDates.length - 1].date}T00:00:00`);
   return formatter.formatRange(start, end);
 }
+
+/**
+ * Formats a list of (possibly non-consecutive) event dates, e.g. "September 5, 2026"
+ * or "September 5 & 12, 2026". Unlike `formatDateRange`, this doesn't collapse the
+ * list into a single start–end range, since event dates aren't necessarily a
+ * contiguous run the way a show's `runDates` are.
+ */
+export function formatEventDates(dates: { date: string }[]): string {
+  if (dates.length === 0) return 'TBA';
+
+  const formatted = dates.map((d) => formatDate(d.date));
+  if (formatted.length === 1) return formatted[0];
+
+  return `${formatted.slice(0, -1).join(', ')} & ${formatted.at(-1)}`;
+}

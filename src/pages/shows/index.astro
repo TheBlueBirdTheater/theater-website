@@ -27,8 +27,8 @@ const { data: extras } = (await getEntry('extras', 'extras'))!;
 
 const todayStr = new Date().toISOString().slice(0, 10);
 const upcomingEvents = (await getCollection('events'))
-  .filter((event) => event.data.date >= todayStr)
-  .sort((a, b) => a.data.date.localeCompare(b.data.date));
+  .filter((event) => event.data.showDates.at(-1)!.date >= todayStr)
+  .sort((a, b) => a.data.showDates[0].date.localeCompare(b.data.showDates[0].date));
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
