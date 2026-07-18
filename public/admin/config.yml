@@ -213,6 +213,52 @@ collections:
       - { label: Author, name: author, widget: string }
       - { label: Role, name: role, widget: string, required: false }
 
+  - name: events
+    label: Other Events
+    folder: src/content/events
+    create: true
+    slug: "{{slug}}"
+    extension: yaml
+    format: yaml
+    media_folder: /src/assets/images/events
+    public_folder: ../../assets/images/events
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - {
+          label: Date,
+          name: date,
+          widget: string,
+          pattern:
+            ["^\\d{4}-\\d{2}-\\d{2}$", "Format: YYYY-MM-DD, e.g. 2026-12-10"],
+          hint: "Format: YYYY-MM-DD, e.g. 2026-12-10",
+        }
+      - {
+          label: Time,
+          name: time,
+          widget: string,
+          required: false,
+          pattern: ["^\\d{2}:\\d{2}$", "Format: HH:mm (24-hour), e.g. 19:30"],
+          hint: "Format: HH:mm (24-hour), e.g. 19:30",
+        }
+      - {
+          label: Host,
+          name: host,
+          widget: string,
+          required: false,
+          hint: "Who's presenting this event, e.g. a guest choir or a private rental — leave blank for venue-hosted events.",
+        }
+      - { label: Image, name: image, widget: image, required: false }
+      - { label: Image Alt Text, name: imageAlt, widget: string, required: false }
+      - { label: Ticket/Info URL, name: ticketUrl, widget: string, required: false }
+      - {
+          label: Ticket Price,
+          name: ticketPrice,
+          widget: string,
+          required: false,
+          hint: 'e.g. "$15" — leave blank if free or not yet set.',
+        }
+
   - name: gallery
     label: Gallery
     folder: src/content/gallery

@@ -212,6 +212,37 @@ const getInvolved = defineCollection({
   }),
 });
 
+const events = defineCollection({
+  loader: optionalGlob({ pattern: '*.yaml', base: './src/content/events' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      showDates: z
+        .array(
+          z.object({
+            date: dateString,
+            /** Omitted or empty when the time for this date is still TBA. */
+            times: z
+              .array(
+                z.object({
+                  time: timeString,
+                  label: z.string().optional(),
+                })
+              )
+              .optional(),
+          })
+        )
+        .min(1),
+      /** Who's presenting this event — e.g. a guest choir or a private rental. Not an OPTP production. */
+      host: z.string().optional(),
+      image: image().optional(),
+      imageAlt: z.string().optional(),
+      ticketUrl: z.string().optional(),
+      ticketPrice: z.string().optional(),
+    }),
+});
+
 const gallery = defineCollection({
   loader: optionalGlob({ pattern: '*.yaml', base: './src/content/gallery' }),
   schema: ({ image }) =>
@@ -249,4 +280,5 @@ export const collections = {
   getInvolved,
   extras,
   gallery,
+  events,
 };

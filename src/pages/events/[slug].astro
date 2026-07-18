@@ -1,0 +1,95 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import { Image } from 'astro:assets';
+import Button from '@components/Button.astro';
+import ShareButton from '@components/ShareButton.astro';
+import InfoRow from '@components/InfoRow.astro';
+import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getVenueContact, THEATRE_NAME } from '@data/venue';
+import { formatDate } from '@utils/dates';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((event) => ({
+    params: { slug: event.id },
+    props: { event },
+  }));
+}
+
+interface Props {
+  event: CollectionEntry<'events'>;
+}
+
+const { event } = Astro.props as Props;
+const { data } = event;
+
+const contact = await getVenueContact();
+
+const eventSchema = buildEventSchema({
+  name: data.title,
+  // TODO: normalize to full ISO with real timezone once real event times are known
+  startDate: data.time ? `${data.date}T${data.time}:00` : data.date,
+  url: `/events/${event.id}`,
+  venueName: THEATRE_NAME,
+  venueAddress: contact.address,
+  performerName: data.host,
+  offerUrl: data.ticketUrl,
+  offerPrice: data.ticketPrice,
+  description: data.description,
+  imageUrl: data.image?.src,
+});
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Shows', url: '/shows' },
+  { name: data.title, url: `/events/${event.id}` },
+]);
+---
+
+<DefaultLayout
+  title={data.title}
+  description={data.description}
+  image={data.image?.src}
+  imageAlt={data.imageAlt}
+>
+  <Schema schema={eventSchema} />
+  <Schema schema={breadcrumbSchema} />
+
+  <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr]">
+    {data.image ? (
+      <Image
+        src={data.image}
+        alt={data.imageAlt ?? data.title}
+        format="webp"
+        class="border-line rounded-lg aspect-4/5 w-full border object-cover shadow-card"
+      />
+    ) : (
+      <div class="border-line rounded-lg bg-base-200 text-base-content/60 font-body flex aspect-4/5 w-full items-center justify-center border text-sm">
+        {formatDate(data.date)}
+      </div>
+    )}
+    <div>
+      <h1 class="font-heading text-base-content text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.01em]">
+        {data.title}
+      </h1>
+      {data.host && <p class="font-body text-base-content/60 mt-2 text-[1.1875rem] italic">Presented by {data.host}</p>}
+      <p class="font-body text-base-content mt-4">{data.description}</p>
+
+      <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
+        <InfoRow label="Date" value={data.time ? `${formatDate(data.date)} · ${data.time}` : formatDate(data.date)} />
+        <InfoRow label="Venue" value={THEATRE_NAME} />
+      </div>
+
+      <div class="mt-7 flex flex-wrap items-center gap-3">
+        {data.ticketUrl && (
+          <Button href={data.ticketUrl} variant="primary" size="lg">
+            {data.ticketPrice ? `Get Tickets · ${data.ticketPrice}` : 'Get Tickets'}
+          </Button>
+        )}
+        <ShareButton title={data.title} size="lg" />
+      </div>
+    </div>
+  </div>
+</DefaultLayout>

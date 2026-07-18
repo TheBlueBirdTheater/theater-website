@@ -1,16 +1,27 @@
 ---
 import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
+import {
+  faLocationDot,
+  faPhone,
+  faEnvelope,
+  faArrowUpRightFromSquare,
+} from '@fortawesome/free-solid-svg-icons';
+import Icon from '@components/Icon.astro';
 import logo from '@assets/logo.png';
 
 const { data: contact } = (await getEntry('contact', 'contact'))!;
 const currentYear = new Date().getFullYear();
+const { line1, city, state, zip } = contact.address;
+const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(`${line1}, ${city}, ${state} ${zip}`)}`;
 
 const linkClass = 'text-light-blue-tint hover:text-secondary-accessible text-sm no-underline';
+const contactRowClass = `${linkClass} flex items-start gap-2.5`;
+const contactIconClass = 'mt-0.5 h-3.5 w-3.5 shrink-0 text-secondary-accessible';
 ---
 
 <footer class="bg-primary text-primary-content">
-  <div class="mx-auto grid max-w-(--container-max) gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1fr]">
+  <div class="mx-auto grid max-w-(--container-max) gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
     <div>
       <div class="mb-3.5 flex items-center gap-3.5">
         <Image src={logo} alt="Blue Bird Theatre logo" width={40} height={60} />
@@ -48,22 +59,35 @@ const linkClass = 'text-light-blue-tint hover:text-secondary-accessible text-sm 
       <h3 class="font-body mb-3.5 text-[0.8125rem] font-semibold tracking-[0.09em] text-secondary-accessible uppercase">
         Contact
       </h3>
-      <div class="flex flex-col gap-2 text-sm text-light-blue-tint">
+      <div class="flex flex-col gap-2">
         <a href="/faq" class={linkClass}>FAQ</a>
         <a href="/contact" class={linkClass}>Contact Us</a>
-        <span>{contact.address.line1}</span>
-        <span>{contact.address.city}, {contact.address.state} {contact.address.zip}</span>
-        <a href={`tel:${contact.phone}`} class={linkClass}>{contact.phone}</a>
-        <a href={`mailto:${contact.email}`} class={linkClass}>{contact.email}</a>
       </div>
-    </nav>
-    <nav>
-      <h3 class="font-body mb-3.5 text-[0.8125rem] font-semibold tracking-[0.09em] text-secondary-accessible uppercase">
-        Follow
-      </h3>
-      <div class="flex flex-col gap-2">
+      <address class="border-accent mt-3.5 flex flex-col gap-2.5 border-t pt-3.5 not-italic">
+        <a href={mapsUrl} target="_blank" rel="noopener" class={contactRowClass}>
+          <Icon icon={faLocationDot} class={contactIconClass} />
+          <span>{line1}<br />{city}, {state} {zip}</span>
+        </a>
+        <a href={`tel:${contact.phone}`} class={contactRowClass}>
+          <Icon icon={faPhone} class={contactIconClass} />
+          <span>{contact.phone}</span>
+        </a>
+        <a href={`mailto:${contact.email}`} class={contactRowClass}>
+          <Icon icon={faEnvelope} class={contactIconClass} />
+          <span class="break-all">{contact.email}</span>
+        </a>
+      </address>
+      <div class="mt-4 flex flex-wrap gap-2">
         {contact.socials.map((social) => (
-          <a href={social.url} class={linkClass}>{social.platform}</a>
+          <a
+            href={social.url}
+            target="_blank"
+            rel="noopener"
+            class="border-secondary text-light-blue-tint hover:border-secondary-accessible hover:text-secondary-accessible inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[0.8125rem] no-underline"
+          >
+            {social.platform}
+            <Icon icon={faArrowUpRightFromSquare} class="h-2.5 w-2.5" />
+          </a>
         ))}
       </div>
     </nav>
