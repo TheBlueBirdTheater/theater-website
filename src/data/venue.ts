@@ -1,8 +1,9 @@
 import { getEntry } from 'astro:content';
 import type { PostalAddressInput } from '@utils/schema';
 
-// TODO: optp.org is unconfirmed per BRAND/CONTACT spec — mirrors `site` in astro.config.mjs
-export const SITE_URL = 'https://optp.org';
+// Mirrors `site` in astro.config.mjs — Netlify's `URL` build env var when available,
+// otherwise the optp.org placeholder (unconfirmed per BRAND/CONTACT spec).
+export const SITE_URL = process.env.URL || 'https://optp.org';
 
 // Orangeburg Part-Time Players — the resident volunteer troupe (a 501(c)(3) nonprofit)
 // that operates the Blue Bird Theatre and performs most, but not all, shows there.

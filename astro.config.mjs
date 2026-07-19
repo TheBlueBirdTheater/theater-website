@@ -6,9 +6,10 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: optp.org is unconfirmed per BRAND/CONTACT spec — required for @astrojs/sitemap
-  // and for SEO.astro's canonical/OG URLs to resolve. Update once the production domain is locked.
-  site: 'https://optp.org',
+  // Netlify sets `URL` at build time to the site's primary domain (custom domain if one is
+  // attached, otherwise the *.netlify.app subdomain) — falls back to the optp.org placeholder
+  // (unconfirmed per BRAND/CONTACT spec) when building outside Netlify.
+  site: process.env.URL || 'https://optp.org',
   output: 'static',
   integrations: [mdx(), sitemap()],
   vite: {
