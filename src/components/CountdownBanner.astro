@@ -1,6 +1,6 @@
 ---
 import { toUtcInstant, type Showing } from '@utils/showings';
-import { formatDate } from '@utils/dates';
+import { formatDate, formatTime } from '@utils/dates';
 
 interface Props {
   next: Showing | null;
@@ -18,7 +18,7 @@ const targetUtc = !isPast && next ? toUtcInstant(next) : null;
         {next.label ? `${next.label}: ` : 'Next showing: '}{formatDate(next.date)}
       </p>
       <noscript>
-        <p class="font-body text-sm">{next.time}</p>
+        <p class="font-body text-sm">{formatTime(next.time!)}</p>
       </noscript>
       <div class="hidden items-end gap-4" data-countdown data-countdown-target={targetUtc.toISOString()}>
         <div class="flex flex-col items-center">

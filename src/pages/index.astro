@@ -11,6 +11,7 @@ import SectionHeading from '@components/SectionHeading.astro';
 import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, OPTP_NAME, THEATRE_NAME } from '@utils/schema';
 import { getCurrentShow, getShowStatus } from '@utils/shows';
 import { formatDateRange } from '@utils/dates';
+import { toVenueIsoString } from '@utils/showings';
 import { getVenueContact } from '@data/venue';
 import { getEntry } from 'astro:content';
 
@@ -36,7 +37,7 @@ const performingGroupSchema = buildPerformingGroupSchema({
 const eventSchema = currentShow && firstRunDate
   ? buildEventSchema({
       name: currentShow.data.title,
-      startDate: `${firstRunDate.date}T${firstRunDate.time}:00`,
+      startDate: toVenueIsoString(firstRunDate) ?? firstRunDate.date,
       url: `/shows/${currentShow.id}`,
       venueName: currentShow.data.venue,
       venueAddress: contact.address,

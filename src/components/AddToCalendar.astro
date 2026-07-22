@@ -2,6 +2,7 @@
 import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import Icon from '@components/Icon.astro';
 import { toUtcInstant, type Showing } from '@utils/showings';
+import { formatTime } from '@utils/dates';
 
 interface Props {
   title: string;
@@ -16,13 +17,6 @@ const { title, address, showings, ticketUrl, description } = Astro.props as Prop
 const CALENDAR_DURATION_HOURS = 2.5;
 
 const optionFormatter = new Intl.DateTimeFormat('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-
-function formatTime(time: string): string {
-  const [h, m] = time.split(':').map(Number);
-  const period = h >= 12 ? 'PM' : 'AM';
-  const hour12 = h % 12 === 0 ? 12 : h % 12;
-  return `${hour12}:${String(m).padStart(2, '0')} ${period}`;
-}
 
 function formatShowingOption(showing: Showing): string {
   const dateLabel = optionFormatter.format(new Date(`${showing.date}T00:00:00`));

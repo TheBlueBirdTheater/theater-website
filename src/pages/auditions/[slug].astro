@@ -1,0 +1,68 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import AuditionNotice from '@components/AuditionNotice.astro';
+import Button from '@components/Button.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getVenueContact } from '@data/venue';
+import { isAuditionActive } from '@utils/auditions';
+
+export async function getStaticPaths() {
+  const [shows, events] = await Promise.all([getCollection('shows'), getCollection('events')]);
+  const showPaths = shows
+    .filter((show) => show.data.auditions)
+    .map((show) => ({ params: { slug: show.id }, props: { entry: show, kind: 'shows' as const } }));
+  const eventPaths = events
+    .filter((event) => event.data.auditions)
+    .map((event) => ({ params: { slug: event.id }, props: { entry: event, kind: 'events' as const } }));
+  return [...showPaths, ...eventPaths];
+}
+
+interface Props {
+  entry: CollectionEntry<'shows'> | CollectionEntry<'events'>;
+  kind: 'shows' | 'events';
+}
+
+const { entry, kind } = Astro.props as Props;
+const { data } = entry;
+const auditions = data.auditions!;
+const active = isAuditionActive(auditions);
+const entryHref = `/${kind}/${entry.id}`;
+const contact = await getVenueContact();
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Auditions', url: '/auditions' },
+  { name: data.title, url: `/auditions/${entry.id}` },
+]);
+---
+
+<DefaultLayout
+  title={`Auditions for ${data.title}`}
+  description={`Audition dates and details for ${data.title}.`}
+>
+  <Schema schema={breadcrumbSchema} />
+
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
+    <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Auditions</p>
+    <h1 class="font-heading text-base-content mt-2 text-display-sm font-semibold">Auditions for {data.title}</h1>
+  </div>
+
+  <div class="mx-auto max-w-(--container-narrow) px-4 pb-20">
+    {active ? (
+      <AuditionNotice title={data.title} auditions={auditions} fallbackContactEmail={contact.email} />
+    ) : (
+      <div class="border-line rounded-lg border bg-base-100 p-8 text-center shadow-card">
+        <p class="font-body text-base-content">This audition period has closed.</p>
+        <p class="font-body text-base-content/70 mt-2">
+          Check the <a href="/auditions" class="link">Auditions page</a> for current opportunities.
+        </p>
+      </div>
+    )}
+
+    <div class="mt-8 flex justify-center">
+      <Button href={entryHref} variant="ghost">More About {data.title}</Button>
+    </div>
+  </div>
+</DefaultLayout>

@@ -2,14 +2,17 @@
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
-import InfoRow from '@components/InfoRow.astro';
-import Button from '@components/Button.astro';
+import DivisionAuditionPanel from '@components/DivisionAuditionPanel.astro';
+import AuditionNotice from '@components/AuditionNotice.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
-import { getCollection, getEntry } from 'astro:content';
+import { getAuditioningNow } from '@utils/auditions';
+import { getVenueContact } from '@data/venue';
+import { getEntry } from 'astro:content';
 
-const upcomingAuditions = await getCollection('auditions');
+const auditioningNow = await getAuditioningNow();
 const { data: extras } = (await getEntry('extras', 'extras'))!;
-const { juniorOptp } = extras;
+const { adultOptp, juniorOptp } = extras;
+const contact = await getVenueContact();
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -25,45 +28,36 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   </div>
 
   <div class="mx-auto grid max-w-250 gap-8 px-4 pb-20 md:grid-cols-2">
-    {upcomingAuditions.map((notice) => (
-      <div class="border-line rounded-lg border bg-base-100 p-8 shadow-card">
-        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
-          Adult Auditions
-        </p>
-        <h2 class="font-heading text-base-content mt-2 text-feature font-semibold">{notice.data.showTitle}</h2>
-
-        <div class="mt-5 flex flex-col gap-3.5">
-          <InfoRow
-            label="Audition Dates"
-            value={notice.data.auditionDates.map((d) => `${d.date}, ${d.time} — ${d.location}`).join(' · ')}
-          />
-          {notice.data.callbackDate && <InfoRow label="Callbacks" value={notice.data.callbackDate} />}
-        </div>
-
-        <p class="font-body text-base-content/70 mt-4">
-          {notice.data.requirements.join(' ')}
-        </p>
-
-        <Button href={notice.data.signUpUrl} variant="secondary" class="mt-6">Sign Up to Audition</Button>
-        <p class="font-body text-base-content/70 mt-3 text-sm">
-          Questions? <a href={`mailto:${notice.data.contactEmail}`} class="link">{notice.data.contactEmail}</a>
-        </p>
-      </div>
-    ))}
-
-    <div class="bg-primary text-primary-content rounded-lg p-8">
-      <p class="font-body text-secondary-accessible text-eyebrow font-semibold tracking-[0.09em] uppercase">
-        Junior OPTP
-      </p>
-      <h2 class="font-heading mt-2 text-feature font-semibold">{juniorOptp.ageRange}</h2>
-      <p class="font-body text-light-blue-tint mt-3">{juniorOptp.description}</p>
-      <div class="mt-5 flex flex-col gap-3.5">
-        <InfoRow label="Auditions" value={juniorOptp.auditionWindow} />
-        <InfoRow label="Performances" value={juniorOptp.performanceWindow} />
-      </div>
-      <Button href={`mailto:${juniorOptp.contactEmail}`} variant="inverse" class="mt-6">
-        Ask About Junior OPTP
-      </Button>
-    </div>
+    <DivisionAuditionPanel
+      eyebrow="Adult OPTP"
+      heading="Adult OPTP"
+      description={adultOptp.description}
+      auditionWindow={adultOptp.auditionWindow}
+      contactEmail={adultOptp.contactEmail}
+    />
+    <DivisionAuditionPanel
+      eyebrow="Junior OPTP"
+      heading={juniorOptp.ageRange}
+      description={juniorOptp.description}
+      auditionWindow={juniorOptp.auditionWindow}
+      performanceWindow={juniorOptp.performanceWindow}
+      contactEmail={juniorOptp.contactEmail}
+    />
   </div>
+
+  {auditioningNow.length > 0 && (
+    <div class="mx-auto max-w-250 px-4 pb-20">
+      <SectionHeading eyebrow="Right Now" title="Auditioning Now" />
+      <div class="mt-8 grid gap-8 md:grid-cols-2">
+        {auditioningNow.map((listing) => (
+          <AuditionNotice
+            title={listing.title}
+            href={listing.href}
+            auditions={listing}
+            fallbackContactEmail={contact.email}
+          />
+        ))}
+      </div>
+    </div>
+  )}
 </DefaultLayout>

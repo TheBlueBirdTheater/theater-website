@@ -11,14 +11,16 @@ import VenueMap from '@components/VenueMap.astro';
 import AddToCalendar from '@components/AddToCalendar.astro';
 import KnowBeforeYouGo from '@components/KnowBeforeYouGo.astro';
 import CountdownBanner from '@components/CountdownBanner.astro';
+import AuditionNotice from '@components/AuditionNotice.astro';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import { getVenueContact } from '@data/venue';
-import { formatDate } from '@utils/dates';
+import { formatDate, formatTime } from '@utils/dates';
 import { getShowStatus } from '@utils/shows';
-import { getNextShowing, type Showing } from '@utils/showings';
+import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
 import { formatAccessibilitySummary } from '@utils/accessibility';
+import { isAuditionActive } from '@utils/auditions';
 
 export async function getStaticPaths() {
   const shows = await getCollection('shows');
@@ -54,8 +56,7 @@ const locationFaq = await getEntry('faqs', 'venue-location');
 const eventSchemas = data.runDates.map((rd) =>
   buildEventSchema({
     name: data.title,
-    // TODO: normalize to full ISO with real timezone once real run-date times are known
-    startDate: `${rd.date}T${rd.time}:00`,
+    startDate: toVenueIsoString(rd) ?? rd.date,
     url: `/shows/${show.id}`,
     venueName: data.venue,
     venueAddress: contact.address,
@@ -91,10 +92,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         src={data.posterImage}
         alt={data.posterAlt}
         format="webp"
-        class="border-line rounded-lg aspect-4/5 w-full border object-cover shadow-card"
+        class="border-line rounded-lg aspect-4/5 w-full min-w-0 border object-cover shadow-card"
       />
     ) : (
-      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-4/5 w-full items-center justify-center border text-sm">
+      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
         Poster coming soon
       </div>
     )}
@@ -106,18 +107,26 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       {data.subtitle && <p class="font-body text-base-content/70 mt-2 text-lead italic">{data.subtitle}</p>}
       <p class="font-body text-base-content mt-4">{data.synopsis}</p>
 
-      <div class="mt-7 grid gap-4.5 sm:grid-cols-2">
-        <InfoRow
-          label="Dates"
-          value={data.runDates.length === 0
-            ? 'TBA'
-            : data.runDates
-                .map((rd) => {
-                  const dateLabel = rd.label ? `${rd.label}: ${formatDate(rd.date)}` : formatDate(rd.date);
-                  return rd.accessibilityTag ? `${dateLabel} (${rd.accessibilityTag})` : dateLabel;
-                })
-                .join(' · ')}
-        />
+      <div class="mt-7">
+        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Showtimes</p>
+        {data.runDates.length === 0 ? (
+          <p class="font-body text-base-content mt-2">TBA</p>
+        ) : (
+          <ul class="font-body text-base-content mt-2 space-y-1">
+            {data.runDates.map((rd) => (
+              <li>
+                {rd.label && <span class="font-medium">{rd.label}: </span>}
+                {formatDate(rd.date)}
+                {' — '}
+                {rd.time ? formatTime(rd.time) : 'Time TBA'}
+                {rd.accessibilityTag && ` (${rd.accessibilityTag})`}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div class="mt-4.5 grid gap-4.5 sm:grid-cols-2">
         <InfoRow label="Venue" value={data.venue} />
         <InfoRow label="Presented By" value={performingGroup} />
         {data.dressCode && <InfoRow label="Dress Code" value={data.dressCode} iconDef={faShirt} />}
@@ -184,6 +193,19 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           </div>
         )}
       </div>
+
+      {data.auditions && isAuditionActive(data.auditions) && (
+        <div class="mt-10">
+          <Divider />
+          <div class="mt-8">
+            <AuditionNotice
+              title={`Auditions for ${data.title}`}
+              auditions={data.auditions}
+              fallbackContactEmail={contact.email}
+            />
+          </div>
+        </div>
+      )}
     </div>
   </div>
 </DefaultLayout>

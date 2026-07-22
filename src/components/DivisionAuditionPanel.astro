@@ -1,0 +1,30 @@
+---
+import InfoRow from '@components/InfoRow.astro';
+import Button from '@components/Button.astro';
+
+interface Props {
+  eyebrow: string;
+  heading: string;
+  description: string;
+  auditionWindow: string;
+  performanceWindow?: string;
+  contactEmail: string;
+}
+
+const { eyebrow, heading, description, auditionWindow, performanceWindow, contactEmail } = Astro.props as Props;
+---
+
+<div class="bg-primary text-primary-content rounded-lg p-8">
+  <p class="font-body text-secondary-accessible text-eyebrow font-semibold tracking-[0.09em] uppercase">
+    {eyebrow}
+  </p>
+  <h2 class="font-heading mt-2 text-feature font-semibold">{heading}</h2>
+  <p class="font-body text-light-blue-tint mt-3">{description}</p>
+  <div class="mt-5 flex flex-col gap-3.5">
+    <InfoRow label="Auditions" value={auditionWindow} />
+    {performanceWindow && <InfoRow label="Performances" value={performanceWindow} />}
+  </div>
+  <Button href={`mailto:${contactEmail}`} variant="inverse" class="mt-6">
+    Ask About {eyebrow}
+  </Button>
+</div>

@@ -1,0 +1,57 @@
+---
+import InfoRow from '@components/InfoRow.astro';
+import Button from '@components/Button.astro';
+import { formatDate, formatTime } from '@utils/dates';
+import { SIGN_UP_PLACEHOLDER_URL, type AuditionData } from '@utils/auditions';
+
+interface Props {
+  title: string;
+  href?: string;
+  auditions: AuditionData;
+  fallbackContactEmail?: string;
+}
+
+const { title, href, auditions, fallbackContactEmail } = Astro.props as Props;
+const contactEmail = auditions.contactEmail ?? fallbackContactEmail;
+const tba = !auditions.auditionDates || auditions.auditionDates.length === 0;
+---
+
+<div class="border-line rounded-lg border bg-base-100 p-8 shadow-card">
+  <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Auditioning Now</p>
+  {href ? (
+    <h2 class="font-heading text-base-content mt-2 text-feature font-semibold">
+      <a href={href} class="link link-hover">{title}</a>
+    </h2>
+  ) : (
+    <h2 class="font-heading text-base-content mt-2 text-feature font-semibold">{title}</h2>
+  )}
+
+  <div class="mt-5 flex flex-col gap-3.5">
+    <InfoRow
+      label="Audition Dates"
+      value={tba
+        ? 'To be announced'
+        : auditions.auditionDates!
+            .map((d) => {
+              const dateTime = `${formatDate(d.date)}, ${formatTime(d.time)}`;
+              return d.location ? `${dateTime} — ${d.location}` : dateTime;
+            })
+            .join(' · ')}
+    />
+    {auditions.callbackDate && <InfoRow label="Callbacks" value={auditions.callbackDate} />}
+  </div>
+
+  {auditions.requirements && auditions.requirements.length > 0 && (
+    <p class="font-body text-base-content/70 mt-4">{auditions.requirements.join(' ')}</p>
+  )}
+  {auditions.notes && <p class="font-body text-base-content/70 mt-4">{auditions.notes}</p>}
+
+  <Button href={auditions.signUpUrl ?? SIGN_UP_PLACEHOLDER_URL} variant="secondary" class="mt-6">
+    Sign Up to Audition
+  </Button>
+  {contactEmail && (
+    <p class="font-body text-base-content/70 mt-3 text-sm">
+      Questions? <a href={`mailto:${contactEmail}`} class="link">{contactEmail}</a>
+    </p>
+  )}
+</div>

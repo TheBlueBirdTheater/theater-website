@@ -68,6 +68,29 @@ const visitInfoFields = {
     .optional(),
 };
 
+/** Optional audition specifics a show or event can add alongside the org-wide Auditions page content. */
+const auditionInfoFields = {
+  auditions: z
+    .object({
+      /** Omitted or empty when audition dates haven't been announced yet (TBA). */
+      auditionDates: z
+        .array(
+          z.object({
+            date: dateString,
+            time: timeString,
+            location: z.string().optional(),
+          })
+        )
+        .optional(),
+      callbackDate: dateString.optional(),
+      requirements: z.array(z.string()).optional(),
+      signUpUrl: z.string().optional(),
+      contactEmail: z.string().optional(),
+      notes: z.string().optional(),
+    })
+    .optional(),
+};
+
 const shows = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/shows' }),
   schema: ({ image }) =>
@@ -80,7 +103,8 @@ const shows = defineCollection({
       runDates: z.array(
         z.object({
           date: dateString,
-          time: timeString,
+          /** Omitted when the time for this run date isn't set yet (TBA). */
+          time: timeString.optional(),
           label: z.string().optional(),
           accessibilityTag: z.string().optional(),
         })
@@ -89,29 +113,12 @@ const shows = defineCollection({
       ticketUrl: z.string(),
       ticketPrice: z.string().optional(),
       ...visitInfoFields,
+      ...auditionInfoFields,
       /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
       performingGroup: z.string().optional(),
       cast: z.array(z.string()).optional(),
       crew: z.array(z.string()).optional(),
     }),
-});
-
-const auditions = defineCollection({
-  loader: optionalGlob({ pattern: '*.yaml', base: './src/content/auditions' }),
-  schema: z.object({
-    showTitle: z.string(),
-    auditionDates: z.array(
-      z.object({
-        date: dateString,
-        time: z.string(),
-        location: z.string(),
-      })
-    ),
-    callbackDate: dateString.optional(),
-    requirements: z.array(z.string()),
-    signUpUrl: z.string(),
-    contactEmail: z.string(),
-  }),
 });
 
 const team = defineCollection({
@@ -254,15 +261,16 @@ const events = defineCollection({
               )
               .optional(),
           })
-        )
-        .min(1),
+        ),
       /** Who's presenting this event — e.g. a guest choir or a private rental. Not an OPTP production. */
       host: z.string().optional(),
+      performers: z.array(z.string()).optional(),
       image: image().optional(),
       imageAlt: z.string().optional(),
       ticketUrl: z.string().optional(),
       ticketPrice: z.string().optional(),
       ...visitInfoFields,
+      ...auditionInfoFields,
     }),
 });
 
@@ -280,6 +288,12 @@ const extras = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/extras' }),
   schema: z.object({
     alsoAtTheBlueBird: z.string(),
+    /** General audition info for the adult company, shown on the Auditions page alongside Junior OPTP. */
+    adultOptp: z.object({
+      description: z.string(),
+      auditionWindow: z.string(),
+      contactEmail: z.string(),
+    }),
     juniorOptp: z.object({
       ageRange: z.string(),
       description: z.string(),
@@ -292,7 +306,6 @@ const extras = defineCollection({
 
 export const collections = {
   shows,
-  auditions,
   team,
   faqs,
   valueProps,

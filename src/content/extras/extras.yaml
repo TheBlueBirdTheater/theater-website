@@ -1,4 +1,8 @@
 alsoAtTheBlueBird: "Beyond the OPTP's own season, the Blue Bird Theatre regularly hosts live music performances, dance recitals, beauty pageants, comedy acts, and more. It is also available as an affordable and intimate venue to rent for community events."
+adultOptp:
+  description: "[ADULT OPTP AUDITION DESCRIPTION] — no experience necessary, all roles and backstage positions are open to the community."
+  auditionWindow: "[ADULT OPTP AUDITION WINDOW, e.g. Auditions are typically held 6 to 8 weeks before each show opens]"
+  contactEmail: optp1981@gmail.com
 juniorOptp:
   ageRange: "Ages 6 to 18"
   description: "Each summer, more than 50 children and teens gather at the Blue Bird Theatre and work together to create magic on the stage. All area youth are invited to be a part of the Junior Orangeburg Part-Time Players, no experience required."

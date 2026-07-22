@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
-import { formatEventDates } from '@utils/dates';
+import { formatEventDates, formatTime } from '@utils/dates';
 
 interface Props {
   event: CollectionEntry<'events'>;
@@ -37,7 +37,7 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
     {data.host && <p class="font-body text-base-content/70 text-sm italic">Presented by {data.host}</p>}
     <p class="font-body text-base-content mt-1 text-sm font-medium">
       {formatEventDates(data.showDates)}
-      {singleDateTimes && singleDateTimes.length > 0 && ` · ${singleDateTimes.map((t) => t.time).join(' & ')}`}
+      {singleDateTimes && singleDateTimes.length > 0 && ` · ${singleDateTimes.map((t) => formatTime(t.time)).join(' & ')}`}
     </p>
   </div>
 </a>

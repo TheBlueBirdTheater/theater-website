@@ -1,0 +1,7 @@
+title: "[TEST] No-Image Placeholder Preview"
+description: Temporary event with no image set, used to check the placeholder box
+  sizing on the event detail page. Delete this file when done.
+showDates:
+  - date: "2099-01-01"
+    times:
+      - time: "19:00"

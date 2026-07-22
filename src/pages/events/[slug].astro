@@ -9,12 +9,15 @@ import VenueMap from '@components/VenueMap.astro';
 import AddToCalendar from '@components/AddToCalendar.astro';
 import KnowBeforeYouGo from '@components/KnowBeforeYouGo.astro';
 import CountdownBanner from '@components/CountdownBanner.astro';
+import AuditionNotice from '@components/AuditionNotice.astro';
+import Divider from '@components/Divider.astro';
+import { isAuditionActive } from '@utils/auditions';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
 import { getVenueContact, THEATRE_NAME } from '@data/venue';
-import { formatDate, formatEventDates } from '@utils/dates';
-import { getNextShowing, type Showing } from '@utils/showings';
+import { formatDate, formatEventDates, formatTime } from '@utils/dates';
+import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
 import { formatAccessibilitySummary } from '@utils/accessibility';
 
 export async function getStaticPaths() {
@@ -50,8 +53,7 @@ const eventSchemas = data.showDates.flatMap((sd) =>
   (sd.times && sd.times.length > 0 ? sd.times : [undefined]).map((t) =>
     buildEventSchema({
       name: data.title,
-      // TODO: normalize to full ISO with real timezone once real event times are known
-      startDate: t ? `${sd.date}T${t.time}:00` : sd.date,
+      startDate: (t ? toVenueIsoString({ date: sd.date, time: t.time }) : null) ?? sd.date,
       url: `/events/${event.id}`,
       venueName: THEATRE_NAME,
       venueAddress: contact.address,
@@ -88,10 +90,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         src={data.image}
         alt={data.imageAlt ?? data.title}
         format="webp"
-        class="border-line rounded-lg aspect-4/5 w-full border object-cover shadow-card"
+        class="border-line rounded-lg aspect-4/5 w-full min-w-0 border object-cover shadow-card"
       />
     ) : (
-      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-4/5 w-full items-center justify-center border text-sm">
+      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
         {formatEventDates(data.showDates)}
       </div>
     )}
@@ -109,25 +111,29 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
       <div class="mt-4.5">
         <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Showtimes</p>
-        <ul class="font-body text-base-content mt-2 space-y-1">
-          {data.showDates.map((sd) => (
-            <li>
-              {formatDate(sd.date)}
-              {sd.times && sd.times.length > 0 && (
-                <>
-                  {' — '}
-                  {sd.times.map((t, i) => (
+        {data.showDates.length === 0 ? (
+          <p class="font-body text-base-content mt-2">TBA</p>
+        ) : (
+          <ul class="font-body text-base-content mt-2 space-y-1">
+            {data.showDates.map((sd) => (
+              <li>
+                {formatDate(sd.date)}
+                {' — '}
+                {sd.times && sd.times.length > 0 ? (
+                  sd.times.map((t, i) => (
                     <>
-                      {t.label ? `${t.label}: ${t.time}` : t.time}
+                      {t.label ? `${t.label}: ${formatTime(t.time)}` : formatTime(t.time)}
                       {t.accessibilityTag && ` (${t.accessibilityTag})`}
                       {i < sd.times!.length - 1 && ' & '}
                     </>
-                  ))}
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
+                  ))
+                ) : (
+                  'Time TBA'
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div class="mt-7">
@@ -161,6 +167,38 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           dressCode={data.dressCode}
         />
       </div>
+
+      {data.performers && data.performers.length > 0 && (
+        <div class="mt-10">
+          <Divider />
+          <div class="mt-8">
+            <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
+              Performances By
+            </p>
+            <p class="font-body text-base-content mt-2 leading-[1.9]">
+              {data.performers.map((performer, i) => (
+                <>
+                  {performer}
+                  {i < data.performers!.length - 1 && <br />}
+                </>
+              ))}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {data.auditions && isAuditionActive(data.auditions) && (
+        <div class="mt-10">
+          <Divider />
+          <div class="mt-8">
+            <AuditionNotice
+              title={`Auditions for ${data.title}`}
+              auditions={data.auditions}
+              fallbackContactEmail={contact.email}
+            />
+          </div>
+        </div>
+      )}
     </div>
   </div>
 </DefaultLayout>

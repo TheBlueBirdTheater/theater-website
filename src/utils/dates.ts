@@ -5,6 +5,14 @@ export function formatDate(dateStr: string): string {
   return formatter.format(new Date(`${dateStr}T00:00:00`));
 }
 
+/** Formats an "HH:MM" 24-hour wall-clock time as e.g. "7:30 PM". */
+export function formatTime(time: string): string {
+  const [h, m] = time.split(':').map(Number);
+  const period = h >= 12 ? 'PM' : 'AM';
+  const hour12 = h % 12 === 0 ? 12 : h % 12;
+  return `${hour12}:${String(m).padStart(2, '0')} ${period}`;
+}
+
 /**
  * Formats a show's run dates as a human-readable range, e.g. "September 11–13, 2026"
  * or, when the run spans months/years, "December 30, 2026 – January 2, 2027".

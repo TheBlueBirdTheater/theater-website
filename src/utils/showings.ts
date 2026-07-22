@@ -46,6 +46,28 @@ export function toUtcInstant(showing: Showing): Date | null {
   return new Date(approxUtc.getTime() - offsetMinutes * 60000);
 }
 
+function formatOffset(minutes: number): string {
+  const sign = minutes <= 0 ? '-' : '+';
+  const abs = Math.abs(minutes);
+  const hh = String(Math.floor(abs / 60)).padStart(2, '0');
+  const mm = String(abs % 60).padStart(2, '0');
+  return `${sign}${hh}:${mm}`;
+}
+
+/**
+ * Renders a showing's wall-clock date/time as a full offset-aware ISO 8601 string
+ * (e.g. "2026-09-11T19:30:00-04:00"), suitable for JSON-LD `startDate`. Returns null
+ * for TBA showings (no time) — callers should fall back to a date-only string.
+ */
+export function toVenueIsoString(showing: Showing): string | null {
+  if (!showing.time) return null;
+  const [hours, minutes] = showing.time.split(':').map(Number);
+  const [year, month, day] = showing.date.split('-').map(Number);
+  const approxUtc = new Date(Date.UTC(year, month - 1, day, hours, minutes));
+  const offsetMinutes = venueOffsetMinutes(approxUtc);
+  return `${showing.date}T${showing.time}:00${formatOffset(offsetMinutes)}`;
+}
+
 function toDateTime(showing: Showing, endOfDay = false): Date {
   if (showing.time) return new Date(`${showing.date}T${showing.time}:00`);
   return new Date(`${showing.date}T${endOfDay ? '23:59:59' : '00:00:00'}`);

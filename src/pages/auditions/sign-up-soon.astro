@@ -1,0 +1,35 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import Button from '@components/Button.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
+import { getVenueContact } from '@data/venue';
+
+const contact = await getVenueContact();
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Auditions', url: '/auditions' },
+  { name: 'Sign-Up Coming Soon', url: '/auditions/sign-up-soon' },
+]);
+---
+
+<DefaultLayout
+  title="Sign-Up Coming Soon"
+  description="Audition sign-up details for this production are still being finalized."
+  noindex
+>
+  <Schema schema={breadcrumbSchema} />
+
+  <div class="mx-auto max-w-xl px-4 py-24 text-center">
+    <h1 class="font-heading text-base-content text-display-sm font-semibold">Sign-Ups Are Almost Ready</h1>
+    <p class="font-body text-base-content/70 mt-4">
+      Our directors are still finalizing the sign-up process for this audition. Check back soon, or reach out to us
+      directly with any questions.
+    </p>
+    <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
+      <Button href="/auditions" variant="primary">Back to Auditions</Button>
+      <Button href={`mailto:${contact.email}`} variant="secondary">Email Us</Button>
+    </div>
+  </div>
+</DefaultLayout>

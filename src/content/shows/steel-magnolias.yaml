@@ -21,6 +21,22 @@ runDates:
 venue: Blue Bird Theatre
 ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg
 ticketPrice: $20 adults, $15 students and seniors
+auditions:
+  auditionDates:
+    - date: "2026-08-11"
+      time: "19:00"
+      location: Blue Bird Theatre
+    - date: "2026-08-12"
+      time: "19:00"
+      location: Blue Bird Theatre
+  callbackDate: "2026-08-15"
+  requirements:
+    - "All roles are female, ages 20-70."
+    - Please prepare a one-minute contemporary monologue.
+    - Sides will also be provided at the audition.
+  signUpUrl: https://www.signupgenius.com/go/bluebirdtheatre-steelmagnolias
+  contactEmail: optp1981@gmail.com
+  notes: No experience necessary — all are welcome to audition.
 performingGroup: Orangeburg Part-Time Players
 crew:
   - "Director: Coe Dantzler"

@@ -1,8 +1,21 @@
-title: "A Dream Is a Wish Your Heart Makes"
-description: A magical tribute to the most beloved princesses, presented by
-  Randy Etters and directed by Lauren Ott. Showtime TBA.
+title: Once Upon a Singalong
+description: A magical tribute to the most beloved princesses directed by Lauren
+  Ott. Showtime TBA.
 showDates:
-  - date: "2026-09-05"
+  - date: 2026-10-17
+    times: []
 host: Randy Etters
-image: ../../assets/images/events/blue-bird-dreams-cover-photo-1.jpg
-imageAlt: "A Dream Is a Wish Your Heart Makes poster: a princess in a pink gown before a glowing castle"
+performers:
+  - Lauren Ott
+  - Sarah Dukes
+  - Melissa Cisco
+  - Aubrey Ford
+  - Isaiah Carter
+  - Wesley Ford
+image: ../../assets/images/events/once-upon-a-singalong-hmgv.png
+imageAlt: "A Dream Is a Wish Your Heart Makes poster: a princess in a pink gown
+  before a glowing castle"
+doorsOpenMinutesBefore: 29
+runTime: 1 hour and 30 minutes
+concessionsNote: Snacks and drinks available in the lobby before the show and
+  during intermission.
