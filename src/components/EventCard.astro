@@ -4,18 +4,22 @@ import { Image } from 'astro:assets';
 import { formatEventDates, formatTime } from '@utils/dates';
 
 interface Props {
-  event: CollectionEntry<'events'>;
+  event: CollectionEntry<'events'> | CollectionEntry<'archivedEvents'>;
+  /** Renders as a plain, non-linking card — used on the season archive page where no detail page exists. */
+  archived?: boolean;
 }
 
-const { event } = Astro.props as Props;
+const { event, archived = false } = Astro.props as Props;
 const { data } = event;
+const Tag = archived ? 'div' : 'a';
 
 const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : undefined;
 ---
 
-<a
-  href={`/events/${event.id}`}
-  class="border-line bg-base-100 hover:shadow-raised flex flex-col overflow-hidden rounded-lg border no-underline shadow-card transition-all duration-200 hover:-translate-y-1"
+<Tag
+  href={archived ? undefined : `/events/${event.id}`}
+  class="border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card"
+  class:list={[!archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1']}
 >
   <div class="border-line relative aspect-4/3 overflow-hidden border-b">
     {data.image ? (
@@ -40,4 +44,4 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
       {singleDateTimes && singleDateTimes.length > 0 && ` · ${singleDateTimes.map((t) => formatTime(t.time)).join(' & ')}`}
     </p>
   </div>
-</a>
+</Tag>

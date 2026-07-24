@@ -6,9 +6,13 @@ import EventCard from '@components/EventCard.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getShowStatus } from '@utils/shows';
+import { getCurrentSeason, getNextSeason } from '@utils/seasons';
 import { getCollection, getEntry } from 'astro:content';
 
-const allShows = await getCollection('shows');
+const currentSeason = getCurrentSeason();
+const nextSeason = getNextSeason();
+
+const allShows = (await getCollection('shows')).filter((show) => show.data.season === currentSeason);
 
 const upcomingShows = allShows
   .filter((show) => show.data.runDates.length > 0 && getShowStatus(show) !== 'past')
@@ -27,8 +31,15 @@ const { data: extras } = (await getEntry('extras', 'extras'))!;
 
 const todayStr = new Date().toISOString().slice(0, 10);
 const upcomingEvents = (await getCollection('events'))
-  .filter((event) => event.data.showDates.at(-1)!.date >= todayStr)
+  .filter((event) => event.data.season === currentSeason && event.data.showDates.at(-1)!.date >= todayStr)
   .sort((a, b) => a.data.showDates[0].date.localeCompare(b.data.showDates[0].date));
+
+const nextSeasonShows = (await getCollection('shows'))
+  .filter((show) => show.data.season === nextSeason)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+const nextSeasonEvents = (await getCollection('events'))
+  .filter((event) => event.data.season === nextSeason)
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -40,10 +51,24 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-max) px-4 py-14">
-    <SectionHeading eyebrow="2026–2027 Season" title="On Stage at the Blue Bird" />
+    <SectionHeading eyebrow={`${currentSeason} Season`} title="On Stage at the Blue Bird" />
     <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {shows.map((show) => <ShowCard show={show} />)}
     </div>
+  </div>
+
+  <div class="mx-auto max-w-(--container-max) px-4 py-14">
+    <SectionHeading eyebrow="Looking Ahead" title={`Coming ${nextSeason} Season`} />
+    {nextSeasonShows.length > 0 || nextSeasonEvents.length > 0 ? (
+      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {nextSeasonShows.map((show) => <ShowCard show={show} />)}
+        {nextSeasonEvents.map((event) => <EventCard event={event} />)}
+      </div>
+    ) : (
+      <p class="font-body text-base-content mt-4">
+        Our {nextSeason} season lineup is coming soon — check back later!
+      </p>
+    )}
   </div>
 
   <section class="bg-base-200">

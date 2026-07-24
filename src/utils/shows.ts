@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCurrentSeason } from '@utils/seasons';
 
 const MS_PER_DAY = 86400000;
 const CURRENT_WINDOW_DAYS = 14;
@@ -30,7 +31,8 @@ export function getShowStatus(
 }
 
 export async function getCurrentShow() {
-  const shows = await getCollection('shows');
+  const currentSeason = getCurrentSeason();
+  const shows = (await getCollection('shows')).filter((show) => show.data.season === currentSeason);
   const withStatus = shows.map((show) => ({ show, status: getShowStatus(show) }));
 
   const current = withStatus.find((s) => s.status === 'current');

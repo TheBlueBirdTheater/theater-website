@@ -7,11 +7,13 @@ import { SIGN_UP_PLACEHOLDER_URL, type AuditionData } from '@utils/auditions';
 interface Props {
   title: string;
   href?: string;
+  /** Link to this listing's dedicated /auditions/[slug] page, rendered as a "Read More" button. */
+  readMoreHref?: string;
   auditions: AuditionData;
   fallbackContactEmail?: string;
 }
 
-const { title, href, auditions, fallbackContactEmail } = Astro.props as Props;
+const { title, href, readMoreHref, auditions, fallbackContactEmail } = Astro.props as Props;
 const contactEmail = auditions.contactEmail ?? fallbackContactEmail;
 const tba = !auditions.auditionDates || auditions.auditionDates.length === 0;
 ---
@@ -46,9 +48,12 @@ const tba = !auditions.auditionDates || auditions.auditionDates.length === 0;
   )}
   {auditions.notes && <p class="font-body text-base-content/70 mt-4">{auditions.notes}</p>}
 
-  <Button href={auditions.signUpUrl ?? SIGN_UP_PLACEHOLDER_URL} variant="secondary" class="mt-6">
-    Sign Up to Audition
-  </Button>
+  <div class="mt-6 flex flex-wrap items-center gap-3">
+    <Button href={auditions.signUpUrl ?? SIGN_UP_PLACEHOLDER_URL} variant="secondary">
+      Sign Up to Audition
+    </Button>
+    {readMoreHref && <Button href={readMoreHref} variant="ghost">Read More</Button>}
+  </div>
   {contactEmail && (
     <p class="font-body text-base-content/70 mt-3 text-sm">
       Questions? <a href={`mailto:${contactEmail}`} class="link">{contactEmail}</a>

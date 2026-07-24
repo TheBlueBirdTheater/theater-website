@@ -1,0 +1,69 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import ShowCard from '@components/ShowCard.astro';
+import EventCard from '@components/EventCard.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
+import { getCurrentSeason } from '@utils/seasons';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+type ArchivedShow = CollectionEntry<'shows'> | CollectionEntry<'archivedShows'>;
+type ArchivedEvent = CollectionEntry<'events'> | CollectionEntry<'archivedEvents'>;
+
+const currentSeasonNum = Number(getCurrentSeason());
+
+// One-year grace period (current − 1): still live in src/content, just no longer buildable pages.
+const graceShows = (await getCollection('shows')).filter((show) => Number(show.data.season) < currentSeasonNum);
+const graceEvents = (await getCollection('events')).filter((event) => Number(event.data.season) < currentSeasonNum);
+
+// 2+ years old: already swept into src/archive by scripts/archive-seasons.mjs.
+const sweptShows = await getCollection('archivedShows');
+const sweptEvents = await getCollection('archivedEvents');
+
+const allShows: ArchivedShow[] = [...graceShows, ...sweptShows];
+const allEvents: ArchivedEvent[] = [...graceEvents, ...sweptEvents];
+
+const seasons = Array.from(new Set([...allShows.map((s) => s.data.season), ...allEvents.map((e) => e.data.season)])).sort(
+  (a, b) => Number(b) - Number(a)
+);
+
+const seasonGroups = seasons.map((season) => ({
+  season,
+  shows: allShows.filter((s) => s.data.season === season).sort((a, b) => a.data.title.localeCompare(b.data.title)),
+  events: allEvents.filter((e) => e.data.season === season).sort((a, b) => a.data.title.localeCompare(b.data.title)),
+}));
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Shows', url: '/shows' },
+  { name: 'Past Seasons', url: '/shows/archive' },
+]);
+---
+
+<DefaultLayout
+  title="Past Seasons"
+  description="Browse shows and events from past seasons at the Blue Bird Theatre."
+>
+  <Schema schema={breadcrumbSchema} />
+
+  <div class="mx-auto max-w-(--container-max) px-4 py-14">
+    <SectionHeading eyebrow="Past Seasons" title="From the Archives" />
+
+    {seasonGroups.length === 0 ? (
+      <p class="font-body text-base-content mt-4">
+        No past seasons to show yet — check back after the current season wraps up.
+      </p>
+    ) : (
+      seasonGroups.map((group, i) => (
+        <div class:list={[i > 0 && 'mt-14']}>
+          <h2 class="font-heading text-base-content text-display-sm font-semibold">{group.season} Season</h2>
+          <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {group.shows.map((show) => <ShowCard show={show} archived />)}
+            {group.events.map((event) => <EventCard event={event} archived />)}
+          </div>
+        </div>
+      ))
+    )}
+  </div>
+</DefaultLayout>

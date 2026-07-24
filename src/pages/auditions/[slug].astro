@@ -7,14 +7,15 @@ import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getVenueContact } from '@data/venue';
 import { isAuditionActive } from '@utils/auditions';
+import { isBuildableSeason } from '@utils/seasons';
 
 export async function getStaticPaths() {
   const [shows, events] = await Promise.all([getCollection('shows'), getCollection('events')]);
   const showPaths = shows
-    .filter((show) => show.data.auditions)
+    .filter((show) => show.data.auditions && isBuildableSeason(show.data.season))
     .map((show) => ({ params: { slug: show.id }, props: { entry: show, kind: 'shows' as const } }));
   const eventPaths = events
-    .filter((event) => event.data.auditions)
+    .filter((event) => event.data.auditions && isBuildableSeason(event.data.season))
     .map((event) => ({ params: { slug: event.id }, props: { entry: event, kind: 'events' as const } }));
   return [...showPaths, ...eventPaths];
 }

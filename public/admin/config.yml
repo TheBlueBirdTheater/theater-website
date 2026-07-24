@@ -37,6 +37,13 @@ collections:
       - { label: Synopsis, name: synopsis, widget: text }
       - { label: Poster Image, name: posterImage, widget: image, required: false }
       - { label: Poster Alt Text, name: posterAlt, widget: string }
+      - {
+          label: Season (Year),
+          name: season,
+          widget: string,
+          pattern: ["^\\d{4}$", "Format: 4-digit year, e.g. 2026"],
+          hint: "Which season's program this belongs to — not necessarily the calendar year of its dates (an event just after New Year's can still belong to the prior season). To announce something for next season ahead of time, tag it with next year's number here; it'll get its own page and show under “Coming Next Season” immediately. Entries get archived automatically two seasons after this one.",
+        }
       - label: Run Dates
         name: runDates
         widget: list
@@ -331,6 +338,13 @@ collections:
     fields:
       - { label: Title, name: title, widget: string }
       - { label: Description, name: description, widget: text }
+      - {
+          label: Season (Year),
+          name: season,
+          widget: string,
+          pattern: ["^\\d{4}$", "Format: 4-digit year, e.g. 2026"],
+          hint: "Which season's program this belongs to — not necessarily the calendar year of its dates (an event just after New Year's can still belong to the prior season). To announce something for next season ahead of time, tag it with next year's number here; it'll get its own page and show under “Coming Next Season” immediately. Entries get archived automatically two seasons after this one.",
+        }
       - label: Show Dates
         name: showDates
         widget: list

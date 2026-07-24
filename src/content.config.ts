@@ -1,4 +1,4 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, type SchemaContext } from 'astro:content';
 import { glob, type Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
 
@@ -91,34 +91,47 @@ const auditionInfoFields = {
     .optional(),
 };
 
+/** Which season's program an entry belongs to — editor-set, not derived from its dates (see hint in config.yml). */
+const seasonField = z.string().regex(/^\d{4}$/, 'Format: 4-digit year, e.g. 2026');
+
+/** Shared by the live `shows` collection and the `archivedShows` collection it eventually feeds. */
+const showSchema = ({ image }: SchemaContext) =>
+  z.object({
+    title: z.string(),
+    subtitle: z.string().optional(),
+    synopsis: z.string(),
+    posterImage: image().optional(),
+    posterAlt: z.string(),
+    season: seasonField,
+    runDates: z.array(
+      z.object({
+        date: dateString,
+        /** Omitted when the time for this run date isn't set yet (TBA). */
+        time: timeString.optional(),
+        label: z.string().optional(),
+        accessibilityTag: z.string().optional(),
+      })
+    ),
+    venue: z.string(),
+    ticketUrl: z.string(),
+    ticketPrice: z.string().optional(),
+    ...visitInfoFields,
+    ...auditionInfoFields,
+    /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
+    performingGroup: z.string().optional(),
+    cast: z.array(z.string()).optional(),
+    crew: z.array(z.string()).optional(),
+  });
+
 const shows = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/shows' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      subtitle: z.string().optional(),
-      synopsis: z.string(),
-      posterImage: image().optional(),
-      posterAlt: z.string(),
-      runDates: z.array(
-        z.object({
-          date: dateString,
-          /** Omitted when the time for this run date isn't set yet (TBA). */
-          time: timeString.optional(),
-          label: z.string().optional(),
-          accessibilityTag: z.string().optional(),
-        })
-      ),
-      venue: z.string(),
-      ticketUrl: z.string(),
-      ticketPrice: z.string().optional(),
-      ...visitInfoFields,
-      ...auditionInfoFields,
-      /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
-      performingGroup: z.string().optional(),
-      cast: z.array(z.string()).optional(),
-      crew: z.array(z.string()).optional(),
-    }),
+  schema: showSchema,
+});
+
+/** Swept here by scripts/archive-seasons.mjs once a season is 2+ years old — not editable via Decap. */
+const archivedShows = defineCollection({
+  loader: optionalGlob({ pattern: '**/*.yaml', base: './src/archive/shows' }),
+  schema: showSchema,
 });
 
 const team = defineCollection({
@@ -240,38 +253,48 @@ const getInvolved = defineCollection({
   }),
 });
 
+/** Shared by the live `events` collection and the `archivedEvents` collection it eventually feeds. */
+const eventSchema = ({ image }: SchemaContext) =>
+  z.object({
+    title: z.string(),
+    description: z.string(),
+    season: seasonField,
+    showDates: z
+      .array(
+        z.object({
+          date: dateString,
+          /** Omitted or empty when the time for this date is still TBA. */
+          times: z
+            .array(
+              z.object({
+                time: timeString,
+                label: z.string().optional(),
+                accessibilityTag: z.string().optional(),
+              })
+            )
+            .optional(),
+        })
+      ),
+    /** Who's presenting this event — e.g. a guest choir or a private rental. Not an OPTP production. */
+    host: z.string().optional(),
+    performers: z.array(z.string()).optional(),
+    image: image().optional(),
+    imageAlt: z.string().optional(),
+    ticketUrl: z.string().optional(),
+    ticketPrice: z.string().optional(),
+    ...visitInfoFields,
+    ...auditionInfoFields,
+  });
+
 const events = defineCollection({
   loader: optionalGlob({ pattern: '*.yaml', base: './src/content/events' }),
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      description: z.string(),
-      showDates: z
-        .array(
-          z.object({
-            date: dateString,
-            /** Omitted or empty when the time for this date is still TBA. */
-            times: z
-              .array(
-                z.object({
-                  time: timeString,
-                  label: z.string().optional(),
-                  accessibilityTag: z.string().optional(),
-                })
-              )
-              .optional(),
-          })
-        ),
-      /** Who's presenting this event — e.g. a guest choir or a private rental. Not an OPTP production. */
-      host: z.string().optional(),
-      performers: z.array(z.string()).optional(),
-      image: image().optional(),
-      imageAlt: z.string().optional(),
-      ticketUrl: z.string().optional(),
-      ticketPrice: z.string().optional(),
-      ...visitInfoFields,
-      ...auditionInfoFields,
-    }),
+  schema: eventSchema,
+});
+
+/** Swept here by scripts/archive-seasons.mjs once a season is 2+ years old — not editable via Decap. */
+const archivedEvents = defineCollection({
+  loader: optionalGlob({ pattern: '**/*.yaml', base: './src/archive/events' }),
+  schema: eventSchema,
 });
 
 const gallery = defineCollection({
@@ -306,6 +329,7 @@ const extras = defineCollection({
 
 export const collections = {
   shows,
+  archivedShows,
   team,
   faqs,
   valueProps,
@@ -317,4 +341,5 @@ export const collections = {
   extras,
   gallery,
   events,
+  archivedEvents,
 };

@@ -19,13 +19,16 @@ import { getVenueContact, THEATRE_NAME } from '@data/venue';
 import { formatDate, formatEventDates, formatTime } from '@utils/dates';
 import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
 import { formatAccessibilitySummary } from '@utils/accessibility';
+import { isBuildableSeason } from '@utils/seasons';
 
 export async function getStaticPaths() {
   const events = await getCollection('events');
-  return events.map((event) => ({
-    params: { slug: event.id },
-    props: { event },
-  }));
+  return events
+    .filter((event) => isBuildableSeason(event.data.season))
+    .map((event) => ({
+      params: { slug: event.id },
+      props: { event },
+    }));
 }
 
 interface Props {
@@ -90,7 +93,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         src={data.image}
         alt={data.imageAlt ?? data.title}
         format="webp"
-        class="border-line rounded-lg aspect-4/5 w-full min-w-0 border object-cover shadow-card"
+        class="border-line w-full min-w-0 self-start rounded-lg border shadow-card"
       />
     ) : (
       <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
@@ -193,6 +196,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           <div class="mt-8">
             <AuditionNotice
               title={`Auditions for ${data.title}`}
+              readMoreHref={`/auditions/${event.id}`}
               auditions={data.auditions}
               fallbackContactEmail={contact.email}
             />

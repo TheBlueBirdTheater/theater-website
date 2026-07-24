@@ -21,13 +21,16 @@ import { getShowStatus } from '@utils/shows';
 import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
 import { formatAccessibilitySummary } from '@utils/accessibility';
 import { isAuditionActive } from '@utils/auditions';
+import { isBuildableSeason } from '@utils/seasons';
 
 export async function getStaticPaths() {
   const shows = await getCollection('shows');
-  return shows.map((show) => ({
-    params: { slug: show.id },
-    props: { show },
-  }));
+  return shows
+    .filter((show) => isBuildableSeason(show.data.season))
+    .map((show) => ({
+      params: { slug: show.id },
+      props: { show },
+    }));
 }
 
 interface Props {
@@ -92,7 +95,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         src={data.posterImage}
         alt={data.posterAlt}
         format="webp"
-        class="border-line rounded-lg aspect-4/5 w-full min-w-0 border object-cover shadow-card"
+        class="border-line w-full min-w-0 self-start rounded-lg border shadow-card"
       />
     ) : (
       <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
@@ -200,6 +203,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           <div class="mt-8">
             <AuditionNotice
               title={`Auditions for ${data.title}`}
+              readMoreHref={`/auditions/${show.id}`}
               auditions={data.auditions}
               fallbackContactEmail={contact.email}
             />
