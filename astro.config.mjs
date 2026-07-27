@@ -11,7 +11,12 @@ export default defineConfig({
   // (unconfirmed per BRAND/CONTACT spec) when building outside Netlify.
   site: process.env.URL || 'https://optp.org',
   output: 'static',
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    sitemap({
+      filter: (page) => !new URL(page).pathname.startsWith('/admin'),
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
     server: {
