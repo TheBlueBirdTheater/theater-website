@@ -5,55 +5,41 @@ import ShowCard from '@components/ShowCard.astro';
 import EventCard from '@components/EventCard.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
-import { getShowStatus } from '@utils/shows';
 import { getCurrentSeason, getNextSeason } from '@utils/seasons';
+import { getWhatsOn } from '@utils/whatsOn';
 import { getCollection, getEntry } from 'astro:content';
 
 const currentSeason = getCurrentSeason();
 const nextSeason = getNextSeason();
 
-const allShows = (await getCollection('shows')).filter((show) => show.data.season === currentSeason);
+const whatsOn = await getWhatsOn(currentSeason);
 
-const upcomingShows = allShows
-  .filter((show) => show.data.runDates.length > 0 && getShowStatus(show) !== 'past')
-  .sort((a, b) => a.data.runDates[0].date.localeCompare(b.data.runDates[0].date));
-
-const tbaShows = allShows
-  .filter((show) => show.data.runDates.length === 0)
+const nextSeasonShows = (await getCollection('shows', ({ data }) => !data.draft && data.season === nextSeason))
+  .sort((a, b) => a.data.title.localeCompare(b.data.title));
+const nextSeasonEvents = (await getCollection('events', ({ data }) => !data.draft && data.season === nextSeason))
   .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
-const pastShows = allShows
-  .filter((show) => getShowStatus(show) === 'past')
-  .sort((a, b) => b.data.runDates.at(-1)!.date.localeCompare(a.data.runDates.at(-1)!.date));
-
-const shows = [...upcomingShows, ...tbaShows, ...pastShows];
 const { data: extras } = (await getEntry('extras', 'extras'))!;
-
-const todayStr = new Date().toISOString().slice(0, 10);
-const upcomingEvents = (await getCollection('events'))
-  .filter((event) => event.data.season === currentSeason && event.data.showDates.at(-1)!.date >= todayStr)
-  .sort((a, b) => a.data.showDates[0].date.localeCompare(b.data.showDates[0].date));
-
-const nextSeasonShows = (await getCollection('shows'))
-  .filter((show) => show.data.season === nextSeason)
-  .sort((a, b) => a.data.title.localeCompare(b.data.title));
-const nextSeasonEvents = (await getCollection('events'))
-  .filter((event) => event.data.season === nextSeason)
-  .sort((a, b) => a.data.title.localeCompare(b.data.title));
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Shows', url: '/shows' },
+  { name: 'What’s On', url: '/shows/' },
 ]);
 ---
 
-<DefaultLayout title="Shows" description="See what's currently playing and what's coming up at the Blue Bird Theatre.">
+<DefaultLayout
+  title="What's On"
+  description="See what's currently playing and what's coming up at the Blue Bird Theatre — OPTP productions and hosted events, together."
+>
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-max) px-4 py-14">
-    <SectionHeading eyebrow={`${currentSeason} Season`} title="On Stage at the Blue Bird" />
+    <SectionHeading eyebrow={`${currentSeason} Season`} title="What's On at the Blue Bird" />
+    <p class="font-body text-base-content mt-4 max-w-160">{extras.alsoAtTheBlueBird}</p>
     <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {shows.map((show) => <ShowCard show={show} />)}
+      {whatsOn.map((item) =>
+        item.kind === 'show' ? <ShowCard show={item.entry} /> : <EventCard event={item.entry} />
+      )}
     </div>
   </div>
 
@@ -73,18 +59,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <section class="bg-base-200">
     <div class="mx-auto max-w-(--container-max) px-4 py-16">
-      <SectionHeading eyebrow="Beyond OPTP" title="Also at the Blue Bird Theatre" />
-      <p class="font-body text-base-content mt-4 max-w-160">{extras.alsoAtTheBlueBird}</p>
-      <p class="font-body text-base-content mt-3 max-w-160">
+      <p class="font-body text-base-content max-w-160">
         Interested in renting the Blue Bird Theatre for your own production or event?{' '}
-        <a href="/contact" class="link link-primary font-semibold">Get in touch</a>.
+        <a href="/rentals/" class="link link-primary font-semibold">Learn more about rentals</a>.
       </p>
-
-      {upcomingEvents.length > 0 && (
-        <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {upcomingEvents.map((event) => <EventCard event={event} />)}
-        </div>
-      )}
     </div>
   </section>
 </DefaultLayout>

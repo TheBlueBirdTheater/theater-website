@@ -3,23 +3,27 @@ import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import { Image } from 'astro:assets';
 import NewsletterSignup from '@components/NewsletterSignup.astro';
+import ShowCard from '@components/ShowCard.astro';
+import EventCard from '@components/EventCard.astro';
 import logo from '@assets/logo.png';
-import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
 import InfoRow from '@components/InfoRow.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, OPTP_NAME, THEATRE_NAME } from '@utils/schema';
-import { getCurrentShow, getShowStatus } from '@utils/shows';
-import { formatDateRange } from '@utils/dates';
+import { getUpcomingWhatsOn } from '@utils/whatsOn';
 import { toVenueIsoString } from '@utils/showings';
 import { getVenueContact } from '@data/venue';
 import { getEntry } from 'astro:content';
 
-const currentShow = await getCurrentShow();
-const firstRunDate = currentShow?.data.runDates[0];
+const whatsOn = await getUpcomingWhatsOn(6);
 
 const { data: history } = (await getEntry('history', 'history'))!;
+const { data: extras } = (await getEntry('extras', 'extras'))!;
 const contact = await getVenueContact();
+
+const parkingFaq = await getEntry('faqs', 'venue-parking');
+const showtimesFaq = await getEntry('faqs', 'tickets-showtimes');
+const ticketCostFaq = await getEntry('faqs', 'tickets-cost');
 
 const theaterSchema = buildTheaterVenueSchema({
   name: THEATRE_NAME,
@@ -34,58 +38,108 @@ const performingGroupSchema = buildPerformingGroupSchema({
   locationName: THEATRE_NAME,
 });
 
-const eventSchema = currentShow && firstRunDate
-  ? buildEventSchema({
-      name: currentShow.data.title,
+const featured = whatsOn[0];
+const featuredEventSchema = (() => {
+  if (!featured) return null;
+  if (featured.kind === 'show') {
+    const { entry } = featured;
+    const firstRunDate = entry.data.runDates[0];
+    if (!firstRunDate) return null;
+    return buildEventSchema({
+      name: entry.data.title,
       startDate: toVenueIsoString(firstRunDate) ?? firstRunDate.date,
-      url: `/shows/${currentShow.id}`,
-      venueName: currentShow.data.venue,
+      url: `/shows/${entry.id}/`,
+      venueName: entry.data.venue,
       venueAddress: contact.address,
-      performerName: currentShow.data.performingGroup ?? OPTP_NAME,
-      offerUrl: currentShow.data.ticketUrl,
-      offerPrice: currentShow.data.ticketPrice,
-      description: currentShow.data.synopsis,
-    })
-  : null;
+      performerName: entry.data.performingGroup ?? OPTP_NAME,
+      offerUrl: entry.data.ticketUrl,
+      offerPrice: entry.data.ticketPrice,
+      description: entry.data.synopsis,
+    });
+  }
+  const { entry } = featured;
+  const firstShowDate = entry.data.showDates[0];
+  const firstTime = firstShowDate?.times?.[0];
+  if (!firstShowDate) return null;
+  return buildEventSchema({
+    name: entry.data.title,
+    startDate: (firstTime ? toVenueIsoString({ date: firstShowDate.date, time: firstTime.time }) : null) ?? firstShowDate.date,
+    url: `/events/${entry.id}/`,
+    venueName: THEATRE_NAME,
+    venueAddress: contact.address,
+    performerName: entry.data.host,
+    offerUrl: entry.data.ticketUrl,
+    offerPrice: entry.data.ticketPrice,
+    description: entry.data.description,
+    imageUrl: entry.data.image?.src,
+  });
+})();
 ---
 
 <DefaultLayout
   title="Home"
   description="Blue Bird Theatre is a historic community theater in Orangeburg, SC, home to the Orangeburg Part-Time Players."
 >
-  <Schema schema={eventSchema ? [theaterSchema, performingGroupSchema, eventSchema] : [theaterSchema, performingGroupSchema]} />
+  <Schema
+    schema={featuredEventSchema ? [theaterSchema, performingGroupSchema, featuredEventSchema] : [theaterSchema, performingGroupSchema]}
+  />
 
-  {currentShow && (
-    <section class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-16">
-      <div class="order-2 md:order-1">
-        <Badge status={getShowStatus(currentShow)} />
-        <h1 class="font-heading text-base-content mt-4 text-display leading-[1.08] font-semibold tracking-[-0.01em] sm:text-display-lg">
-          {currentShow.data.title}
-        </h1>
-        {currentShow.data.subtitle && (
-          <p class="font-body text-base-content/70 mt-2 text-lead italic">{currentShow.data.subtitle}</p>
+  <section class="mx-auto max-w-(--container-max) px-4 py-14 md:py-16">
+    <SectionHeading eyebrow="What's On" title="On Stage at the Blue Bird" />
+    {whatsOn.length > 0 ? (
+      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {whatsOn.map((item) =>
+          item.kind === 'show' ? <ShowCard show={item.entry} /> : <EventCard event={item.entry} />
         )}
-        <p class="font-body text-base-content mt-4 max-w-130">{currentShow.data.synopsis}</p>
-        <div class="mt-5 flex flex-wrap gap-5">
-          <InfoRow label="Dates" value={formatDateRange(currentShow.data.runDates)} />
-          <InfoRow label="Venue" value={currentShow.data.venue} />
-        </div>
-        <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Get Tickets</Button>
       </div>
-      {currentShow.data.posterImage ? (
-        <Image
-          src={currentShow.data.posterImage}
-          alt={currentShow.data.posterAlt}
-          format="webp"
-          class="border-line rounded-lg aspect-square w-full max-w-sm order-1 justify-self-center border object-cover shadow-card md:order-2"
-        />
-      ) : (
-        <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body order-1 flex aspect-square w-full max-w-sm items-center justify-center justify-self-center border text-sm md:order-2">
-          Poster coming soon
+    ) : (
+      <p class="font-body text-base-content mt-4">Our next season is coming together — check back soon!</p>
+    )}
+    <Button href="/shows/" variant="secondary" class="mt-8">See Everything On Stage</Button>
+  </section>
+
+  <section class="bg-base-200">
+    <div class="mx-auto max-w-(--container-max) px-4 py-16">
+      <SectionHeading eyebrow="Get Involved" title="There's a role for you at the Blue Bird" />
+      <div class="mt-8 grid gap-6 sm:grid-cols-3">
+        <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
+          <h3 class="font-heading text-base-content text-lg font-semibold">Audition</h3>
+          <p class="font-body text-base-content/70 mt-2 text-sm">
+            Join the cast or crew of an upcoming production — no experience necessary.
+          </p>
+          <Button href="/auditions/" variant="secondary" size="sm" class="mt-4">Auditions</Button>
         </div>
-      )}
-    </section>
-  )}
+        <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
+          <h3 class="font-heading text-base-content text-lg font-semibold">Volunteer</h3>
+          <p class="font-body text-base-content/70 mt-2 text-sm">
+            Help backstage, front-of-house, or behind the scenes at the Blue Bird.
+          </p>
+          <Button href="/volunteer/" variant="secondary" size="sm" class="mt-4">Volunteer</Button>
+        </div>
+        <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
+          <h3 class="font-heading text-base-content text-lg font-semibold">Donate</h3>
+          <p class="font-body text-base-content/70 mt-2 text-sm">
+            Support the nonprofit that keeps this historic stage alive.
+          </p>
+          <Button href="/donate/" variant="secondary" size="sm" class="mt-4">Donate</Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-(--container-max) px-4 py-16">
+    <SectionHeading eyebrow="Plan Your Visit" title="Everything you need to know before curtain" />
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      <InfoRow
+        label="Address"
+        value={`${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`}
+      />
+      {parkingFaq && <InfoRow label="Parking" value={parkingFaq.data.answer} />}
+      {showtimesFaq && <InfoRow label="Showtimes" value={showtimesFaq.data.answer} />}
+      {ticketCostFaq && <InfoRow label="Ticket Prices" value={ticketCostFaq.data.answer} />}
+    </div>
+    <Button href="/faq/" variant="ghost" class="mt-6">More Visit & FAQ Details</Button>
+  </section>
 
   <section class="bg-primary">
     <div class="mx-auto grid max-w-(--container-max) items-center gap-12 px-4 py-16 md:grid-cols-[0.9fr_1.1fr]">
@@ -93,14 +147,31 @@ const eventSchema = currentShow && firstRunDate
         <Image src={logo} alt="Blue Bird Theatre marquee illustration" width={220} height={330} />
       </div>
       <div>
-        <SectionHeading
-          eyebrow="Since 1981"
-          title="The largest community theater between Columbia and Charleston"
-          onNavy
-        />
-        <p class="font-body text-light-blue-tint mt-4 max-w-170 text-lead">{history.intro}</p>
-        <Button href="/about" variant="inverse" class="mt-6">Read Our Story</Button>
+        <SectionHeading eyebrow={`Junior OPTP · ${extras.juniorOptp.ageRange}`} title="Kids and teens take the stage every summer" onNavy />
+        <p class="font-body text-light-blue-tint mt-4 max-w-170 text-lead">{extras.juniorOptp.description}</p>
+        <Button href="/auditions/" variant="inverse" class="mt-6">Junior OPTP Auditions</Button>
       </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-(--container-max) px-4 py-16">
+    <div class="grid items-center gap-12 md:grid-cols-[0.9fr_1.1fr]">
+      <div class="bg-base-200 border-line rounded-lg border p-8 shadow-card justify-self-center">
+        <Image src={logo} alt="Blue Bird Theatre marquee illustration" width={220} height={330} />
+      </div>
+      <div>
+        <SectionHeading eyebrow="Since 1981" title="The largest community theater between Columbia and Charleston" />
+        <p class="font-body text-base-content mt-4 max-w-170 text-lead">{history.intro}</p>
+        <Button href="/about/" variant="primary" class="mt-6">Read Our Story</Button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-base-200">
+    <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
+      <SectionHeading eyebrow="Host Your Event" title="Rent the Blue Bird Theatre" align="center" />
+      <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-lead">{extras.alsoAtTheBlueBird}</p>
+      <Button href="/rentals/" variant="primary" class="mt-6">Rental Info & Rates</Button>
     </div>
   </section>
 

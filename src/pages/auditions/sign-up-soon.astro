@@ -9,8 +9,8 @@ const contact = await getVenueContact();
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Auditions', url: '/auditions' },
-  { name: 'Sign-Up Coming Soon', url: '/auditions/sign-up-soon' },
+  { name: 'Auditions', url: '/auditions/' },
+  { name: 'Sign-Up Coming Soon', url: '/auditions/sign-up-soon/' },
 ]);
 ---
 
@@ -28,7 +28,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       directly with any questions.
     </p>
     <div class="mt-7 flex flex-wrap items-center justify-center gap-3">
-      <Button href="/auditions" variant="primary">Back to Auditions</Button>
+      <Button href="/auditions/" variant="primary">Back to Auditions</Button>
       <Button href={`mailto:${contact.email}`} variant="secondary">Email Us</Button>
     </div>
   </div>

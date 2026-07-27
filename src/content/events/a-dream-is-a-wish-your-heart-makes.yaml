@@ -1,10 +1,11 @@
 title: Once Upon a Singalong
 description: A magical tribute to the most beloved princesses directed by Lauren
-  Ott. Showtime TBA.
+  Ott.
 season: "2026"
 showDates:
   - date: 2026-10-17
-    times: []
+    times:
+      - time: "19:00"
 host: Randy Etters
 performers:
   - Lauren Ott

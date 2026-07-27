@@ -40,7 +40,7 @@ const tba = !auditions.auditionDates || auditions.auditionDates.length === 0;
             })
             .join(' · ')}
     />
-    {auditions.callbackDate && <InfoRow label="Callbacks" value={auditions.callbackDate} />}
+    {auditions.callbackDate && <InfoRow label="Callbacks" value={formatDate(auditions.callbackDate)} />}
   </div>
 
   {auditions.requirements && auditions.requirements.length > 0 && (

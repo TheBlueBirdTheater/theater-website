@@ -22,9 +22,10 @@ import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings'
 import { formatAccessibilitySummary } from '@utils/accessibility';
 import { isAuditionActive } from '@utils/auditions';
 import { isBuildableSeason } from '@utils/seasons';
+import { truncate } from '@utils/text';
 
 export async function getStaticPaths() {
-  const shows = await getCollection('shows');
+  const shows = await getCollection('shows', ({ data }) => !data.draft);
   return shows
     .filter((show) => isBuildableSeason(show.data.season))
     .map((show) => ({
@@ -60,7 +61,7 @@ const eventSchemas = data.runDates.map((rd) =>
   buildEventSchema({
     name: data.title,
     startDate: toVenueIsoString(rd) ?? rd.date,
-    url: `/shows/${show.id}`,
+    url: `/shows/${show.id}/`,
     venueName: data.venue,
     venueAddress: contact.address,
     performerName: performingGroup,
@@ -73,15 +74,15 @@ const eventSchemas = data.runDates.map((rd) =>
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Shows', url: '/shows' },
-  { name: data.title, url: `/shows/${show.id}` },
+  { name: 'What’s On', url: '/shows/' },
+  { name: data.title, url: `/shows/${show.id}/` },
 ]);
 ---
 
 <DefaultLayout
   title={data.title}
-  description={data.synopsis}
-  image={data.posterImage?.src}
+  description={data.metaDescription ?? truncate(data.synopsis)}
+  image={data.ogImage}
   imageAlt={data.posterAlt}
 >
   <Schema schema={eventSchemas} />
@@ -203,7 +204,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           <div class="mt-8">
             <AuditionNotice
               title={`Auditions for ${data.title}`}
-              readMoreHref={`/auditions/${show.id}`}
+              readMoreHref={`/auditions/${show.id}/`}
               auditions={data.auditions}
               fallbackContactEmail={contact.email}
             />

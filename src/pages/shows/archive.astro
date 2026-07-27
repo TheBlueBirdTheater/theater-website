@@ -14,8 +14,12 @@ type ArchivedEvent = CollectionEntry<'events'> | CollectionEntry<'archivedEvents
 const currentSeasonNum = Number(getCurrentSeason());
 
 // One-year grace period (current − 1): still live in src/content, just no longer buildable pages.
-const graceShows = (await getCollection('shows')).filter((show) => Number(show.data.season) < currentSeasonNum);
-const graceEvents = (await getCollection('events')).filter((event) => Number(event.data.season) < currentSeasonNum);
+const graceShows = (await getCollection('shows', ({ data }) => !data.draft)).filter(
+  (show) => Number(show.data.season) < currentSeasonNum
+);
+const graceEvents = (await getCollection('events', ({ data }) => !data.draft)).filter(
+  (event) => Number(event.data.season) < currentSeasonNum
+);
 
 // 2+ years old: already swept into src/archive by scripts/archive-seasons.mjs.
 const sweptShows = await getCollection('archivedShows');
@@ -36,8 +40,8 @@ const seasonGroups = seasons.map((season) => ({
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Shows', url: '/shows' },
-  { name: 'Past Seasons', url: '/shows/archive' },
+  { name: 'What’s On', url: '/shows/' },
+  { name: 'Past Seasons', url: '/shows/archive/' },
 ]);
 ---
 

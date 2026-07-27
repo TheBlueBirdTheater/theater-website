@@ -11,10 +11,14 @@ export default defineConfig({
   // (unconfirmed per BRAND/CONTACT spec) when building outside Netlify.
   site: process.env.URL || 'https://optp.org',
   output: 'static',
+  trailingSlash: 'always',
   integrations: [
     mdx(),
     sitemap({
-      filter: (page) => !new URL(page).pathname.startsWith('/admin'),
+      filter: (page) => {
+        const pathname = new URL(page).pathname;
+        return !pathname.startsWith('/admin') && !pathname.includes('zz-test');
+      },
     }),
   ],
   vite: {

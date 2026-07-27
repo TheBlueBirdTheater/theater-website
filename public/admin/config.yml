@@ -35,8 +35,25 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Subtitle, name: subtitle, widget: string, required: false }
       - { label: Synopsis, name: synopsis, widget: text }
+      - {
+          label: Meta Description,
+          name: metaDescription,
+          widget: string,
+          required: false,
+          pattern: ["^.{0,160}$", "Keep it under 160 characters"],
+          hint: "Short description for search results and social shares (~155 characters). Leave blank to auto-generate one from the Synopsis.",
+        }
       - { label: Poster Image, name: posterImage, widget: image, required: false }
       - { label: Poster Alt Text, name: posterAlt, widget: string }
+      - {
+          label: Social Share Image (OG Image),
+          name: ogImage,
+          widget: image,
+          media_folder: /public/images/og,
+          public_folder: /images/og,
+          required: false,
+          hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) — NOT the poster, which is usually the wrong aspect ratio. Leave blank to use the site's generic default share image.",
+        }
       - {
           label: Season (Year),
           name: season,
@@ -259,6 +276,14 @@ collections:
             widget: string,
             hint: 'e.g. "Director: [Name]"',
           }
+      - {
+          label: Draft (hide from site),
+          name: draft,
+          widget: boolean,
+          default: false,
+          required: false,
+          hint: "When on, this entry is hidden from the site entirely (listings, its own page, and the sitemap) without deleting it.",
+        }
 
   - name: team
     label: Board & Staff
@@ -339,6 +364,14 @@ collections:
       - { label: Title, name: title, widget: string }
       - { label: Description, name: description, widget: text }
       - {
+          label: Meta Description,
+          name: metaDescription,
+          widget: string,
+          required: false,
+          pattern: ["^.{0,160}$", "Keep it under 160 characters"],
+          hint: "Short description for search results and social shares (~155 characters). Leave blank to auto-generate one from the Description.",
+        }
+      - {
           label: Season (Year),
           name: season,
           widget: string,
@@ -402,6 +435,15 @@ collections:
         field: { label: Performer, name: value, widget: string }
       - { label: Image, name: image, widget: image, required: false }
       - { label: Image Alt Text, name: imageAlt, widget: string, required: false }
+      - {
+          label: Social Share Image (OG Image),
+          name: ogImage,
+          widget: image,
+          media_folder: /public/images/og,
+          public_folder: /images/og,
+          required: false,
+          hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) — NOT the event image above, which is usually the wrong aspect ratio. Leave blank to use the site's generic default share image.",
+        }
       - { label: Ticket/Info URL, name: ticketUrl, widget: string, required: false }
       - {
           label: Ticket Price,
@@ -552,6 +594,14 @@ collections:
               required: false,
               hint: 'Anything else auditioners should know, e.g. "Prepare 32 bars of a song."',
             }
+      - {
+          label: Draft (hide from site),
+          name: draft,
+          widget: boolean,
+          default: false,
+          required: false,
+          hint: "When on, this entry is hidden from the site entirely (listings, its own page, and the sitemap) without deleting it.",
+        }
 
   - name: gallery
     label: Gallery
@@ -732,6 +782,39 @@ collections:
             fields:
               - { label: Title, name: title, widget: string }
               - { label: Description, name: description, widget: text }
+
+  - name: rentals
+    label: Rentals Page Settings
+    files:
+      - name: rentals
+        label: Rentals Page Settings
+        file: src/content/rentals/rentals.yaml
+        fields:
+          - {
+              label: Intro,
+              name: intro,
+              widget: text,
+              hint: "Opening paragraph on the Rentals page.",
+            }
+          - { label: Capacity, name: capacity, widget: string, hint: 'e.g. "300 seats"' }
+          - {
+              label: Stage Dimensions,
+              name: stageDimensions,
+              widget: string,
+              hint: 'e.g. "30 ft wide x 20 ft deep"',
+            }
+          - label: Amenities
+            name: amenities
+            widget: list
+            required: false
+            field: { label: Amenity, name: value, widget: string }
+          - label: Rate Tiers
+            name: rateTiers
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string, hint: 'e.g. "Half-Day Rental"' }
+              - { label: Rate, name: rate, widget: string, hint: 'e.g. "$250"' }
+              - { label: Description, name: description, widget: text, required: false }
 
   - name: extras
     label: Extra Page Copy

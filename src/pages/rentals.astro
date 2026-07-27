@@ -1,0 +1,115 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import InfoRow from '@components/InfoRow.astro';
+import Button from '@components/Button.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
+import { getEntry } from 'astro:content';
+
+const { data: rentals } = (await getEntry('rentals', 'rentals'))!;
+const { data: contact } = (await getEntry('contact', 'contact'))!;
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Rentals', url: '/rentals/' },
+]);
+---
+
+<DefaultLayout
+  title="Rentals"
+  description="Rent the Blue Bird Theatre for your concert, recital, pageant, or community event in downtown Orangeburg, SC."
+>
+  <Schema schema={breadcrumbSchema} />
+
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
+    <SectionHeading title="Rent the Blue Bird Theatre" />
+    <p class="font-body text-base-content mt-4 text-lead">{rentals.intro}</p>
+
+    <div class="mt-8 grid gap-6 sm:grid-cols-2">
+      <InfoRow label="Capacity" value={rentals.capacity} />
+      <InfoRow label="Stage Dimensions" value={rentals.stageDimensions} />
+    </div>
+
+    {rentals.amenities && rentals.amenities.length > 0 && (
+      <div class="mt-8">
+        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Amenities</p>
+        <ul class="font-body text-base-content mt-3 list-inside list-disc space-y-1">
+          {rentals.amenities.map((amenity) => <li>{amenity}</li>)}
+        </ul>
+      </div>
+    )}
+
+    <div class="mt-10">
+      <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Rates</p>
+      <div class="mt-4 grid gap-6 sm:grid-cols-2">
+        {rentals.rateTiers.map((tier) => (
+          <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
+            <h3 class="font-heading text-base-content text-lg font-semibold">{tier.name}</h3>
+            <p class="font-heading text-primary mt-1 text-xl font-semibold">{tier.rate}</p>
+            {tier.description && <p class="font-body text-base-content/70 mt-2 text-sm">{tier.description}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="border-line bg-base-200 mt-10 rounded-lg border p-6">
+      <h2 class="font-heading text-base-content text-lg font-semibold">Request a Rental</h2>
+      <p class="font-body text-base-content/70 mt-2 text-sm">
+        Tell us about your event and we'll follow up with availability and details. You can also reach us directly
+        at <a href={`tel:${contact.phone}`} class="link">{contact.phone}</a> or{' '}
+        <a href={`mailto:${contact.email}`} class="link">{contact.email}</a>.
+      </p>
+      <form
+        name="rental-inquiry"
+        method="POST"
+        data-netlify="true"
+        class="mt-5 flex flex-col gap-4"
+      >
+        <input type="hidden" name="form-name" value="rental-inquiry" />
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-name" class="font-body text-base-content text-sm font-medium">Name</label>
+            <input
+              id="rental-inquiry-name"
+              type="text"
+              name="name"
+              required
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-email" class="font-body text-base-content text-sm font-medium">Email</label>
+            <input
+              id="rental-inquiry-email"
+              type="email"
+              name="email"
+              required
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="rental-inquiry-date" class="font-body text-base-content text-sm font-medium">Event Date(s)</label>
+          <input
+            id="rental-inquiry-date"
+            type="text"
+            name="event-date"
+            class="input border-line text-base-content rounded-md"
+          />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="rental-inquiry-message" class="font-body text-base-content text-sm font-medium">Tell us about your event</label>
+          <textarea
+            id="rental-inquiry-message"
+            name="message"
+            rows="4"
+            required
+            class="textarea border-line text-base-content rounded-md"
+          ></textarea>
+        </div>
+        <Button type="submit" variant="primary" class="self-start">Send Inquiry</Button>
+      </form>
+    </div>
+  </div>
+</DefaultLayout>

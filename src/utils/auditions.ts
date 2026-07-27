@@ -2,7 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import { getNextShowing, type Showing } from '@utils/showings';
 
 /** Internal page linked to when a show/event hasn't set up its real sign-up process yet. */
-export const SIGN_UP_PLACEHOLDER_URL = '/auditions/sign-up-soon';
+export const SIGN_UP_PLACEHOLDER_URL = '/auditions/sign-up-soon/';
 
 export type AuditionData = NonNullable<CollectionEntry<'shows'>['data']['auditions']>;
 
@@ -53,8 +53,8 @@ function toListing(
     listing: {
       ...rest,
       title: entry.data.title,
-      href: `/auditions/${entry.id}`,
-      entryHref: `/${kind}/${entry.id}`,
+      href: `/auditions/${entry.id}/`,
+      entryHref: `/${kind}/${entry.id}/`,
       auditionDates: auditionDates ?? [],
       tba: !auditionDates || auditionDates.length === 0,
     },
@@ -65,7 +65,10 @@ function toListing(
 
 /** Every show/event currently auditioning (dates not yet passed), soonest audition date first, TBA entries last. */
 export async function getAuditioningNow(now: Date = new Date()): Promise<AuditionListing[]> {
-  const [shows, events] = await Promise.all([getCollection('shows'), getCollection('events')]);
+  const [shows, events] = await Promise.all([
+    getCollection('shows', ({ data }) => !data.draft),
+    getCollection('events', ({ data }) => !data.draft),
+  ]);
   return [...shows.map((s) => toListing(s, 'shows', now)), ...events.map((e) => toListing(e, 'events', now))]
     .filter((x): x is { listing: AuditionListing; sortKey: number; active: boolean } => x !== null && x.active)
     .sort((a, b) => a.sortKey - b.sortKey)

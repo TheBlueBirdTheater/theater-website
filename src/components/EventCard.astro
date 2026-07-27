@@ -17,7 +17,7 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
 ---
 
 <Tag
-  href={archived ? undefined : `/events/${event.id}`}
+  href={archived ? undefined : `/events/${event.id}/`}
   class="border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card"
   class:list={[!archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1']}
 >

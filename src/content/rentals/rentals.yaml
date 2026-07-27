@@ -1,0 +1,14 @@
+intro: "The Blue Bird Theatre is an affordable and intimate historic venue available to rent for concerts, recitals, pageants, and other community events."
+capacity: "[CAPACITY, e.g. 300 seats]"
+stageDimensions: "[STAGE DIMENSIONS, e.g. 30 ft wide x 20 ft deep]"
+amenities:
+  - "[AMENITY, e.g. Sound and stage lighting system]"
+  - "[AMENITY, e.g. Dressing rooms]"
+  - "[AMENITY, e.g. Lobby and box office space]"
+rateTiers:
+  - name: "[RATE TIER NAME, e.g. Half-Day Rental]"
+    rate: "[RATE, e.g. $250]"
+    description: "[DESCRIPTION, e.g. Up to 4 hours, includes basic sound and lighting]"
+  - name: "[RATE TIER NAME, e.g. Full-Day Rental]"
+    rate: "[RATE, e.g. $450]"
+    description: "[DESCRIPTION, e.g. Up to 8 hours, includes basic sound and lighting]"

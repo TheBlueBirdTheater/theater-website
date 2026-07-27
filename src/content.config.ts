@@ -100,8 +100,18 @@ const showSchema = ({ image }: SchemaContext) =>
     title: z.string(),
     subtitle: z.string().optional(),
     synopsis: z.string(),
+    /** Short (~155-char) search/social description. Falls back to a truncated synopsis when omitted. */
+    metaDescription: z.string().max(160).optional(),
     posterImage: image().optional(),
     posterAlt: z.string(),
+    /**
+     * Stable, unhashed social-share image (e.g. `/images/og/steel-magnolias.jpg`
+     * under `public/`) — intentionally NOT the `image()` helper, since that
+     * produces a build-hashed path unsuitable for a stable OG URL. Falls back
+     * to the site default (`/images/og-default.jpg`) when omitted, rather than
+     * the (likely portrait) posterImage.
+     */
+    ogImage: z.string().optional(),
     season: seasonField,
     runDates: z.array(
       z.object({
@@ -121,6 +131,8 @@ const showSchema = ({ image }: SchemaContext) =>
     performingGroup: z.string().optional(),
     cast: z.array(z.string()).optional(),
     crew: z.array(z.string()).optional(),
+    /** Hides this entry from the site (sitemap, listings, and its own page) without deleting it. */
+    draft: z.boolean().optional(),
   });
 
 const shows = defineCollection({
@@ -258,6 +270,8 @@ const eventSchema = ({ image }: SchemaContext) =>
   z.object({
     title: z.string(),
     description: z.string(),
+    /** Short (~155-char) search/social description. Falls back to a truncated description when omitted. */
+    metaDescription: z.string().max(160).optional(),
     season: seasonField,
     showDates: z
       .array(
@@ -280,10 +294,20 @@ const eventSchema = ({ image }: SchemaContext) =>
     performers: z.array(z.string()).optional(),
     image: image().optional(),
     imageAlt: z.string().optional(),
+    /**
+     * Stable, unhashed social-share image (e.g. `/images/og/my-event.jpg`
+     * under `public/`) — intentionally NOT the `image()` helper, since that
+     * produces a build-hashed path unsuitable for a stable OG URL. Falls back
+     * to the site default (`/images/og-default.jpg`) when omitted, rather than
+     * the event's own `image`.
+     */
+    ogImage: z.string().optional(),
     ticketUrl: z.string().optional(),
     ticketPrice: z.string().optional(),
     ...visitInfoFields,
     ...auditionInfoFields,
+    /** Hides this entry from the site (sitemap, listings, and its own page) without deleting it. */
+    draft: z.boolean().optional(),
   });
 
 const events = defineCollection({
@@ -305,6 +329,23 @@ const gallery = defineCollection({
       alt: z.string(),
       caption: z.string().optional(),
     }),
+});
+
+const rentals = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/rentals' }),
+  schema: z.object({
+    intro: z.string(),
+    capacity: z.string(),
+    stageDimensions: z.string(),
+    amenities: z.array(z.string()).optional(),
+    rateTiers: z.array(
+      z.object({
+        name: z.string(),
+        rate: z.string(),
+        description: z.string().optional(),
+      })
+    ),
+  }),
 });
 
 const extras = defineCollection({
@@ -338,6 +379,7 @@ export const collections = {
   history,
   donate,
   getInvolved,
+  rentals,
   extras,
   gallery,
   events,

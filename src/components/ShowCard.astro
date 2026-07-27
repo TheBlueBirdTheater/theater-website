@@ -17,7 +17,7 @@ const Tag = archived ? 'div' : 'a';
 ---
 
 <Tag
-  href={archived ? undefined : `/shows/${show.id}`}
+  href={archived ? undefined : `/shows/${show.id}/`}
   class="border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card"
   class:list={[!archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1']}
 >
@@ -43,6 +43,7 @@ const Tag = archived ? 'div' : 'a';
   </div>
   <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
     <h3 class="font-heading text-base-content text-card-title font-semibold tracking-[-0.01em]">{data.title}</h3>
+    <p class="font-body text-base-content/70 text-sm italic">Presented by {data.performingGroup ?? 'Orangeburg Part-Time Players'}</p>
     {data.subtitle && <p class="font-body text-base-content/70 text-sm italic">{data.subtitle}</p>}
     <p class="font-body text-base-content mt-1 text-sm font-medium">
       {formatDateRange(data.runDates)}

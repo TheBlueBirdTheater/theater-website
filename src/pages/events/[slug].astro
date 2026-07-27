@@ -20,9 +20,10 @@ import { formatDate, formatEventDates, formatTime } from '@utils/dates';
 import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
 import { formatAccessibilitySummary } from '@utils/accessibility';
 import { isBuildableSeason } from '@utils/seasons';
+import { truncate } from '@utils/text';
 
 export async function getStaticPaths() {
-  const events = await getCollection('events');
+  const events = await getCollection('events', ({ data }) => !data.draft);
   return events
     .filter((event) => isBuildableSeason(event.data.season))
     .map((event) => ({
@@ -57,7 +58,7 @@ const eventSchemas = data.showDates.flatMap((sd) =>
     buildEventSchema({
       name: data.title,
       startDate: (t ? toVenueIsoString({ date: sd.date, time: t.time }) : null) ?? sd.date,
-      url: `/events/${event.id}`,
+      url: `/events/${event.id}/`,
       venueName: THEATRE_NAME,
       venueAddress: contact.address,
       performerName: data.host,
@@ -71,15 +72,15 @@ const eventSchemas = data.showDates.flatMap((sd) =>
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Shows', url: '/shows' },
-  { name: data.title, url: `/events/${event.id}` },
+  { name: 'What’s On', url: '/shows/' },
+  { name: data.title, url: `/events/${event.id}/` },
 ]);
 ---
 
 <DefaultLayout
   title={data.title}
-  description={data.description}
-  image={data.image?.src}
+  description={data.metaDescription ?? truncate(data.description)}
+  image={data.ogImage}
   imageAlt={data.imageAlt}
 >
   <Schema schema={eventSchemas} />
@@ -196,7 +197,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           <div class="mt-8">
             <AuditionNotice
               title={`Auditions for ${data.title}`}
-              readMoreHref={`/auditions/${event.id}`}
+              readMoreHref={`/auditions/${event.id}/`}
               auditions={data.auditions}
               fallbackContactEmail={contact.email}
             />

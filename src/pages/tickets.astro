@@ -18,7 +18,7 @@ const eventSchema = currentShow && firstRunDate
   ? buildEventSchema({
       name: currentShow.data.title,
       startDate: toVenueIsoString(firstRunDate) ?? firstRunDate.date,
-      url: `/shows/${currentShow.id}`,
+      url: `/shows/${currentShow.id}/`,
       venueName: currentShow.data.venue,
       venueAddress: contact.address,
       performerName: currentShow.data.performingGroup ?? OPTP_NAME,
@@ -30,7 +30,7 @@ const eventSchema = currentShow && firstRunDate
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Tickets', url: '/tickets' },
+  { name: 'Tickets', url: '/tickets/' },
 ]);
 ---
 

@@ -2,23 +2,93 @@
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
+import InfoRow from '@components/InfoRow.astro';
+import Button from '@components/Button.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
 const faqs = await getCollection('faqs');
+const { data: contact } = (await getEntry('contact', 'contact'))!;
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'FAQ', url: '/faq' },
+  { name: 'Visit & FAQ', url: '/faq/' },
 ]);
 ---
 
-<DefaultLayout title="FAQ" description="Frequently asked questions about OPTP and the Blue Bird Theatre.">
+<DefaultLayout
+  title="Visit & FAQ"
+  description="Plan your visit to the Blue Bird Theatre: contact info, ticket prices, parking, and answers to common questions."
+>
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
-    <SectionHeading title="Frequently Asked Questions" />
-    <div class="mt-8 space-y-3">
+    <SectionHeading title="Visit & FAQ" />
+
+    <div class="mt-8 flex flex-col gap-5">
+      <InfoRow label="Phone" value={contact.phone} href={`tel:${contact.phone}`} />
+      <InfoRow label="Email" value={contact.email} href={`mailto:${contact.email}`} />
+      <InfoRow
+        label="Address"
+        value={`Blue Bird Theatre, ${contact.address.line1}, ${contact.address.city}, ${contact.address.state} ${contact.address.zip}`}
+      />
+    </div>
+
+    <div class="mt-6 flex gap-4">
+      {contact.socials.map((social) => (
+        <a href={social.url} class="link link-primary">{social.platform}</a>
+      ))}
+    </div>
+
+    <div class="border-line bg-base-200 mt-10 rounded-lg border p-6">
+      <h2 class="font-heading text-base-content text-lg font-semibold">Send Us a Message</h2>
+      <p class="font-body text-base-content/70 mt-2 text-sm">
+        Questions about a show, a rental inquiry, or anything else — we'll get back to you as soon as we can.
+      </p>
+      <form
+        name="visit-inquiry"
+        method="POST"
+        data-netlify="true"
+        class="mt-5 flex flex-col gap-4"
+      >
+        <input type="hidden" name="form-name" value="visit-inquiry" />
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="visit-inquiry-name" class="font-body text-base-content text-sm font-medium">Name</label>
+            <input
+              id="visit-inquiry-name"
+              type="text"
+              name="name"
+              required
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="visit-inquiry-email" class="font-body text-base-content text-sm font-medium">Email</label>
+            <input
+              id="visit-inquiry-email"
+              type="email"
+              name="email"
+              required
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <label for="visit-inquiry-message" class="font-body text-base-content text-sm font-medium">Message</label>
+          <textarea
+            id="visit-inquiry-message"
+            name="message"
+            rows="4"
+            required
+            class="textarea border-line text-base-content rounded-md"
+          ></textarea>
+        </div>
+        <Button type="submit" variant="primary" class="self-start">Send Message</Button>
+      </form>
+    </div>
+
+    <div class="mt-14 space-y-3">
       {faqs.map((faq) => (
         <div class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
           <input type="checkbox" />
