@@ -12,18 +12,18 @@ const { data: contact } = (await getEntry('contact', 'contact'))!;
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Visit & FAQ', url: '/faq/' },
+  { name: 'Contact', url: '/faq/' },
 ]);
 ---
 
 <DefaultLayout
-  title="Visit & FAQ"
-  description="Plan your visit to the Blue Bird Theatre: contact info, ticket prices, parking, and answers to common questions."
+  title="Contact"
+  description="Contact info for the Blue Bird Theatre, plus answers to common questions about tickets, parking, and more."
 >
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
-    <SectionHeading title="Visit & FAQ" />
+    <SectionHeading title="Contact" />
 
     <div class="mt-8 flex flex-col gap-5">
       <InfoRow label="Phone" value={contact.phone} href={`tel:${contact.phone}`} />
@@ -46,17 +46,17 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         Questions about a show, a rental inquiry, or anything else — we'll get back to you as soon as we can.
       </p>
       <form
-        name="visit-inquiry"
+        name="contact-inquiry"
         method="POST"
         data-netlify="true"
         class="mt-5 flex flex-col gap-4"
       >
-        <input type="hidden" name="form-name" value="visit-inquiry" />
+        <input type="hidden" name="form-name" value="contact-inquiry" />
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="flex flex-col gap-1.5">
-            <label for="visit-inquiry-name" class="font-body text-base-content text-sm font-medium">Name</label>
+            <label for="contact-inquiry-name" class="font-body text-base-content text-sm font-medium">Name</label>
             <input
-              id="visit-inquiry-name"
+              id="contact-inquiry-name"
               type="text"
               name="name"
               required
@@ -64,9 +64,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
             />
           </div>
           <div class="flex flex-col gap-1.5">
-            <label for="visit-inquiry-email" class="font-body text-base-content text-sm font-medium">Email</label>
+            <label for="contact-inquiry-email" class="font-body text-base-content text-sm font-medium">Email</label>
             <input
-              id="visit-inquiry-email"
+              id="contact-inquiry-email"
               type="email"
               name="email"
               required
@@ -75,9 +75,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           </div>
         </div>
         <div class="flex flex-col gap-1.5">
-          <label for="visit-inquiry-message" class="font-body text-base-content text-sm font-medium">Message</label>
+          <label for="contact-inquiry-message" class="font-body text-base-content text-sm font-medium">Message</label>
           <textarea
-            id="visit-inquiry-message"
+            id="contact-inquiry-message"
             name="message"
             rows="4"
             required

@@ -6,13 +6,13 @@ import EventCard from '@components/EventCard.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCurrentSeason, getNextSeason } from '@utils/seasons';
-import { getWhatsOn } from '@utils/whatsOn';
+import { getWhatsOnGroups } from '@utils/whatsOn';
 import { getCollection, getEntry } from 'astro:content';
 
 const currentSeason = getCurrentSeason();
 const nextSeason = getNextSeason();
 
-const whatsOn = await getWhatsOn(currentSeason);
+const { upcoming, past } = await getWhatsOnGroups(currentSeason);
 
 const nextSeasonShows = (await getCollection('shows', ({ data }) => !data.draft && data.season === nextSeason))
   .sort((a, b) => a.data.title.localeCompare(b.data.title));
@@ -23,12 +23,12 @@ const { data: extras } = (await getEntry('extras', 'extras'))!;
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'What’s On', url: '/shows/' },
+  { name: 'Shows', url: '/shows/' },
 ]);
 ---
 
 <DefaultLayout
-  title="What's On"
+  title="Shows"
   description="See what's currently playing and what's coming up at the Blue Bird Theatre — OPTP productions and hosted events, together."
 >
   <Schema schema={breadcrumbSchema} />
@@ -37,11 +37,22 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <SectionHeading eyebrow={`${currentSeason} Season`} title="What's On at the Blue Bird" />
     <p class="font-body text-base-content mt-4 max-w-160">{extras.alsoAtTheBlueBird}</p>
     <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {whatsOn.map((item) =>
+      {upcoming.map((item) =>
         item.kind === 'show' ? <ShowCard show={item.entry} /> : <EventCard event={item.entry} />
       )}
     </div>
   </div>
+
+  {past.length > 0 && (
+    <div class="mx-auto max-w-(--container-max) px-4 py-14">
+      <SectionHeading eyebrow="This Season" title="Past This Season" />
+      <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {past.map((item) =>
+          item.kind === 'show' ? <ShowCard show={item.entry} muted /> : <EventCard event={item.entry} muted />
+        )}
+      </div>
+    </div>
+  )}
 
   <div class="mx-auto max-w-(--container-max) px-4 py-14">
     <SectionHeading eyebrow="Looking Ahead" title={`Coming ${nextSeason} Season`} />

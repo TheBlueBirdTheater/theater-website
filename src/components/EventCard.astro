@@ -7,9 +7,11 @@ interface Props {
   event: CollectionEntry<'events'> | CollectionEntry<'archivedEvents'>;
   /** Renders as a plain, non-linking card — used on the season archive page where no detail page exists. */
   archived?: boolean;
+  /** Renders with reduced opacity/grayscale, but still links through — used for past events on /shows/. */
+  muted?: boolean;
 }
 
-const { event, archived = false } = Astro.props as Props;
+const { event, archived = false, muted = false } = Astro.props as Props;
 const { data } = event;
 const Tag = archived ? 'div' : 'a';
 
@@ -18,8 +20,11 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
 
 <Tag
   href={archived ? undefined : `/events/${event.id}/`}
-  class="border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card"
-  class:list={[!archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1']}
+  class:list={[
+    'border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card',
+    !archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1',
+    muted && 'opacity-60 grayscale-[0.5]',
+  ]}
 >
   <div class="border-line relative aspect-4/3 overflow-hidden border-b">
     {data.image ? (
@@ -35,6 +40,11 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
         {formatEventDates(data.showDates)}
       </div>
     )}
+    <div class="absolute top-3.5 right-3.5">
+      <span class="bg-base-100/90 border-line text-base-content/70 font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase">
+        Hosted Event
+      </span>
+    </div>
   </div>
   <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
     <h3 class="font-heading text-base-content text-card-title font-semibold tracking-[-0.01em]">{data.title}</h3>

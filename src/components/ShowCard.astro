@@ -9,17 +9,25 @@ interface Props {
   show: CollectionEntry<'shows'> | CollectionEntry<'archivedShows'>;
   /** Renders as a plain, non-linking card — used on the season archive page where no detail page exists. */
   archived?: boolean;
+  /** Renders with reduced opacity/grayscale, but still links through — used for past shows on /shows/. */
+  muted?: boolean;
 }
 
-const { show, archived = false } = Astro.props as Props;
+const { show, archived = false, muted = false } = Astro.props as Props;
 const { data } = show;
 const Tag = archived ? 'div' : 'a';
+const isOptp = !data.performingGroup || data.performingGroup === 'Orangeburg Part-Time Players';
+const presenterLabel = isOptp ? 'OPTP Production' : 'Guest Production';
 ---
 
 <Tag
   href={archived ? undefined : `/shows/${show.id}/`}
-  class="border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card"
-  class:list={[!archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1']}
+  class:list={[
+    'bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card',
+    isOptp ? 'border-primary/30' : 'border-line',
+    !archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1',
+    muted && 'opacity-60 grayscale-[0.5]',
+  ]}
 >
   <div class="border-line relative aspect-4/3 overflow-hidden border-b">
     {data.posterImage ? (
@@ -40,6 +48,11 @@ const Tag = archived ? 'div' : 'a';
         <Badge status={getShowStatus(show as CollectionEntry<'shows'>)} />
       </div>
     )}
+    <div class="absolute top-3.5 right-3.5">
+      <span class="bg-base-100/90 border-primary/30 text-primary font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase">
+        {presenterLabel}
+      </span>
+    </div>
   </div>
   <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
     <h3 class="font-heading text-base-content text-card-title font-semibold tracking-[-0.01em]">{data.title}</h3>

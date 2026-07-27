@@ -128,7 +128,7 @@ const featuredEventSchema = (() => {
   </section>
 
   <section class="mx-auto max-w-(--container-max) px-4 py-16">
-    <SectionHeading eyebrow="Plan Your Visit" title="Everything you need to know before curtain" />
+    <SectionHeading eyebrow="Know Before You Go" title="Everything you need to know before curtain" />
     <div class="mt-8 grid gap-6 sm:grid-cols-2">
       <InfoRow
         label="Address"
@@ -138,7 +138,7 @@ const featuredEventSchema = (() => {
       {showtimesFaq && <InfoRow label="Showtimes" value={showtimesFaq.data.answer} />}
       {ticketCostFaq && <InfoRow label="Ticket Prices" value={ticketCostFaq.data.answer} />}
     </div>
-    <Button href="/faq/" variant="ghost" class="mt-6">More Visit & FAQ Details</Button>
+    <Button href="/faq/" variant="ghost" class="mt-6">Contact & FAQ</Button>
   </section>
 
   <section class="bg-primary">

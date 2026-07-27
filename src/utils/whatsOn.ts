@@ -30,12 +30,18 @@ async function getSeasonItems(season: string): Promise<WhatsOnItem[]> {
   ];
 }
 
+export interface WhatsOnGroups {
+  /** Upcoming/current shows and events (including TBA), soonest first, TBA last. */
+  upcoming: WhatsOnItem[];
+  /** Shows and events from this season that have already closed, most recently past first. */
+  past: WhatsOnItem[];
+}
+
 /**
  * Merges the `shows` and `events` collections for a given season (default:
- * current) into one date-sorted list — upcoming/TBA first (soonest first,
- * TBA entries last), then past entries (most recently past first).
+ * current) into upcoming and past groups, each date-sorted.
  */
-export async function getWhatsOn(season: string = getCurrentSeason()): Promise<WhatsOnItem[]> {
+export async function getWhatsOnGroups(season: string = getCurrentSeason()): Promise<WhatsOnGroups> {
   const items = await getSeasonItems(season);
   const todayStr = new Date().toISOString().slice(0, 10);
 
@@ -47,7 +53,7 @@ export async function getWhatsOn(season: string = getCurrentSeason()): Promise<W
     .filter((item) => isPast(item, todayStr))
     .sort((a, b) => (lastDate(b) ?? '').localeCompare(lastDate(a) ?? ''));
 
-  return [...upcoming, ...past];
+  return { upcoming, past };
 }
 
 /** The next N upcoming (non-past, dated) shows/events, soonest first — for homepage teasers. */
