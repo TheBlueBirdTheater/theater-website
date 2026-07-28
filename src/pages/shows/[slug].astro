@@ -85,7 +85,7 @@ const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
 <DefaultLayout
   title={data.title}
   description={data.metaDescription ?? truncate(data.synopsis)}
-  image={data.ogImage}
+  image={data.ogImage ?? data.posterImage?.src}
   imageAlt={data.posterAlt}
 >
   <Schema schema={eventSchemas} />

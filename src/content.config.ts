@@ -106,10 +106,10 @@ const showSchema = ({ image }: SchemaContext) =>
     posterAlt: z.string(),
     /**
      * Stable, unhashed social-share image (e.g. `/images/og/steel-magnolias.jpg`
-     * under `public/`) — intentionally NOT the `image()` helper, since that
-     * produces a build-hashed path unsuitable for a stable OG URL. Falls back
-     * to the site default (`/images/og-default.jpg`) when omitted, rather than
-     * the (likely portrait) posterImage.
+     * under `public/`, ideally 1200x630) — intentionally NOT the `image()` helper,
+     * since that produces a build-hashed path unsuitable for a stable OG URL.
+     * When omitted, the page falls back to posterImage (portrait, but still
+     * show-specific) and only uses the site default if there's no poster either.
      */
     ogImage: z.string().optional(),
     season: seasonField,
@@ -310,10 +310,10 @@ const eventSchema = ({ image }: SchemaContext) =>
     imageAlt: z.string().optional(),
     /**
      * Stable, unhashed social-share image (e.g. `/images/og/my-event.jpg`
-     * under `public/`) — intentionally NOT the `image()` helper, since that
-     * produces a build-hashed path unsuitable for a stable OG URL. Falls back
-     * to the site default (`/images/og-default.jpg`) when omitted, rather than
-     * the event's own `image`.
+     * under `public/`, ideally 1200x630) — intentionally NOT the `image()` helper,
+     * since that produces a build-hashed path unsuitable for a stable OG URL.
+     * When omitted, the page falls back to the event's own `image` and only
+     * uses the site default if there's no image either.
      */
     ogImage: z.string().optional(),
     ticketUrl: z.string().optional(),
