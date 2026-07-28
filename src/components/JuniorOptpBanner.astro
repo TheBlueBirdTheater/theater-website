@@ -1,0 +1,21 @@
+---
+import SectionHeading from '@components/SectionHeading.astro';
+import Button from '@components/Button.astro';
+import { getEntry } from 'astro:content';
+
+const { data: extras } = (await getEntry('extras', 'extras'))!;
+const { juniorOptp } = extras;
+---
+
+<section class="bg-primary">
+  <div class="mx-auto grid max-w-(--container-max) items-center gap-12 px-4 py-16 md:grid-cols-[0.9fr_1.1fr]">
+    <div class="border-line bg-base-100/10 text-primary-content/70 font-body flex aspect-4/3 w-full items-center justify-center rounded-lg border text-sm justify-self-center">
+      Junior OPTP photo coming soon
+    </div>
+    <div>
+      <SectionHeading eyebrow={`Junior OPTP · ${juniorOptp.ageRange}`} title="Kids and teens take the stage every summer" onNavy />
+      <p class="font-body text-light-blue-tint mt-4 max-w-170 text-lead">{juniorOptp.description}</p>
+      <Button href="/auditions/" variant="inverse" class="mt-6">Junior OPTP Auditions</Button>
+    </div>
+  </div>
+</section>

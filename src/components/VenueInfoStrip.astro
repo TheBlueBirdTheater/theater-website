@@ -1,0 +1,26 @@
+---
+import SectionHeading from '@components/SectionHeading.astro';
+import InfoRow from '@components/InfoRow.astro';
+import Button from '@components/Button.astro';
+import { getVenueContact } from '@data/venue';
+import { getEntry } from 'astro:content';
+
+const contact = await getVenueContact();
+const parkingFaq = await getEntry('faqs', 'venue-parking');
+const showtimesFaq = await getEntry('faqs', 'tickets-showtimes');
+const ticketCostFaq = await getEntry('faqs', 'tickets-cost');
+---
+
+<section class="mx-auto max-w-(--container-max) px-4 py-16">
+  <SectionHeading eyebrow="Know Before You Go" title="Everything you need to know before curtain" />
+  <div class="mt-8 grid gap-6 sm:grid-cols-2">
+    <InfoRow
+      label="Address"
+      value={`${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`}
+    />
+    {parkingFaq && <InfoRow label="Parking" value={parkingFaq.data.answer} />}
+    {showtimesFaq && <InfoRow label="Showtimes" value={showtimesFaq.data.answer} />}
+    {ticketCostFaq && <InfoRow label="Ticket Prices" value={ticketCostFaq.data.answer} />}
+  </div>
+  <Button href="/faq/" variant="ghost" class="mt-6">Contact & FAQ</Button>
+</section>

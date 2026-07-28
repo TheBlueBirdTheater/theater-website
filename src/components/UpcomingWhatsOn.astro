@@ -1,0 +1,31 @@
+---
+import SectionHeading from '@components/SectionHeading.astro';
+import Button from '@components/Button.astro';
+import ShowCard from '@components/ShowCard.astro';
+import EventCard from '@components/EventCard.astro';
+import { getUpcomingWhatsOn } from '@utils/whatsOn';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  count?: number;
+}
+
+const { eyebrow = 'Coming Up', title = 'Next at the Blue Bird', count = 3 } = Astro.props as Props;
+
+const whatsOn = await getUpcomingWhatsOn(count);
+---
+
+<section class="mx-auto max-w-(--container-max) px-4 py-14 md:py-16">
+  <SectionHeading eyebrow={eyebrow} title={title} />
+  {whatsOn.length > 0 ? (
+    <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      {whatsOn.map((item) =>
+        item.kind === 'show' ? <ShowCard show={item.entry} /> : <EventCard event={item.entry} />
+      )}
+    </div>
+  ) : (
+    <p class="font-body text-base-content mt-4">Our next season is coming together — check back soon!</p>
+  )}
+  <Button href="/shows/" variant="secondary" class="mt-8">See Everything On Stage</Button>
+</section>

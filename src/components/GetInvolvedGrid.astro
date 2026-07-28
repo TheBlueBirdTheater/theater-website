@@ -1,0 +1,33 @@
+---
+import SectionHeading from '@components/SectionHeading.astro';
+import Button from '@components/Button.astro';
+---
+
+<section class="bg-base-200">
+  <div class="mx-auto max-w-(--container-max) px-4 py-16">
+    <SectionHeading eyebrow="Get Involved" title="There's a role for you at the Blue Bird" />
+    <div class="mt-8 grid gap-6 sm:grid-cols-3">
+      <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
+        <h3 class="font-heading text-base-content text-lg font-semibold">Audition</h3>
+        <p class="font-body text-base-content/70 mt-2 text-sm">
+          Join the cast or crew of an upcoming production — no experience necessary.
+        </p>
+        <Button href="/auditions/" variant="secondary" size="sm" class="mt-4">Auditions</Button>
+      </div>
+      <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
+        <h3 class="font-heading text-base-content text-lg font-semibold">Volunteer</h3>
+        <p class="font-body text-base-content/70 mt-2 text-sm">
+          Help backstage, front-of-house, or behind the scenes at the Blue Bird.
+        </p>
+        <Button href="/volunteer/" variant="secondary" size="sm" class="mt-4">Volunteer</Button>
+      </div>
+      <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
+        <h3 class="font-heading text-base-content text-lg font-semibold">Donate</h3>
+        <p class="font-body text-base-content/70 mt-2 text-sm">
+          Support the nonprofit that keeps this historic stage alive.
+        </p>
+        <Button href="/donate/" variant="secondary" size="sm" class="mt-4">Donate</Button>
+      </div>
+    </div>
+  </div>
+</section>
