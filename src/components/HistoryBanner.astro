@@ -2,16 +2,16 @@
 import { Image } from 'astro:assets';
 import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
-import logo from '@assets/logo.png';
+import theaterFront from '@assets/images/bluebird-front.png';
 import { getEntry } from 'astro:content';
 
 const { data: history } = (await getEntry('history', 'history'))!;
 ---
 
-<section class="mx-auto max-w-(--container-max) px-4 py-16">
+<section class="mx-auto max-w-(--container-max) px-4 py-16" data-reveal>
   <div class="grid items-center gap-12 md:grid-cols-[0.9fr_1.1fr]">
-    <div class="bg-base-200 border-line rounded-lg border p-8 shadow-card justify-self-center">
-      <Image src={logo} alt="Blue Bird Theatre marquee illustration" width={220} height={330} />
+    <div class="border-line overflow-hidden rounded-lg border shadow-card justify-self-center">
+      <Image src={theaterFront} alt="The Blue Bird Theatre marquee and storefront" format="webp" class="aspect-square w-full object-cover" />
     </div>
     <div>
       <SectionHeading eyebrow="Since 1981" title="The largest community theater between Columbia and Charleston" />

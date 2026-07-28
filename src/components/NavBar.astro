@@ -9,18 +9,25 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/shows/", label: "Shows" },
   { href: "/auditions/", label: "Auditions" },
-  { href: "/about/", label: "About" },
   { href: "/volunteer/", label: "Volunteer" },
+];
+
+const venueInfoLinks = [
+  { href: "/about/", label: "About" },
   { href: "/rentals/", label: "Rentals" },
-  { href: "/faq/", label: "Contact" },
+  { href: "/contact/", label: "Contact" },
 ];
 
 const currentPath = Astro.url.pathname;
 const isActive = (href: string) =>
   href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+const isVenueInfoActive = venueInfoLinks.some((link) => isActive(link.href));
 ---
 
-<header class="bg-base-100 border-base-300 sticky top-0 z-20 border-b">
+<header
+  data-navbar
+  class="bg-base-100 border-base-300 sticky top-0 z-20 border-b"
+>
   <div class="navbar mx-auto max-w-(--container-max) px-4">
     <div class="navbar-start">
       <a
@@ -28,7 +35,12 @@ const isActive = (href: string) =>
         class="flex items-center gap-2"
         aria-label="Blue Bird Theatre home"
       >
-        <Image src={logoMark} alt="Blue Bird Theatre logo" width={40} height={40} />
+        <Image
+          src={logoMark}
+          alt="Blue Bird Theatre logo"
+          width={40}
+          height={40}
+        />
         <span
           class="font-heading text-base-content text-xl font-bold tracking-[-0.01em]"
         >
@@ -42,16 +54,65 @@ const isActive = (href: string) =>
     >
       <ul class="flex items-center gap-7">
         {
-          navLinks.map((link) => (
+          navLinks.slice(0, 3).map((link) => (
             <li>
               <a
                 href={link.href}
                 aria-current={isActive(link.href) ? "page" : undefined}
                 class:list={[
-                  "font-body border-b-2 pb-1 text-sm font-medium",
-                  isActive(link.href)
-                    ? "border-primary text-primary"
-                    : "border-transparent text-base-content",
+                  "nav-link font-body text-sm font-medium",
+                  isActive(link.href) ? "text-primary" : "text-base-content",
+                ]}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+        <li class="group relative shrink-0">
+          <button
+            type="button"
+            class:list={[
+              "nav-link font-body text-sm font-medium whitespace-nowrap",
+              isVenueInfoActive ? "text-primary" : "text-base-content",
+            ]}
+          >
+            Venue Info
+          </button>
+          <div
+            class="invisible absolute top-full left-0 z-10 w-44 pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+          >
+            <ul class="menu bg-base-100 rounded-box p-2 shadow">
+              {
+                venueInfoLinks.map((link) => (
+                  <li>
+                    <a
+                      href={link.href}
+                      aria-current={isActive(link.href) ? "page" : undefined}
+                      class:list={[
+                        "font-body text-sm font-medium",
+                        isActive(link.href)
+                          ? "text-primary"
+                          : "text-base-content",
+                      ]}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </li>
+        {
+          navLinks.slice(3).map((link) => (
+            <li>
+              <a
+                href={link.href}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                class:list={[
+                  "nav-link font-body text-sm font-medium",
+                  isActive(link.href) ? "text-primary" : "text-base-content",
                 ]}
               >
                 {link.label}
@@ -67,24 +128,24 @@ const isActive = (href: string) =>
       <Button href="/tickets/" variant="primary" size="sm">Tickets</Button>
       <details class="dropdown dropdown-end group">
         <summary
-          class="btn btn-ghost btn-square list-none [&::-webkit-details-marker]:hidden"
+          class="btn btn-ghost btn-square relative z-30 list-none [&::-webkit-details-marker]:hidden"
           aria-label="Toggle menu"
         >
           <Icon icon={faBars} class="h-5 w-5 group-open:hidden" />
           <Icon icon={faXmark} class="hidden h-5 w-5 group-open:block" />
         </summary>
         <ul
-          class="menu dropdown-content bg-base-100 rounded-box z-10 mt-2 w-56 p-2 shadow"
+          class="menu bg-base-100 fixed inset-0 z-20 mt-0 w-screen max-w-none flex-col flex-nowrap items-stretch gap-1 overflow-y-auto rounded-none p-6 pt-24 shadow-none"
           aria-label="Primary"
         >
           {
-            navLinks.map((link) => (
+            navLinks.slice(0, 3).map((link) => (
               <li>
                 <a
                   href={link.href}
                   aria-current={isActive(link.href) ? "page" : undefined}
                   class:list={[
-                    "font-body text-sm font-medium",
+                    "font-body text-lg font-medium",
                     isActive(link.href) && "text-primary",
                   ]}
                 >
@@ -93,8 +154,41 @@ const isActive = (href: string) =>
               </li>
             ))
           }
-          <li class="border-line mt-1 border-t pt-1">
-            <a href="/donate/" class="font-body text-sm font-medium">Donate</a>
+          <li class="menu-title">Venue Info</li>
+          {
+            venueInfoLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  class:list={[
+                    "font-body text-lg font-medium",
+                    isActive(link.href) && "text-primary",
+                  ]}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          {
+            navLinks.slice(3).map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  class:list={[
+                    "font-body text-lg font-medium",
+                    isActive(link.href) && "text-primary",
+                  ]}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="border-line mt-4 border-t pt-4">
+            <a href="/donate/" class="font-body text-lg font-medium">Donate</a>
           </li>
         </ul>
       </details>

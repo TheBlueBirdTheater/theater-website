@@ -1,0 +1,32 @@
+---
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import Icon from '@components/Icon.astro';
+import type { BreadcrumbItem } from '@utils/schema';
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props as Props;
+---
+
+<nav aria-label="Breadcrumb" class="mx-auto max-w-(--container-max) px-4 pt-6">
+  <ol class="font-body text-base-content/70 flex flex-wrap items-center gap-2 text-sm">
+    {
+      items.map((item, i) => (
+        <li class="flex items-center gap-2">
+          {i > 0 && <Icon icon={faChevronRight} class="h-3 w-3 text-base-content/40" />}
+          {i === items.length - 1 ? (
+            <span class="text-base-content font-medium" aria-current="page">
+              {item.name}
+            </span>
+          ) : (
+            <a href={item.url} class="hover:text-primary">
+              {item.name}
+            </a>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

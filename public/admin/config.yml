@@ -748,6 +748,33 @@ collections:
                 widget: list
                 field: { label: Benefit, name: value, widget: string }
 
+  - name: stats
+    label: Organization Stats
+    files:
+      - name: stats
+        label: Organization Stats
+        file: src/content/stats/stats.yaml
+        fields:
+          - label: Stats
+            name: items
+            widget: list
+            hint: "Numbers shown in the homepage/about stats band. Order controls display order."
+            fields:
+              - { label: Number, name: value, widget: number, value_type: int }
+              - {
+                  label: Suffix,
+                  name: suffix,
+                  widget: string,
+                  required: false,
+                  hint: 'e.g. "+" or "%"',
+                }
+              - {
+                  label: Label,
+                  name: label,
+                  widget: string,
+                  hint: 'e.g. "Community Productions"',
+                }
+
   - name: getInvolved
     label: Get Involved Page Settings
     files:

@@ -6,7 +6,7 @@ import { getEntry } from 'astro:content';
 const { data: extras } = (await getEntry('extras', 'extras'))!;
 ---
 
-<section class="bg-base-200">
+<section class="bg-base-200" data-reveal>
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
     <SectionHeading eyebrow="Host Your Event" title="Rent the Blue Bird Theatre" align="center" />
     <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-lead">{extras.alsoAtTheBlueBird}</p>

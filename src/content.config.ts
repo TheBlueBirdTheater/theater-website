@@ -244,6 +244,20 @@ const donate = defineCollection({
   }),
 });
 
+const stats = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/stats' }),
+  schema: z.object({
+    items: z.array(
+      z.object({
+        value: z.number(),
+        /** e.g. "+" or "%", appended after the count-up finishes. */
+        suffix: z.string().optional(),
+        label: z.string(),
+      })
+    ),
+  }),
+});
+
 const getInvolved = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/getInvolved' }),
   schema: z.object({
@@ -378,6 +392,7 @@ export const collections = {
   contact,
   history,
   donate,
+  stats,
   getInvolved,
   rentals,
   extras,

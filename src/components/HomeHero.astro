@@ -1,23 +1,37 @@
 ---
+import { Image } from 'astro:assets';
 import Button from '@components/Button.astro';
+import heroImage from '@assets/images/bluebird-side-silhouette.png';
 ---
 
-<section class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-20">
+<section class="mx-auto grid min-h-dvh max-w-(--container-max) content-center gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-20">
   <div>
-    <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Est. 1981</p>
-    <h1 class="font-heading text-base-content mt-4 text-display leading-[1.08] font-semibold tracking-[-0.01em] sm:text-display-lg">
+    <p class="hero-anim-1 font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Est. 1981</p>
+    <h1 class="hero-anim-2 font-heading text-base-content mt-4 text-display leading-[1.08] font-semibold tracking-[-0.01em] sm:text-display-lg">
       Orangeburg's Home for Live Theater
     </h1>
-    <p class="font-body text-base-content mt-4 max-w-130 text-lead">
+    <p class="hero-anim-3 font-body text-base-content mt-4 max-w-130 text-lead">
       The Blue Bird Theatre has brought community-powered plays, musicals, and live events to downtown Orangeburg,
       SC since 1981.
     </p>
-    <div class="mt-7 flex flex-wrap gap-3">
+    <div class="hero-anim-4 mt-7 flex flex-wrap gap-3">
       <Button href="/shows/" variant="primary" size="lg">See What's On</Button>
       <Button href="/tickets/" variant="secondary" size="lg">Get Tickets</Button>
     </div>
   </div>
-  <div class="border-line bg-base-200 text-base-content/70 font-body flex aspect-4/3 w-full items-center justify-center rounded-lg border text-sm">
-    Theater photo coming soon
+  <div class="hero-anim-poster hero-spotlight">
+    <Image
+      src={heroImage}
+      alt="Illustrated silhouette of the Blue Bird Theatre marquee"
+      format="webp"
+      class="aspect-square w-full object-contain"
+    />
+    <div class="mt-4 flex justify-center gap-3" aria-hidden="true">
+      <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
+      <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
+      <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
+      <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
+      <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
+    </div>
   </div>
 </section>

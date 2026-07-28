@@ -2,22 +2,25 @@
 import Button from '@components/Button.astro';
 ---
 
-<section class="mx-auto my-16 max-w-(--container-narrow) px-6 text-center">
-  <p class="font-body text-primary mb-2.5 text-eyebrow font-semibold tracking-[0.09em] uppercase">
-    Stay In The Loop
-  </p>
-  <h2 class="font-heading text-base-content text-display-sm leading-[1.2] font-semibold tracking-[-0.01em]">
-    Get show announcements in your inbox
-  </h2>
-  <!-- TODO: wire up to a real newsletter provider (e.g. Mailchimp) once one is chosen -->
-  <form class="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row sm:items-end" action="#" method="post">
-    <input
-      type="email"
-      name="email"
-      required
-      placeholder="Your email address"
-      class="input border-line text-base-content flex-1 rounded-md [--font-size:1rem]"
-    />
-    <Button type="submit" variant="primary">Join the List</Button>
-  </form>
+<section class="bg-primary" data-reveal>
+  <div class="mx-auto max-w-(--container-narrow) px-6 py-16 text-center">
+    <p class="font-body text-secondary-accessible mb-2.5 text-eyebrow font-semibold tracking-[0.09em] uppercase">
+      Stay In The Loop
+    </p>
+    <h2 class="font-heading text-primary-content text-display-sm leading-[1.2] font-semibold tracking-[-0.01em]">
+      Get show announcements in your inbox
+    </h2>
+    <p class="font-body text-light-blue-tint mt-2">New shows, ticket on-sales, and audition dates — no spam.</p>
+    <!-- TODO: wire up to a real newsletter provider (e.g. Mailchimp) once one is chosen -->
+    <form class="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row sm:items-end" action="#" method="post">
+      <input
+        type="email"
+        name="email"
+        required
+        placeholder="Your email address"
+        class="input bg-base-100 text-base-content flex-1 rounded-md border-none [--font-size:1rem]"
+      />
+      <Button type="submit" variant="inverse">Join the List</Button>
+    </form>
+  </div>
 </section>

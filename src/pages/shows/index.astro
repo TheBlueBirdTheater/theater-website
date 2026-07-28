@@ -4,15 +4,17 @@ import Schema from '@components/Schema.astro';
 import ShowCard from '@components/ShowCard.astro';
 import EventCard from '@components/EventCard.astro';
 import SectionHeading from '@components/SectionHeading.astro';
+import CountdownBanner from '@components/CountdownBanner.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCurrentSeason, getNextSeason } from '@utils/seasons';
-import { getWhatsOnGroups } from '@utils/whatsOn';
+import { getWhatsOnGroups, getNextShowingSiteWide } from '@utils/whatsOn';
 import { getCollection, getEntry } from 'astro:content';
 
 const currentSeason = getCurrentSeason();
 const nextSeason = getNextSeason();
 
 const { upcoming, past } = await getWhatsOnGroups(currentSeason);
+const siteWideNext = await getNextShowingSiteWide(currentSeason);
 
 const nextSeasonShows = (await getCollection('shows', ({ data }) => !data.draft && data.season === nextSeason))
   .sort((a, b) => a.data.title.localeCompare(b.data.title));
@@ -33,13 +35,26 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 >
   <Schema schema={breadcrumbSchema} />
 
+  {siteWideNext && (
+    <CountdownBanner
+      next={siteWideNext.next}
+      isPast={false}
+      title={siteWideNext.showTitle}
+      kind={siteWideNext.kind}
+      ticketUrl={siteWideNext.ticketUrl}
+      ticketPrice={siteWideNext.ticketPrice}
+    />
+  )}
+
   <div class="mx-auto max-w-(--container-max) px-4 py-14">
     <SectionHeading eyebrow={`${currentSeason} Season`} title="What's On at the Blue Bird" />
     <p class="font-body text-base-content mt-4 max-w-160">{extras.alsoAtTheBlueBird}</p>
     <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {upcoming.map((item) =>
-        item.kind === 'show' ? <ShowCard show={item.entry} /> : <EventCard event={item.entry} />
-      )}
+      {upcoming.map((item, i) => (
+        <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+          {item.kind === 'show' ? <ShowCard show={item.entry} expandable /> : <EventCard event={item.entry} />}
+        </div>
+      ))}
     </div>
   </div>
 
@@ -47,9 +62,11 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <div class="mx-auto max-w-(--container-max) px-4 py-14">
       <SectionHeading eyebrow="This Season" title="Past This Season" />
       <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {past.map((item) =>
-          item.kind === 'show' ? <ShowCard show={item.entry} muted /> : <EventCard event={item.entry} muted />
-        )}
+        {past.map((item, i) => (
+          <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+            {item.kind === 'show' ? <ShowCard show={item.entry} muted expandable /> : <EventCard event={item.entry} muted />}
+          </div>
+        ))}
       </div>
     </div>
   )}
@@ -58,8 +75,16 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <SectionHeading eyebrow="Looking Ahead" title={`Coming ${nextSeason} Season`} />
     {nextSeasonShows.length > 0 || nextSeasonEvents.length > 0 ? (
       <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {nextSeasonShows.map((show) => <ShowCard show={show} />)}
-        {nextSeasonEvents.map((event) => <EventCard event={event} />)}
+        {nextSeasonShows.map((show, i) => (
+          <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+            <ShowCard show={show} />
+          </div>
+        ))}
+        {nextSeasonEvents.map((event, i) => (
+          <div data-reveal data-reveal-delay={Math.min(nextSeasonShows.length + i, 5) * 80}>
+            <EventCard event={event} />
+          </div>
+        ))}
       </div>
     ) : (
       <p class="font-body text-base-content mt-4">
@@ -71,6 +96,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <section class="bg-base-200">
     <div class="mx-auto max-w-(--container-max) px-4 py-16">
       <p class="font-body text-base-content max-w-160">
+        Curious what we've staged in seasons past?{' '}
+        <a href="/shows/archive/" class="link link-primary font-semibold">See past shows</a>.
+      </p>
+      <p class="font-body text-base-content mt-3 max-w-160">
         Interested in renting the Blue Bird Theatre for your own production or event?{' '}
         <a href="/rentals/" class="link link-primary font-semibold">Learn more about rentals</a>.
       </p>

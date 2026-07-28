@@ -9,6 +9,7 @@ import VenueInfoStrip from '@components/VenueInfoStrip.astro';
 import JuniorOptpBanner from '@components/JuniorOptpBanner.astro';
 import HistoryBanner from '@components/HistoryBanner.astro';
 import RentalsTeaser from '@components/RentalsTeaser.astro';
+import StatsBand from '@components/StatsBand.astro';
 import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, OPTP_NAME, THEATRE_NAME } from '@utils/schema';
 import { getUpcomingWhatsOn } from '@utils/whatsOn';
 import { toVenueIsoString } from '@utils/showings';
@@ -76,6 +77,7 @@ const featuredEventSchema = (() => {
   />
 
   <HomeHero />
+  <StatsBand />
   <UpcomingWhatsOn />
   <GetInvolvedGrid />
   <VenueInfoStrip />

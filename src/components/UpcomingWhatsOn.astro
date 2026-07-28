@@ -20,9 +20,11 @@ const whatsOn = await getUpcomingWhatsOn(count);
   <SectionHeading eyebrow={eyebrow} title={title} />
   {whatsOn.length > 0 ? (
     <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {whatsOn.map((item) =>
-        item.kind === 'show' ? <ShowCard show={item.entry} /> : <EventCard event={item.entry} />
-      )}
+      {whatsOn.map((item, i) => (
+        <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+          {item.kind === 'show' ? <ShowCard show={item.entry} /> : <EventCard event={item.entry} />}
+        </div>
+      ))}
     </div>
   ) : (
     <p class="font-body text-base-content mt-4">Our next season is coming together — check back soon!</p>

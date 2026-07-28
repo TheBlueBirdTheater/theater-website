@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
+import PosterLightbox from '@components/PosterLightbox.astro';
 
 interface Props {
   eyebrow?: string;
@@ -19,14 +20,18 @@ const photos = (await getCollection('gallery')).slice(0, limit);
   <div class="mx-auto max-w-(--container-max) px-4 py-14">
     <SectionHeading eyebrow={eyebrow} title={title} />
     <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-6">
-      {photos.map((photo) => (
-        <Image
-          src={photo.data.photo}
-          alt={photo.data.alt}
-          format="webp"
-          class="border-line rounded-lg aspect-square w-full border object-cover"
-          loading="lazy"
-        />
+      {photos.map((photo, i) => (
+        <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+          <PosterLightbox id={`gallery-preview-${photo.id}`} src={photo.data.photo} alt={photo.data.alt}>
+            <Image
+              src={photo.data.photo}
+              alt={photo.data.alt}
+              format="webp"
+              class="border-line hover-lift rounded-lg aspect-square w-full border object-cover"
+              loading="lazy"
+            />
+          </PosterLightbox>
+        </div>
       ))}
     </div>
     <div class="mt-8 text-center">

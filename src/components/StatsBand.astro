@@ -1,0 +1,21 @@
+---
+import { getEntry } from 'astro:content';
+
+const statsEntry = await getEntry('stats', 'stats');
+const items = statsEntry?.data.items ?? [];
+---
+
+{items.length > 0 && (
+  <section class="bg-primary" data-reveal>
+    <div class="mx-auto grid max-w-(--container-max) gap-8 px-4 py-14 text-center sm:grid-cols-3">
+      {items.map((item) => (
+        <div>
+          <p class="font-heading text-secondary-accessible text-stat font-semibold">
+            <span data-count-to={item.value} data-count-suffix={item.suffix ?? ''}>0</span>
+          </p>
+          <p class="font-body text-light-blue-tint mt-1 text-sm">{item.label}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+)}

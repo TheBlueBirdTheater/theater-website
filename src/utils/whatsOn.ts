@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getCurrentSeason } from '@utils/seasons';
+import { getNextShowing, toUtcInstant, type Showing } from '@utils/showings';
 
 export type WhatsOnItem =
   | { kind: 'show'; entry: CollectionEntry<'shows'> }
@@ -65,4 +66,77 @@ export async function getUpcomingWhatsOn(count: number, season: string = getCurr
     .filter((item) => !isPast(item, todayStr) && firstDate(item) !== undefined)
     .sort((a, b) => firstDate(a)!.localeCompare(firstDate(b)!))
     .slice(0, count);
+}
+
+export interface SiteWideNextShowing {
+  next: Showing;
+  showTitle: string;
+  showHref: string;
+  kind: 'show' | 'event';
+  ticketUrl?: string;
+  ticketPrice?: string;
+}
+
+/**
+ * Finds the single soonest upcoming showing across every show and event in a
+ * season — for the countdown banner on the shows listing page, which isn't
+ * tied to one show's or event's own page.
+ */
+export async function getNextShowingSiteWide(season: string = getCurrentSeason()): Promise<SiteWideNextShowing | null> {
+  const [shows, events] = await Promise.all([
+    getCollection('shows', ({ data }) => !data.draft && data.season === season),
+    getCollection('events', ({ data }) => !data.draft && data.season === season),
+  ]);
+
+  let best: SiteWideNextShowing | null = null;
+  let bestAt = Infinity;
+
+  for (const show of shows) {
+    const showings: Showing[] = show.data.runDates.map((rd) => ({
+      date: rd.date,
+      time: rd.time,
+      label: rd.label,
+      accessibilityTag: rd.accessibilityTag,
+    }));
+    const { next } = getNextShowing(showings);
+    if (!next) continue;
+
+    const at = toUtcInstant(next)?.getTime();
+    if (at === undefined || at >= bestAt) continue;
+
+    bestAt = at;
+    best = {
+      next,
+      showTitle: show.data.title,
+      showHref: `/shows/${show.id}/`,
+      kind: 'show',
+      ticketUrl: show.data.ticketUrl,
+      ticketPrice: show.data.ticketPrice,
+    };
+  }
+
+  for (const event of events) {
+    const showings: Showing[] = event.data.showDates.flatMap((sd) =>
+      sd.times && sd.times.length > 0
+        ? sd.times.map((t) => ({ date: sd.date, time: t.time, label: t.label, accessibilityTag: t.accessibilityTag }))
+        : [{ date: sd.date }]
+    );
+    const { next } = getNextShowing(showings);
+    if (!next) continue;
+
+    const at = toUtcInstant(next)?.getTime();
+    if (at === undefined || at >= bestAt) continue;
+
+    bestAt = at;
+    best = {
+      next,
+      showTitle: event.data.title,
+      showHref: `/events/${event.id}/`,
+      kind: 'event',
+      ticketUrl: event.data.ticketUrl,
+      ticketPrice: event.data.ticketPrice,
+    };
+  }
+
+  return best;
 }

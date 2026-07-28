@@ -26,7 +26,7 @@ const contactIconClass =
   <div
     class="mx-auto grid max-w-(--container-max) gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]"
   >
-    <div>
+    <div data-reveal data-reveal-delay="0">
       <div class="mb-3.5 flex items-center gap-3.5">
         <Image src={logo} alt="Blue Bird Theatre logo" width={40} height={60} />
         <div>
@@ -45,7 +45,7 @@ const contactIconClass =
         Part-Time Players since 1981.
       </p>
     </div>
-    <nav>
+    <nav data-reveal data-reveal-delay="80">
       <h3
         class="font-body mb-3.5 text-eyebrow font-semibold tracking-[0.09em] text-secondary-accessible uppercase"
       >
@@ -54,26 +54,25 @@ const contactIconClass =
       <div class="flex flex-col gap-2">
         <a href="/" class={linkClass}>Home</a>
         <a href="/shows/" class={linkClass}>Current Season</a>
-        <a href="/shows/archive/" class={linkClass}>Past Seasons</a>
         <a href="/tickets/" class={linkClass}>Tickets</a>
-        <a href="/about/" class={linkClass}>About &amp; History</a>
         <a href="/rentals/" class={linkClass}>Rentals</a>
-        <a href="/faq/" class={linkClass}>Contact &amp; FAQ</a>
+        <a href="/contact/" class={linkClass}>Contact &amp; FAQ</a>
       </div>
     </nav>
-    <nav>
+    <nav data-reveal data-reveal-delay="160">
       <h3
         class="font-body mb-3.5 text-eyebrow font-semibold tracking-[0.09em] text-secondary-accessible uppercase"
       >
         Get Involved
       </h3>
       <div class="flex flex-col gap-2">
+        <a href="/about/" class={linkClass}>About &amp; History</a>
         <a href="/auditions/" class={linkClass}>Auditions</a>
         <a href="/volunteer/" class={linkClass}>Volunteering</a>
         <a href="/donate/" class={linkClass}>Donate</a>
       </div>
     </nav>
-    <nav>
+    <nav data-reveal data-reveal-delay="240">
       <h3
         class="font-body text-eyebrow font-semibold tracking-[0.09em] text-secondary-accessible uppercase"
       >

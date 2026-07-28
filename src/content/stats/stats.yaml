@@ -1,0 +1,11 @@
+# Numbers shown in the homepage/about stats band. Edit here or via the Decap
+# CMS admin at /admin — order controls display order.
+items:
+  - value: 1981
+    label: Founded
+  - value: 150
+    suffix: "+"
+    label: Community Productions
+  - value: 100
+    suffix: "%"
+    label: Volunteer-Run

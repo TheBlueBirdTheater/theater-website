@@ -12,7 +12,7 @@ const { data: contact } = (await getEntry('contact', 'contact'))!;
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
-  { name: 'Contact', url: '/faq/' },
+  { name: 'Contact', url: '/contact/' },
 ]);
 ---
 
@@ -88,13 +88,12 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </form>
     </div>
 
-    <div class="mt-14 space-y-3">
+    <div class="mt-14 space-y-3" data-reveal>
       {faqs.map((faq) => (
-        <div class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
-          <input type="checkbox" />
-          <div class="font-body text-base-content collapse-title font-semibold">{faq.data.question}</div>
+        <details class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
+          <summary class="font-body text-base-content collapse-title font-semibold">{faq.data.question}</summary>
           <div class="collapse-content"><p class="font-body text-base-content/70">{faq.data.answer}</p></div>
-        </div>
+        </details>
       ))}
     </div>
   </div>

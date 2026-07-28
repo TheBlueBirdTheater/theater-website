@@ -40,11 +40,10 @@ const rows = [
     </p>
     <div class="mt-3 space-y-3">
       {rows.map((row) => (
-        <div class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
-          <input type="checkbox" />
-          <div class="font-body text-base-content collapse-title font-semibold">{row.title}</div>
+        <details class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
+          <summary class="font-body text-base-content collapse-title font-semibold">{row.title}</summary>
           <div class="collapse-content"><p class="font-body text-base-content/70">{row.body}</p></div>
-        </div>
+        </details>
       ))}
     </div>
   </div>

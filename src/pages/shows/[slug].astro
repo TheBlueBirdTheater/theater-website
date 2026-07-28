@@ -1,6 +1,7 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
+import Breadcrumb from '@components/Breadcrumb.astro';
 import { Image } from 'astro:assets';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
@@ -12,6 +13,7 @@ import AddToCalendar from '@components/AddToCalendar.astro';
 import KnowBeforeYouGo from '@components/KnowBeforeYouGo.astro';
 import CountdownBanner from '@components/CountdownBanner.astro';
 import AuditionNotice from '@components/AuditionNotice.astro';
+import PosterLightbox from '@components/PosterLightbox.astro';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
@@ -72,11 +74,12 @@ const eventSchemas = data.runDates.map((rd) =>
   })
 );
 
-const breadcrumbSchema = buildBreadcrumbSchema([
+const breadcrumbItems = [
   { name: 'Home', url: '/' },
   { name: 'Shows', url: '/shows/' },
   { name: data.title, url: `/shows/${show.id}/` },
-]);
+];
+const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
 ---
 
 <DefaultLayout
@@ -90,14 +93,18 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <CountdownBanner next={nextShowing} isPast={allShowingsPast} />
 
-  <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr]">
+  <Breadcrumb items={breadcrumbItems} />
+
+  <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr] md:items-start">
     {data.posterImage ? (
-      <Image
-        src={data.posterImage}
-        alt={data.posterAlt}
-        format="webp"
-        class="border-line w-full min-w-0 self-start rounded-lg border shadow-card"
-      />
+      <PosterLightbox id={`poster-lightbox-${show.id}`} src={data.posterImage} alt={data.posterAlt}>
+        <Image
+          src={data.posterImage}
+          alt={data.posterAlt}
+          format="webp"
+          class="border-line w-full min-w-0 rounded-lg border shadow-card"
+        />
+      </PosterLightbox>
     ) : (
       <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
         Poster coming soon
@@ -168,7 +175,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         <Divider />
       </div>
 
-      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+      <div class="mt-8 grid gap-8 sm:grid-cols-2" data-reveal>
         {data.cast && data.cast.length > 0 && (
           <div>
             <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Cast</p>
@@ -199,7 +206,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
 
       {data.auditions && isAuditionActive(data.auditions) && (
-        <div class="mt-10">
+        <div class="mt-10" data-reveal>
           <Divider />
           <div class="mt-8">
             <AuditionNotice

@@ -5,6 +5,7 @@ import { Image } from 'astro:assets';
 import SectionHeading from '@components/SectionHeading.astro';
 import PersonCard from '@components/PersonCard.astro';
 import GalleryPreview from '@components/GalleryPreview.astro';
+import StatsBand from '@components/StatsBand.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
@@ -32,7 +33,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-lead">{history.intro}</p>
   </div>
 
-  <div class="mx-auto grid max-w-(--container-max) gap-12 px-4 py-14 md:grid-cols-2 md:items-center">
+  <StatsBand />
+
+  <div class="mx-auto grid max-w-(--container-max) gap-12 px-4 py-14 md:grid-cols-2 md:items-center" data-reveal>
     {foundingMilestone?.imageUrl ? (
       <Image
         src={foundingMilestone.imageUrl}
@@ -56,8 +59,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       <SectionHeading eyebrow="The Building" title="The Blue Bird Theatre" onNavy />
       <div class="mt-8 grid gap-8 sm:grid-cols-2">
         {
-          history.milestones.map((milestone) => (
-            <div class="border-secondary border-l-2 pl-5">
+          history.milestones.map((milestone, i) => (
+            <div class="border-secondary border-l-2 pl-5" data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
               <p class="font-heading text-secondary-accessible font-semibold">{milestone.year}</p>
               <p class="font-heading text-primary-content mt-1 text-callout font-semibold">{milestone.heading}</p>
               <p class="font-body text-light-blue-tint mt-1">{milestone.body}</p>
@@ -74,7 +77,11 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <div class="mx-auto max-w-(--container-max) px-4 py-14">
       <SectionHeading eyebrow="The People" title="Artistic Staff" />
       <div class="mt-7 flex flex-col gap-6">
-        {artisticStaff.map((person) => <PersonCard person={person} />)}
+        {artisticStaff.map((person, i) => (
+          <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+            <PersonCard person={person} />
+          </div>
+        ))}
       </div>
     </div>
   )}
@@ -84,7 +91,11 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       Board of Directors
     </p>
     <div class="mt-6 grid gap-6 sm:grid-cols-2">
-      {boardMembers.map((person) => <PersonCard person={person} />)}
+      {boardMembers.map((person, i) => (
+        <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+          <PersonCard person={person} />
+        </div>
+      ))}
     </div>
   </div>
 </DefaultLayout>

@@ -1,7 +1,10 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Badge from '@components/Badge.astro';
+import Button from '@components/Button.astro';
+import Icon from '@components/Icon.astro';
 import { formatDateRange } from '@utils/dates';
 import { getShowStatus } from '@utils/shows';
 
@@ -11,56 +14,123 @@ interface Props {
   archived?: boolean;
   /** Renders with reduced opacity/grayscale, but still links through — used for past shows on /shows/. */
   muted?: boolean;
+  /** Adds a "Quick Look" toggle revealing the synopsis and a tickets link without leaving the grid. */
+  expandable?: boolean;
 }
 
-const { show, archived = false, muted = false } = Astro.props as Props;
+const { show, archived = false, muted = false, expandable = false } = Astro.props as Props;
 const { data } = show;
 const Tag = archived ? 'div' : 'a';
 const isOptp = !data.performingGroup || data.performingGroup === 'Orangeburg Part-Time Players';
 const presenterLabel = isOptp ? 'OPTP Production' : 'Guest Production';
+const expandId = `show-expand-${show.collection}-${show.id}`;
+
+const cardClasses = [
+  'bg-base-100 flex flex-col overflow-hidden rounded-lg border shadow-card',
+  isOptp ? 'border-primary/30' : 'border-line',
+  !archived && 'hover-lift',
+  muted && 'opacity-60 grayscale-[0.5]',
+];
 ---
 
-<Tag
-  href={archived ? undefined : `/shows/${show.id}/`}
-  class:list={[
-    'bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card',
-    isOptp ? 'border-primary/30' : 'border-line',
-    !archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1',
-    muted && 'opacity-60 grayscale-[0.5]',
-  ]}
->
-  <div class="border-line relative aspect-4/3 overflow-hidden border-b">
-    {data.posterImage ? (
-      <Image
-        src={data.posterImage}
-        alt={data.posterAlt}
-        format="webp"
-        class="h-full w-full object-cover"
-        loading="lazy"
-      />
-    ) : (
-      <div class="bg-base-200 text-base-content/70 font-body flex h-full w-full items-center justify-center text-sm">
-        Poster coming soon
+{expandable ? (
+  <div class:list={cardClasses}>
+    <Tag href={archived ? undefined : `/shows/${show.id}/`} class="flex flex-col no-underline">
+      <div class="border-line relative aspect-4/3 overflow-hidden border-b">
+        {data.posterImage ? (
+          <Image src={data.posterImage} alt={data.posterAlt} format="webp" class="h-full w-full object-cover" loading="lazy" />
+        ) : (
+          <div class="bg-base-200 text-base-content/70 font-body flex h-full w-full items-center justify-center text-sm">
+            Poster coming soon
+          </div>
+        )}
+        {!archived && (
+          <div class="absolute top-3.5 left-3.5">
+            <Badge status={getShowStatus(show as CollectionEntry<'shows'>)} />
+          </div>
+        )}
+        <div class="absolute top-3.5 right-3.5">
+          <span class="bg-base-100/90 border-primary/30 text-primary font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase">
+            {presenterLabel}
+          </span>
+        </div>
       </div>
-    )}
-    {!archived && (
-      <div class="absolute top-3.5 left-3.5">
-        <Badge status={getShowStatus(show as CollectionEntry<'shows'>)} />
+      <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
+        <h3 class="font-heading text-base-content text-card-title font-semibold tracking-[-0.01em]">{data.title}</h3>
+        <p class="font-body text-base-content/70 text-sm italic">Presented by {data.performingGroup ?? 'Orangeburg Part-Time Players'}</p>
+        {data.subtitle && <p class="font-body text-base-content/70 text-sm italic">{data.subtitle}</p>}
+        <p class="font-body text-base-content mt-1 text-sm font-medium">
+          {formatDateRange(data.runDates)}
+          {' · '}{data.venue}
+        </p>
       </div>
-    )}
-    <div class="absolute top-3.5 right-3.5">
-      <span class="bg-base-100/90 border-primary/30 text-primary font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase">
-        {presenterLabel}
-      </span>
+    </Tag>
+    <div class="px-5.5 pb-5.5">
+      <button
+        type="button"
+        aria-expanded="false"
+        aria-controls={expandId}
+        data-expand-toggle
+        class="text-primary font-body flex items-center gap-1.5 text-sm font-semibold"
+      >
+        Quick Look
+        <span data-expand-icon class="inline-block transition-transform duration-200">
+          <Icon icon={faChevronDown} class="h-3 w-3" />
+        </span>
+      </button>
+      <div class="show-expand" id={expandId}>
+        <div class="pt-4">
+          <p class="font-body text-base-content/80 text-sm">{data.synopsis}</p>
+          {!archived && (
+            <Button href={data.ticketUrl} variant="secondary" size="sm" class="mt-4">Get Tickets</Button>
+          )}
+        </div>
+      </div>
     </div>
   </div>
-  <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
-    <h3 class="font-heading text-base-content text-card-title font-semibold tracking-[-0.01em]">{data.title}</h3>
-    <p class="font-body text-base-content/70 text-sm italic">Presented by {data.performingGroup ?? 'Orangeburg Part-Time Players'}</p>
-    {data.subtitle && <p class="font-body text-base-content/70 text-sm italic">{data.subtitle}</p>}
-    <p class="font-body text-base-content mt-1 text-sm font-medium">
-      {formatDateRange(data.runDates)}
-      {' · '}{data.venue}
-    </p>
-  </div>
-</Tag>
+) : (
+  <Tag href={archived ? undefined : `/shows/${show.id}/`} class:list={[...cardClasses, 'no-underline']}>
+    <div class="border-line relative aspect-4/3 overflow-hidden border-b">
+      {data.posterImage ? (
+        <Image src={data.posterImage} alt={data.posterAlt} format="webp" class="h-full w-full object-cover" loading="lazy" />
+      ) : (
+        <div class="bg-base-200 text-base-content/70 font-body flex h-full w-full items-center justify-center text-sm">
+          Poster coming soon
+        </div>
+      )}
+      {!archived && (
+        <div class="absolute top-3.5 left-3.5">
+          <Badge status={getShowStatus(show as CollectionEntry<'shows'>)} />
+        </div>
+      )}
+      <div class="absolute top-3.5 right-3.5">
+        <span class="bg-base-100/90 border-primary/30 text-primary font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase">
+          {presenterLabel}
+        </span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-2 px-5.5 pt-5.5 pb-6">
+      <h3 class="font-heading text-base-content text-card-title font-semibold tracking-[-0.01em]">{data.title}</h3>
+      <p class="font-body text-base-content/70 text-sm italic">Presented by {data.performingGroup ?? 'Orangeburg Part-Time Players'}</p>
+      {data.subtitle && <p class="font-body text-base-content/70 text-sm italic">{data.subtitle}</p>}
+      <p class="font-body text-base-content mt-1 text-sm font-medium">
+        {formatDateRange(data.runDates)}
+        {' · '}{data.venue}
+      </p>
+    </div>
+  </Tag>
+)}
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-expand-toggle]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      btn.querySelector<HTMLElement>('[data-expand-icon]')?.classList.toggle('rotate-180', !expanded);
+
+      const panelId = btn.getAttribute('aria-controls');
+      const panel = panelId ? document.getElementById(panelId) : null;
+      panel?.classList.toggle('is-expanded', !expanded);
+    });
+  });
+</script>

@@ -22,7 +22,7 @@ const singleDateTimes = data.showDates.length === 1 ? data.showDates[0].times : 
   href={archived ? undefined : `/events/${event.id}/`}
   class:list={[
     'border-line bg-base-100 flex flex-col overflow-hidden rounded-lg border no-underline shadow-card',
-    !archived && 'hover:shadow-raised transition-all duration-200 hover:-translate-y-1',
+    !archived && 'hover-lift',
     muted && 'opacity-60 grayscale-[0.5]',
   ]}
 >

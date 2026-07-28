@@ -7,12 +7,13 @@ import AuditionNotice from '@components/AuditionNotice.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getAuditioningNow } from '@utils/auditions';
 import { getVenueContact } from '@data/venue';
-import { getEntry } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
 const auditioningNow = await getAuditioningNow();
 const { data: extras } = (await getEntry('extras', 'extras'))!;
 const { adultOptp, juniorOptp } = extras;
 const contact = await getVenueContact();
+const auditionFaqs = await getCollection('faqs', ({ data }) => data.category === 'Auditions');
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -28,35 +29,55 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   </div>
 
   <div class="mx-auto grid max-w-250 gap-8 px-4 pb-20 md:grid-cols-2">
-    <DivisionAuditionPanel
-      eyebrow="Adult OPTP"
-      heading="Adult OPTP"
-      description={adultOptp.description}
-      auditionWindow={adultOptp.auditionWindow}
-      contactEmail={adultOptp.contactEmail}
-    />
-    <DivisionAuditionPanel
-      eyebrow="Junior OPTP"
-      heading={juniorOptp.ageRange}
-      description={juniorOptp.description}
-      auditionWindow={juniorOptp.auditionWindow}
-      performanceWindow={juniorOptp.performanceWindow}
-      contactEmail={juniorOptp.contactEmail}
-    />
+    <div data-reveal data-reveal-delay="0">
+      <DivisionAuditionPanel
+        eyebrow="Adult OPTP"
+        heading="Adult OPTP"
+        description={adultOptp.description}
+        auditionWindow={adultOptp.auditionWindow}
+        contactEmail={adultOptp.contactEmail}
+      />
+    </div>
+    <div data-reveal data-reveal-delay="80">
+      <DivisionAuditionPanel
+        eyebrow="Junior OPTP"
+        heading={juniorOptp.ageRange}
+        description={juniorOptp.description}
+        auditionWindow={juniorOptp.auditionWindow}
+        performanceWindow={juniorOptp.performanceWindow}
+        contactEmail={juniorOptp.contactEmail}
+      />
+    </div>
   </div>
 
   {auditioningNow.length > 0 && (
     <div class="mx-auto max-w-250 px-4 pb-20">
       <SectionHeading eyebrow="Right Now" title="Auditioning Now" />
       <div class="mt-8 grid gap-8 md:grid-cols-2">
-        {auditioningNow.map((listing) => (
-          <AuditionNotice
-            title={listing.title}
-            href={listing.href}
-            readMoreHref={listing.href}
-            auditions={listing}
-            fallbackContactEmail={contact.email}
-          />
+        {auditioningNow.map((listing, i) => (
+          <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+            <AuditionNotice
+              title={listing.title}
+              href={listing.href}
+              readMoreHref={listing.href}
+              auditions={listing}
+              fallbackContactEmail={contact.email}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {auditionFaqs.length > 0 && (
+    <div class="mx-auto max-w-250 px-4 pb-20">
+      <SectionHeading eyebrow="Good to Know" title="Audition FAQs" />
+      <div class="mt-8 space-y-3" data-reveal>
+        {auditionFaqs.map((faq) => (
+          <details class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
+            <summary class="font-body text-base-content collapse-title font-semibold">{faq.data.question}</summary>
+            <div class="collapse-content"><p class="font-body text-base-content/70">{faq.data.answer}</p></div>
+          </details>
         ))}
       </div>
     </div>

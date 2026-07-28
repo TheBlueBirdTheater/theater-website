@@ -21,13 +21,13 @@
   to = "/.netlify/functions/callback"
   status = 200
 
-# Contact page was merged into the Visit & FAQ page.
+# The Contact & FAQ page moved back to /contact/ (previously /faq/) for clarity.
 [[redirects]]
-  from = "/contact"
-  to = "/faq/"
+  from = "/faq"
+  to = "/contact/"
   status = 301
 
 [[redirects]]
-  from = "/contact/"
-  to = "/faq/"
+  from = "/faq/"
+  to = "/contact/"
   status = 301

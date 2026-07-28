@@ -63,8 +63,16 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         <div class:list={[i > 0 && 'mt-14']}>
           <h2 class="font-heading text-base-content text-display-sm font-semibold">{group.season} Season</h2>
           <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {group.shows.map((show) => <ShowCard show={show} archived />)}
-            {group.events.map((event) => <EventCard event={event} archived />)}
+            {group.shows.map((show, idx) => (
+              <div data-reveal data-reveal-delay={Math.min(idx, 5) * 80}>
+                <ShowCard show={show} archived expandable />
+              </div>
+            ))}
+            {group.events.map((event, idx) => (
+              <div data-reveal data-reveal-delay={Math.min(group.shows.length + idx, 5) * 80}>
+                <EventCard event={event} archived />
+              </div>
+            ))}
           </div>
         </div>
       ))

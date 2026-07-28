@@ -1,16 +1,25 @@
 ---
+import { Image } from 'astro:assets';
 import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
+import juniorPhoto from '@assets/images/junior/junior-optp.jpg';
 import { getEntry } from 'astro:content';
 
 const { data: extras } = (await getEntry('extras', 'extras'))!;
 const { juniorOptp } = extras;
 ---
 
-<section class="bg-primary">
+<section class="bg-primary" data-reveal>
   <div class="mx-auto grid max-w-(--container-max) items-center gap-12 px-4 py-16 md:grid-cols-[0.9fr_1.1fr]">
-    <div class="border-line bg-base-100/10 text-primary-content/70 font-body flex aspect-4/3 w-full items-center justify-center rounded-lg border text-sm justify-self-center">
-      Junior OPTP photo coming soon
+    <div class="w-full overflow-hidden rounded-lg justify-self-center">
+      <Image
+        src={juniorPhoto}
+        alt="Junior OPTP performers on stage"
+        width={800}
+        height={489}
+        format="webp"
+        class="aspect-4/3 w-full object-cover"
+      />
     </div>
     <div>
       <SectionHeading eyebrow={`Junior OPTP · ${juniorOptp.ageRange}`} title="Kids and teens take the stage every summer" onNavy />

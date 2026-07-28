@@ -20,8 +20,14 @@ const isPreviewDeploy = Boolean(process.env.CONTEXT) && process.env.CONTEXT !== 
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <SEO {...page} noindex={page.noindex || isPreviewDeploy} />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
   <body class="font-body bg-base-100 text-base-content" id="top">
     <slot />
+    <script>
+      import '../scripts/motion';
+    </script>
   </body>
 </html>
