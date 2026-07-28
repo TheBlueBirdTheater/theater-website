@@ -52,7 +52,11 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {upcoming.map((item, i) => (
         <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
-          {item.kind === 'show' ? <ShowCard show={item.entry} expandable /> : <EventCard event={item.entry} />}
+          {item.kind === 'show' ? (
+            <ShowCard show={item.entry} expandable hideUpcomingBadge={i >= 2} />
+          ) : (
+            <EventCard event={item.entry} hideUpcomingBadge={i >= 2} />
+          )}
         </div>
       ))}
     </div>

@@ -5,6 +5,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
 import Icon from '@components/Icon.astro';
+import { JR_OPTP_NAME } from '@data/venue';
 import { formatDateRange } from '@utils/dates';
 import { getShowStatus } from '@utils/shows';
 
@@ -16,20 +17,30 @@ interface Props {
   muted?: boolean;
   /** Adds a "Quick Look" toggle revealing the synopsis and a tickets link without leaving the grid. */
   expandable?: boolean;
+  /** Suppresses the "Upcoming" badge (but not "Now Playing"/"Past") — used to limit the tag to the soonest items in a mixed show/event list. */
+  hideUpcomingBadge?: boolean;
 }
 
-const { show, archived = false, muted = false, expandable = false } = Astro.props as Props;
+const { show, archived = false, muted = false, expandable = false, hideUpcomingBadge = false } = Astro.props as Props;
 const { data } = show;
 const Tag = archived ? 'div' : 'a';
 const isOptp = !data.performingGroup || data.performingGroup === 'Orangeburg Part-Time Players';
-const presenterLabel = isOptp ? 'OPTP Production' : 'Guest Production';
+const isJunior = data.performingGroup === JR_OPTP_NAME;
+const presenterLabel = isOptp ? 'OPTP Production' : isJunior ? 'JR Production' : 'Guest Production';
 const expandId = `show-expand-${show.collection}-${show.id}`;
+const status = getShowStatus(show as CollectionEntry<'shows'>);
+const showBadge = !(status === 'upcoming' && hideUpcomingBadge);
 
 const cardClasses = [
   'bg-base-100 flex flex-col overflow-hidden rounded-lg border shadow-card',
-  isOptp ? 'border-primary/30' : 'border-line',
+  isOptp ? 'border-primary/30' : isJunior ? 'border-secondary/30' : 'border-line',
   !archived && 'hover-lift',
   muted && 'opacity-60 grayscale-[0.5]',
+];
+
+const badgeClasses = [
+  'bg-base-100/90 font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase',
+  isOptp ? 'border-primary/30 text-primary' : isJunior ? 'border-secondary/30 text-secondary' : 'border-line text-base-content/70',
 ];
 ---
 
@@ -44,13 +55,13 @@ const cardClasses = [
             Poster coming soon
           </div>
         )}
-        {!archived && (
+        {!archived && showBadge && (
           <div class="absolute top-3.5 left-3.5">
-            <Badge status={getShowStatus(show as CollectionEntry<'shows'>)} />
+            <Badge status={status} />
           </div>
         )}
         <div class="absolute top-3.5 right-3.5">
-          <span class="bg-base-100/90 border-primary/30 text-primary font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase">
+          <span class:list={badgeClasses}>
             {presenterLabel}
           </span>
         </div>
@@ -98,13 +109,13 @@ const cardClasses = [
           Poster coming soon
         </div>
       )}
-      {!archived && (
+      {!archived && showBadge && (
         <div class="absolute top-3.5 left-3.5">
-          <Badge status={getShowStatus(show as CollectionEntry<'shows'>)} />
+          <Badge status={status} />
         </div>
       )}
       <div class="absolute top-3.5 right-3.5">
-        <span class="bg-base-100/90 border-primary/30 text-primary font-body text-fineprint inline-flex items-center rounded-full border px-2.5 py-1 font-semibold tracking-[0.09em] uppercase">
+        <span class:list={badgeClasses}>
           {presenterLabel}
         </span>
       </div>

@@ -127,7 +127,11 @@ const showSchema = ({ image }: SchemaContext) =>
     ticketPrice: z.string().optional(),
     ...visitInfoFields,
     ...auditionInfoFields,
-    /** Group performing this show — defaults to Orangeburg Part-Time Players when omitted. */
+    /**
+     * Group performing this show — defaults to Orangeburg Part-Time Players when omitted.
+     * Set to `JR_OPTP_NAME` (`src/data/venue.ts`) for a Junior OPTP production, which tags
+     * the show "JR Production" instead of "Guest Production" on ShowCard.
+     */
     performingGroup: z.string().optional(),
     cast: z.array(z.string()).optional(),
     crew: z.array(z.string()).optional(),
@@ -347,19 +351,28 @@ const gallery = defineCollection({
 
 const rentals = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/rentals' }),
-  schema: z.object({
-    intro: z.string(),
-    capacity: z.string(),
-    stageDimensions: z.string(),
-    amenities: z.array(z.string()).optional(),
-    rateTiers: z.array(
-      z.object({
-        name: z.string(),
-        rate: z.string(),
-        description: z.string().optional(),
-      })
-    ),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      intro: z.string(),
+      capacity: z.string(),
+      stageDimensions: z.string(),
+      amenities: z.array(z.string()).optional(),
+      rateTiers: z.array(
+        z.object({
+          name: z.string(),
+          rate: z.string(),
+          description: z.string().optional(),
+        })
+      ),
+      photos: z
+        .array(
+          z.object({
+            photo: image(),
+            alt: z.string(),
+          })
+        )
+        .optional(),
+    }),
 });
 
 const extras = defineCollection({

@@ -13,7 +13,6 @@ import AddToCalendar from '@components/AddToCalendar.astro';
 import KnowBeforeYouGo from '@components/KnowBeforeYouGo.astro';
 import CountdownBanner from '@components/CountdownBanner.astro';
 import AuditionNotice from '@components/AuditionNotice.astro';
-import PosterLightbox from '@components/PosterLightbox.astro';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
@@ -97,14 +96,12 @@ const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
 
   <div class="mx-auto grid max-w-(--container-max) gap-14 px-4 py-14 md:grid-cols-[0.85fr_1.15fr] md:items-start">
     {data.posterImage ? (
-      <PosterLightbox id={`poster-lightbox-${show.id}`} src={data.posterImage} alt={data.posterAlt}>
-        <Image
-          src={data.posterImage}
-          alt={data.posterAlt}
-          format="webp"
-          class="border-line w-full min-w-0 rounded-lg border shadow-card"
-        />
-      </PosterLightbox>
+      <Image
+        src={data.posterImage}
+        alt={data.posterAlt}
+        format="webp"
+        class="border-line w-full min-w-0 self-start rounded-lg border shadow-card"
+      />
     ) : (
       <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
         Poster coming soon

@@ -12,3 +12,10 @@ rateTiers:
   - name: "[RATE TIER NAME, e.g. Full-Day Rental]"
     rate: "[RATE, e.g. $450]"
     description: "[DESCRIPTION, e.g. Up to 8 hours, includes basic sound and lighting]"
+photos:
+  - photo: ../../assets/images/rentals/venue-1.jpg
+    alt: Auditorium seating facing the stage at the Blue Bird Theatre
+  - photo: ../../assets/images/rentals/venue-2.jpg
+    alt: Lobby and concession counter at the Blue Bird Theatre
+  - photo: ../../assets/images/rentals/venue-3.jpg
+    alt: Blue Bird Theatre marquee and storefront entrance

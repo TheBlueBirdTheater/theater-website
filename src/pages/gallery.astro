@@ -2,12 +2,20 @@
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
-import PosterLightbox from '@components/PosterLightbox.astro';
-import { Image } from 'astro:assets';
+import Icon from '@components/Icon.astro';
+import { Image, getImage } from 'astro:assets';
+import { faXmark, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection } from 'astro:content';
 
 const photos = await getCollection('gallery');
+
+// The shared lightbox swaps a plain <img> src via client-side script, which
+// needs a resolved build-time URL rather than the raw ImageMetadata object
+// the <Image> component consumes — getImage() is Astro's supported way to
+// get that URL.
+const fullSize = await Promise.all(photos.map((photo) => getImage({ src: photo.data.photo, format: 'webp' })));
+const lightboxData = photos.map((photo, i) => ({ src: fullSize[i].src, alt: photo.data.alt }));
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -27,21 +35,95 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     {photos.length > 0 ? (
       <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
         {photos.map((photo, i) => (
-          <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
-            <PosterLightbox id={`gallery-${photo.id}`} src={photo.data.photo} alt={photo.data.alt}>
-              <Image
-                src={photo.data.photo}
-                alt={photo.data.alt}
-                format="webp"
-                class="border-line hover-lift rounded-lg aspect-square w-full border object-cover"
-                loading="lazy"
-              />
-            </PosterLightbox>
-          </div>
+          <button
+            type="button"
+            data-reveal
+            data-reveal-delay={Math.min(i, 5) * 80}
+            data-gallery-open
+            data-gallery-index={i}
+            aria-haspopup="dialog"
+            class="block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
+          >
+            <Image
+              src={photo.data.photo}
+              alt={photo.data.alt}
+              format="webp"
+              class="border-line hover-lift rounded-lg aspect-square w-full border object-cover"
+              loading="lazy"
+            />
+          </button>
         ))}
       </div>
     ) : (
       <p class="font-body text-base-content/70 mt-8">Production photos coming soon.</p>
     )}
   </div>
+
+  {photos.length > 0 && (
+    <dialog id="gallery-lightbox" data-lightbox aria-label="Gallery photo — full size">
+      <button
+        type="button"
+        data-lightbox-close
+        aria-label="Close"
+        class="btn btn-circle btn-sm bg-base-100 text-base-content border-none absolute top-3 right-3 z-10"
+      >
+        <Icon icon={faXmark} class="h-4 w-4" />
+      </button>
+      {photos.length > 1 && (
+        <>
+          <button
+            type="button"
+            data-gallery-prev
+            aria-label="Previous photo"
+            class="btn btn-circle btn-sm bg-base-100 text-base-content border-none absolute top-1/2 left-3 z-10 -translate-y-1/2"
+          >
+            <Icon icon={faChevronLeft} class="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            data-gallery-next
+            aria-label="Next photo"
+            class="btn btn-circle btn-sm bg-base-100 text-base-content border-none absolute top-1/2 right-3 z-10 -translate-y-1/2"
+          >
+            <Icon icon={faChevronRight} class="h-4 w-4" />
+          </button>
+        </>
+      )}
+      <img data-gallery-img alt="" class="max-h-[90vh] max-w-[90vw] rounded-lg object-contain" />
+    </dialog>
+    <script is:inline type="application/json" data-gallery-data set:html={JSON.stringify(lightboxData)} />
+  )}
 </DefaultLayout>
+
+<script>
+  const dialog = document.getElementById('gallery-lightbox') as HTMLDialogElement | null;
+  const img = dialog?.querySelector<HTMLImageElement>('[data-gallery-img]');
+  const dataEl = document.querySelector<HTMLScriptElement>('script[data-gallery-data]');
+
+  if (dialog && img && dataEl?.textContent) {
+    const photos: { src: string; alt: string }[] = JSON.parse(dataEl.textContent);
+    let index = 0;
+
+    function show(i: number) {
+      index = (i + photos.length) % photos.length;
+      img!.src = photos[index].src;
+      img!.alt = photos[index].alt;
+      dialog!.setAttribute('aria-label', `${photos[index].alt} — full size`);
+    }
+
+    document.querySelectorAll<HTMLElement>('[data-gallery-open]').forEach((thumb) => {
+      thumb.addEventListener('click', () => {
+        show(Number(thumb.dataset.galleryIndex ?? '0'));
+        dialog.showModal();
+      });
+    });
+
+    dialog.querySelector('[data-gallery-prev]')?.addEventListener('click', () => show(index - 1));
+    dialog.querySelector('[data-gallery-next]')?.addEventListener('click', () => show(index + 1));
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key === 'ArrowRight') show(index + 1);
+    });
+  }
+</script>

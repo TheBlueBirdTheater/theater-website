@@ -4,6 +4,8 @@ import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Button from '@components/Button.astro';
+import PosterLightbox from '@components/PosterLightbox.astro';
+import { Image } from 'astro:assets';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getEntry } from 'astro:content';
 
@@ -37,6 +39,25 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         <ul class="font-body text-base-content mt-3 list-inside list-disc space-y-1">
           {rentals.amenities.map((amenity) => <li>{amenity}</li>)}
         </ul>
+      </div>
+    )}
+
+    {rentals.photos && rentals.photos.length > 0 && (
+      <div class="mt-10">
+        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">The Venue</p>
+        <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+          {rentals.photos.map((photo, i) => (
+            <PosterLightbox id={`rental-photo-${i}`} src={photo.photo} alt={photo.alt}>
+              <Image
+                src={photo.photo}
+                alt={photo.alt}
+                format="webp"
+                class="border-line hover-lift rounded-lg aspect-video w-full border object-cover"
+                loading="lazy"
+              />
+            </PosterLightbox>
+          ))}
+        </div>
       </div>
     )}
 

@@ -8,6 +8,8 @@ export const SITE_URL = process.env.URL || 'https://optp.org';
 // Orangeburg Part-Time Players — the resident volunteer troupe (a 501(c)(3) nonprofit)
 // that operates the Blue Bird Theatre and performs most, but not all, shows there.
 export const OPTP_NAME = 'Orangeburg Part-Time Players';
+// The OPTP's youth program — performs its own summer season under the same theater.
+export const JR_OPTP_NAME = 'Junior Orangeburg Part-Time Players';
 export const THEATRE_NAME = 'Blue Bird Theatre';
 
 export interface VenueContact {

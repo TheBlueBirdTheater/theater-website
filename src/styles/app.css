@@ -335,14 +335,33 @@ body:has(header[data-navbar] details[open]) {
   overflow: hidden;
 }
 
-/* Poster / photo lightbox */
+/* Poster / photo lightbox
+   Tailwind's preflight resets margin to 0 on every element, which overrides
+   the browser's built-in `margin: auto` centering for showModal() dialogs
+   (an author-origin style always beats a user-agent one). Centering is
+   therefore made explicit here rather than left to the UA default. */
 dialog[data-lightbox] {
+  position: fixed;
+  inset: 0;
+  margin: auto;
   max-width: min(90vw, 900px);
   max-height: 90vh;
   padding: 0;
   border: none;
   border-radius: var(--radius-lg);
   background: transparent;
+}
+
+/* Block "shrink-to-fit" sizing doesn't reliably factor in a replaced child
+   shrinking via max-height (only max-width), so a height-constrained image
+   (e.g. a portrait photo, or a short viewport) can leave the dialog wider
+   than the actual rendered image — floating the corner-anchored close
+   button out past the image's real edge. Flex intrinsic sizing accounts
+   for both constraints together, so the dialog box hugs the image exactly. */
+dialog[data-lightbox][open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 dialog[data-lightbox]::backdrop {
