@@ -125,6 +125,8 @@ const showSchema = ({ image }: SchemaContext) =>
     venue: z.string(),
     ticketUrl: z.string(),
     ticketPrice: z.string().optional(),
+    /** Ludus show/event ID — scopes an inline LudusWidget to just this production instead of the whole account. */
+    ludusShowId: z.string().optional(),
     ...visitInfoFields,
     ...auditionInfoFields,
     /**
@@ -322,6 +324,8 @@ const eventSchema = ({ image }: SchemaContext) =>
     ogImage: z.string().optional(),
     ticketUrl: z.string().optional(),
     ticketPrice: z.string().optional(),
+    /** Ludus show/event ID — scopes an inline LudusWidget to just this production instead of the whole account. */
+    ludusShowId: z.string().optional(),
     ...visitInfoFields,
     ...auditionInfoFields,
     /** Hides this entry from the site (sitemap, listings, and its own page) without deleting it. */

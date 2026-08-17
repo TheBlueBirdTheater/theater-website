@@ -106,6 +106,13 @@ collections:
           hint: 'e.g. "$15" — leave blank if free or not yet set. Shown in ticket search results.',
         }
       - {
+          label: Ludus Show ID,
+          name: ludusShowId,
+          widget: string,
+          required: false,
+          hint: "Scopes an inline Ludus ticket widget to just this production. Leave blank to skip the inline widget for this show.",
+        }
+      - {
           label: Dress Code,
           name: dressCode,
           widget: string,
@@ -451,6 +458,13 @@ collections:
           widget: string,
           required: false,
           hint: 'e.g. "$15" — leave blank if free or not yet set.',
+        }
+      - {
+          label: Ludus Show ID,
+          name: ludusShowId,
+          widget: string,
+          required: false,
+          hint: "Scopes an inline Ludus ticket widget to just this production. Leave blank to skip the inline widget for this event.",
         }
       - {
           label: Dress Code,

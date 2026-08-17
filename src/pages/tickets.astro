@@ -4,6 +4,7 @@ import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
 import InfoRow from '@components/InfoRow.astro';
+import LudusWidget from '@components/LudusWidget.astro';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCurrentShow } from '@utils/shows';
 import { getVenueContact } from '@data/venue';
@@ -52,10 +53,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
     )}
 
-    <!-- TODO: embed a real third-party ticketing widget here once a platform is chosen
-         (e.g. Eventbrite, Ticketleap, Showpass). Currently linking out via ticketUrl only.
-         Ticketing platform integration pending. -->
-
+    <div class="mt-10">
+      <LudusWidget sections="all" />
+    </div>
 
     <div class="border-line bg-base-200 mt-8 rounded-lg border p-6">
       <h3 class="font-heading text-base-content text-lg font-semibold">Prefer to call or email?</h3>

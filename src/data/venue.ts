@@ -11,6 +11,8 @@ export const OPTP_NAME = 'Orangeburg Part-Time Players';
 // The OPTP's youth program — performs its own summer season under the same theater.
 export const JR_OPTP_NAME = 'Junior Orangeburg Part-Time Players';
 export const THEATRE_NAME = 'Blue Bird Theatre';
+// OPTP's Ludus ticketing account subdomain (https://optp.ludus.com) — used by LudusWidget.astro.
+export const LUDUS_SUBDOMAIN = 'optp';
 
 export interface VenueContact {
   phone: string;

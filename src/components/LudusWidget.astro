@@ -1,0 +1,33 @@
+---
+import { LUDUS_SUBDOMAIN } from '@data/venue';
+
+interface Props {
+  /** Ludus event/show ID to scope the widget to a single production — omit to list everything. */
+  showId?: string;
+  /** 'all' = events & collections; 'events' = only events; 'collections' = only collections; 'classes' = only classes. */
+  sections?: 'all' | 'events' | 'collections' | 'classes';
+  categoryId?: string;
+  hideNav?: boolean;
+  /** CSS width for the widget container — '100%' lets it resize automatically. */
+  width?: string;
+}
+
+const { showId = '', sections = 'all', categoryId = '', hideNav = false, width = '100%' } = Astro.props as Props;
+
+/**
+ * Ludus's widget.js reads these as bare globals rather than exporting an init
+ * function, so the config has to land as literal `var` statements ahead of it —
+ * written via set:html instead of define:vars to match Ludus's own snippet exactly.
+ */
+const configScript = `
+  var subdomain = ${JSON.stringify(LUDUS_SUBDOMAIN)};
+  var showID = ${JSON.stringify(showId)};
+  var sections = ${JSON.stringify(sections)};
+  var categoryID = ${JSON.stringify(categoryId)};
+  var hideNav = ${JSON.stringify(String(hideNav))};
+  var width = ${JSON.stringify(width)};
+`;
+---
+
+<script type="text/javascript" set:html={configScript} />
+<script type="text/javascript" src={`https://${LUDUS_SUBDOMAIN}.ludus.com/widget.js`} is:inline />
