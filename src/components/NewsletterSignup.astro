@@ -1,5 +1,5 @@
 ---
-import Button from '@components/Button.astro';
+import LudusSubscribeWidget from '@components/LudusSubscribeWidget.astro';
 ---
 
 <section class="bg-primary" data-reveal>
@@ -11,16 +11,8 @@ import Button from '@components/Button.astro';
       Get show announcements in your inbox
     </h2>
     <p class="font-body text-light-blue-tint mt-2">New shows, ticket on-sales, and audition dates — no spam.</p>
-    <!-- TODO: wire up to a real newsletter provider (e.g. Mailchimp) once one is chosen -->
-    <form class="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row sm:items-end" action="#" method="post">
-      <input
-        type="email"
-        name="email"
-        required
-        placeholder="Your email address"
-        class="input bg-base-100 text-base-content flex-1 rounded-md border-none [--font-size:1rem]"
-      />
-      <Button type="submit" variant="inverse">Join the List</Button>
-    </form>
+    <div class="mx-auto mt-6 max-w-md">
+      <LudusSubscribeWidget />
+    </div>
   </div>
 </section>

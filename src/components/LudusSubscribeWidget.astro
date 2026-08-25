@@ -1,0 +1,25 @@
+---
+import { LUDUS_SUBDOMAIN } from '@data/venue';
+
+interface Props {
+  hideNav?: boolean;
+  /** CSS width for the widget container — '100%' lets it resize automatically. */
+  width?: string;
+}
+
+const { hideNav = true, width = '100%' } = Astro.props as Props;
+
+/**
+ * Same document.write + config-globals pattern as LudusWidget.astro, but Ludus's
+ * subscribe widget is a separate script (widget_subscribe.js) with its own,
+ * smaller set of globals — no showID/sections/categoryID here.
+ */
+const configScript = `
+  var subdomain = ${JSON.stringify(LUDUS_SUBDOMAIN)};
+  var hideNav = ${JSON.stringify(String(hideNav))};
+  var width = ${JSON.stringify(width)};
+`;
+---
+
+<script type="text/javascript" set:html={configScript} />
+<script type="text/javascript" src={`https://${LUDUS_SUBDOMAIN}.ludus.com/widget_subscribe.js`} is:inline />
