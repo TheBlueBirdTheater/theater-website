@@ -1,8 +1,8 @@
-donationPlatformUrl: "https://www.ticketleap.events/tickets/bluebirdorangeburg/optp-2025-membership"
+donationPlatformUrl: "https://optp.ludus.com/donate.php"
 pageTitle: "Keep the curtain up at the Blue Bird"
 amountHelperText: "Select an amount as a starting point — you'll choose the final amount on the giving platform."
-# Cash App handle — not yet confirmed as current, so not rendered on the Donate page. See
-# src/content.config.ts's `donate` schema comment before wiring this up.
+# Confirmed current — payments go to the treasurer for deposit. Rendered on the Donate page
+# as a Cash App link (https://cash.app/<handle>).
 cashApp: "$OPTP1981"
 nonprofitNote: "The Orangeburg Part-Time Players is a self-supporting, all-volunteer nonprofit 501(c)(3) organization. Every gift is tax-deductible and goes directly toward keeping the Blue Bird's doors open."
 givingLevels:

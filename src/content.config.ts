@@ -258,12 +258,7 @@ const donate = defineCollection({
     pageTitle: z.string(),
     amountHelperText: z.string().optional(),
     nonprofitNote: z.string().optional(),
-    /**
-     * Cash App handle — not yet confirmed as current against the branding
-     * spec's list of verified contact channels. Kept in the schema so it
-     * round-trips through the CMS instead of being silently dropped, but
-     * intentionally not rendered on donate.astro until someone confirms it.
-     */
+    /** Cash App handle (e.g. "$OPTP1981") — rendered on donate.astro as a link to https://cash.app/<handle>. */
     cashApp: z.string().optional(),
     givingLevels: z.array(
       z.object({

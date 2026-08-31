@@ -9,7 +9,7 @@ import { getVenueContact } from '@data/venue';
 
 const valueProps = await getCollection('valueProps');
 const { data: donate } = (await getEntry('donate', 'donate'))!;
-const { givingLevels, sponsorshipTiers, donationPlatformUrl, pageTitle, amountHelperText, nonprofitNote, ogImage } = donate;
+const { givingLevels, sponsorshipTiers, donationPlatformUrl, pageTitle, amountHelperText, nonprofitNote, cashApp, ogImage } = donate;
 const contact = await getVenueContact();
 
 const breadcrumbSchema = buildBreadcrumbSchema([
@@ -31,7 +31,6 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         </div>
       ))}
     </div>
-    <!-- TODO: donationPlatformUrl points to a third-party giving platform once one is chosen -->
     <Button href={donationPlatformUrl} variant="primary" size="lg" class="mt-8">Give Now</Button>
   </div>
 
@@ -119,11 +118,17 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <div class="mx-auto max-w-250 px-4 py-14 text-center">
     {nonprofitNote && <p class="font-body text-base-content/70 text-sm">{nonprofitNote}</p>}
-    {contact.mailingAddress && (
-      <p class="font-body text-base-content/70 mt-2 text-sm">
-        Prefer to give by mail? Send a check to {contact.mailingAddress}.
-      </p>
-    )}
+    <p class="font-body text-base-content/70 mt-4 text-sm">Other ways to give:</p>
+    <ul class="font-body text-base-content/70 mt-1 space-y-1 text-sm">
+      {contact.mailingAddress && (
+        <li>By mail: send a check to {contact.mailingAddress}.</li>
+      )}
+      {cashApp && (
+        <li>
+          Cash App: <a href={`https://cash.app/${cashApp}`} class="link link-primary font-medium">{cashApp}</a> (goes to our treasurer for deposit).
+        </li>
+      )}
+    </ul>
   </div>
 
   <script>

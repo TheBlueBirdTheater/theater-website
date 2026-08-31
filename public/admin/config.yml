@@ -1066,7 +1066,7 @@ collections:
               name: cashApp,
               widget: string,
               required: false,
-              hint: "Not currently shown on the site — pending confirmation that this handle is still current.",
+              hint: 'e.g. "$OPTP1981" — shown on the Donate page as a link to https://cash.app/<handle>.',
             }
           - label: Giving Levels
             name: givingLevels
