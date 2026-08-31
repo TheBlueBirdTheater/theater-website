@@ -14,7 +14,9 @@ const history = historyEntry!.data;
 const team = await getCollection('team');
 const boardMembers = team.filter((person) => person.data.group === 'board');
 const artisticStaff = team.filter((person) => person.data.group === 'staff');
-const foundingMilestone = history.milestones[history.milestones.length - 1];
+const foundingMilestone =
+  history.milestones.find((milestone) => milestone.year === '1981') ?? history.milestones[0];
+const timelineMilestones = history.milestones.filter((milestone) => milestone !== foundingMilestone);
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -30,7 +32,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
-    <SectionHeading eyebrow="Est. 1981" title="Orangeburg Part-Time Players" align="center" />
+    <SectionHeading eyebrow="Est. 1981" title="Orangeburg Part-Time Players" align="center" level="h1" />
     <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-lead">{history.intro}</p>
   </div>
 
@@ -60,7 +62,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       <SectionHeading eyebrow="The Building" title="The Blue Bird Theatre" onNavy />
       <div class="mt-8 grid gap-8 sm:grid-cols-2">
         {
-          history.milestones.map((milestone, i) => (
+          timelineMilestones.map((milestone, i) => (
             <div class="border-secondary border-l-2 pl-5" data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
               <p class="font-heading text-secondary-accessible font-semibold">{milestone.year}</p>
               <p class="font-heading text-primary-content mt-1 text-callout font-semibold">{milestone.heading}</p>

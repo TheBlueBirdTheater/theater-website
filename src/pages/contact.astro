@@ -4,6 +4,7 @@ import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Button from '@components/Button.astro';
+import VenueMap from '@components/VenueMap.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
@@ -24,7 +25,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
-    <SectionHeading title="Contact" />
+    <SectionHeading title="Contact" level="h1" />
 
     <div class="mt-8 flex flex-col gap-5">
       <InfoRow label="Phone" value={contact.phone} href={`tel:${contact.phone}`} />
@@ -40,6 +41,14 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       {contact.socials.map((social) => (
         <a href={social.url} class="link link-primary">{social.platform}</a>
       ))}
+    </div>
+
+    <div class="mt-8">
+      <VenueMap
+        address={`Blue Bird Theatre, ${contact.address.line1}, ${contact.address.city}, ${contact.address.state} ${contact.address.zip}`}
+        lat={contact.mapLat}
+        lng={contact.mapLng}
+      />
     </div>
 
     <div class="border-line bg-base-200 mt-10 rounded-lg border p-6">

@@ -16,7 +16,7 @@ import AuditionNotice from '@components/AuditionNotice.astro';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { getVenueContact } from '@data/venue';
+import { getVenueContact, getLudusTicketUrl } from '@data/venue';
 import { formatDate, formatTime } from '@utils/dates';
 import { getShowStatus } from '@utils/shows';
 import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
@@ -44,6 +44,7 @@ const { data } = show;
 
 const contact = await getVenueContact();
 const performingGroup = data.performingGroup ?? OPTP_NAME;
+const ticketUrl = await getLudusTicketUrl(data.ludusShowId);
 
 const venueAddress = `${data.venue}, ${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`;
 
@@ -66,7 +67,7 @@ const eventSchemas = data.runDates.map((rd) =>
     venueName: data.venue,
     venueAddress: contact.address,
     performerName: performingGroup,
-    offerUrl: data.ticketUrl,
+    offerUrl: ticketUrl,
     offerPrice: data.ticketPrice,
     description: data.synopsis,
     imageUrl: data.posterImage?.src,
@@ -145,12 +146,12 @@ const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
       </div>
 
       <div class="mt-7 flex flex-wrap items-center gap-3">
-        <Button href={data.ticketUrl} variant="primary" size="lg">Get Tickets</Button>
+        <Button href={ticketUrl} variant="primary" size="lg">Get Tickets</Button>
         <AddToCalendar
           title={data.title}
           address={venueAddress}
           showings={showings}
-          ticketUrl={data.ticketUrl}
+          ticketUrl={ticketUrl}
           description={data.synopsis}
         />
         <ShareButton title={data.title} size="lg" />

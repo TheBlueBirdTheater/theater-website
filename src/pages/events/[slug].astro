@@ -16,7 +16,7 @@ import { isAuditionActive } from '@utils/auditions';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { getVenueContact, THEATRE_NAME } from '@data/venue';
+import { getVenueContact, getLudusTicketUrl, THEATRE_NAME } from '@data/venue';
 import { formatDate, formatEventDates, formatTime } from '@utils/dates';
 import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
 import { formatAccessibilitySummary } from '@utils/accessibility';
@@ -41,6 +41,7 @@ const { event } = Astro.props as Props;
 const { data } = event;
 
 const contact = await getVenueContact();
+const ticketUrl = await getLudusTicketUrl(data.ludusShowId);
 
 const venueAddress = `${THEATRE_NAME}, ${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`;
 
@@ -63,7 +64,7 @@ const eventSchemas = data.showDates.flatMap((sd) =>
       venueName: THEATRE_NAME,
       venueAddress: contact.address,
       performerName: data.host,
-      offerUrl: data.ticketUrl,
+      offerUrl: ticketUrl,
       offerPrice: data.ticketPrice,
       description: data.description,
       imageUrl: data.image?.src,
@@ -149,16 +150,14 @@ const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
       </div>
 
       <div class="mt-7 flex flex-wrap items-center gap-3">
-        {data.ticketUrl && (
-          <Button href={data.ticketUrl} variant="primary" size="lg">
-            {data.ticketPrice ? `Get Tickets · ${data.ticketPrice}` : 'Get Tickets'}
-          </Button>
-        )}
+        <Button href={ticketUrl} variant="primary" size="lg">
+          {data.ticketPrice ? `Get Tickets · ${data.ticketPrice}` : 'Get Tickets'}
+        </Button>
         <AddToCalendar
           title={data.title}
           address={venueAddress}
           showings={showings}
-          ticketUrl={data.ticketUrl}
+          ticketUrl={ticketUrl}
           description={data.description}
         />
         <ShareButton title={data.title} size="lg" />
