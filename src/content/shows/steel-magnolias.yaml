@@ -10,14 +10,14 @@ posterAlt: Steel Magnolias poster
 season: "2026"
 runDates:
   - date: "2026-10-08"
-    time: 19:30
+    time: "19:30"
     label: Opening Night
   - date: "2026-10-09"
-    time: 19:30
+    time: "19:30"
   - date: "2026-10-10"
-    time: 19:30
+    time: "19:30"
   - date: "2026-10-11"
-    time: 15:00
+    time: "15:00"
     label: Matinee
 venue: Blue Bird Theatre
 ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg

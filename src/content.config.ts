@@ -202,6 +202,8 @@ const contact = defineCollection({
       state: z.string(),
       zip: z.string(),
     }),
+    /** Single source of truth for the P.O. box — donate.yaml and any component that needs it reads this instead of redeclaring it. */
+    mailingAddress: z.string().optional(),
     mapLat: z.number().optional(),
     mapLng: z.number().optional(),
     socials: z.array(
@@ -210,6 +212,9 @@ const contact = defineCollection({
         url: z.string(),
       })
     ),
+    /** Heading/intro above the Contact page's message form. */
+    formHeading: z.string().optional(),
+    formIntro: z.string().optional(),
   }),
 });
 
@@ -233,6 +238,16 @@ const donate = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/donate' }),
   schema: z.object({
     donationPlatformUrl: z.string(),
+    pageTitle: z.string(),
+    amountHelperText: z.string().optional(),
+    nonprofitNote: z.string().optional(),
+    /**
+     * Cash App handle — not yet confirmed as current against the branding
+     * spec's list of verified contact channels. Kept in the schema so it
+     * round-trips through the CMS instead of being silently dropped, but
+     * intentionally not rendered on donate.astro until someone confirms it.
+     */
+    cashApp: z.string().optional(),
     givingLevels: z.array(
       z.object({
         name: z.string(),
@@ -268,6 +283,23 @@ const getInvolved = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/getInvolved' }),
   schema: z.object({
     signUpUrl: z.string(),
+    /** Heading for the standalone Get Involved / Volunteer page. */
+    pageTitle: z.string(),
+    /** Lead paragraph under `pageTitle` — optional since not every page needs one. */
+    intro: z.string().optional(),
+    /** Eyebrow/title for the 3-card homepage teaser (GetInvolvedGrid) — a distinct, higher-altitude summary from `roles` below, not a duplicate of it. */
+    homeTeaserEyebrow: z.string(),
+    homeTeaserTitle: z.string(),
+    homeTeaserCards: z
+      .array(
+        z.object({
+          title: z.string(),
+          description: z.string(),
+          href: z.string(),
+          buttonLabel: z.string(),
+        })
+      )
+      .optional(),
     roles: z.array(
       z.object({
         title: z.string(),
@@ -358,6 +390,11 @@ const rentals = defineCollection({
   schema: ({ image }) =>
     z.object({
       intro: z.string(),
+      /** Eyebrow/title for the homepage teaser (RentalsTeaser) that links to this page. */
+      teaserEyebrow: z.string(),
+      teaserTitle: z.string(),
+      /** Intro sentence above the rental-inquiry form. */
+      formIntro: z.string().optional(),
       capacity: z.string(),
       stageDimensions: z.string(),
       amenities: z.array(z.string()).optional(),
@@ -395,7 +432,32 @@ const extras = defineCollection({
       auditionWindow: z.string(),
       performanceWindow: z.string(),
       contactEmail: z.string(),
+      /** Title for the homepage banner (JuniorOptpBanner) — the rest of that component's copy comes from this same object. */
+      bannerTitle: z.string(),
     }),
+    /** Copy for /auditions/sign-up-soon, shown when a show/event has no auditions.signUpUrl yet. */
+    auditionSignUpSoon: z
+      .object({
+        title: z.string(),
+        description: z.string(),
+      })
+      .optional(),
+  }),
+});
+
+const siteCopy = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/siteCopy' }),
+  schema: z.object({
+    heroEyebrow: z.string(),
+    heroTitle: z.string(),
+    heroDescription: z.string(),
+    footerTagline: z.string(),
+    /** Appended after "© 1981–{year} Orangeburg Part-Time Players, " in the footer. */
+    footerCopyrightNote: z.string(),
+    newsletterEyebrow: z.string(),
+    newsletterTitle: z.string(),
+    newsletterDescription: z.string(),
+    venueInfoStripTitle: z.string(),
   }),
 });
 
@@ -416,4 +478,5 @@ export const collections = {
   gallery,
   events,
   archivedEvents,
+  siteCopy,
 };

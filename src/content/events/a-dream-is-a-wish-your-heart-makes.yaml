@@ -3,7 +3,7 @@ description: A magical tribute to the most beloved princesses directed by Lauren
   Ott.
 season: "2026"
 showDates:
-  - date: 2026-10-17
+  - date: "2026-10-17"
     times:
       - time: "19:00"
 host: Randy Etters

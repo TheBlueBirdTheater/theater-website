@@ -4,11 +4,12 @@ import Button from '@components/Button.astro';
 import { getEntry } from 'astro:content';
 
 const { data: extras } = (await getEntry('extras', 'extras'))!;
+const { data: rentals } = (await getEntry('rentals', 'rentals'))!;
 ---
 
 <section class="bg-base-200" data-reveal>
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
-    <SectionHeading eyebrow="Host Your Event" title="Rent the Blue Bird Theatre" align="center" />
+    <SectionHeading eyebrow={rentals.teaserEyebrow} title={rentals.teaserTitle} align="center" />
     <p class="font-body text-base-content mx-auto mt-4 max-w-160 text-lead">{extras.alsoAtTheBlueBird}</p>
     <Button href="/rentals/" variant="primary" class="mt-6">Rental Info & Rates</Button>
   </div>

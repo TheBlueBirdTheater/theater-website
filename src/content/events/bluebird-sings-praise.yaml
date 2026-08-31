@@ -3,9 +3,9 @@ description: Songs by artists such as Lauren Daigle, Maverick City Music,
   Passion, Cory Asbury, Jason Crabb, Phil Wickham, We the Kingdom, and more.
 season: "2026"
 showDates:
-  - date: 2027-08-03
+  - date: "2027-08-03"
     times:
-      - time: 19:00
+      - time: "19:00"
 performers:
   - Shields Fairey
   - Aaron Bradley

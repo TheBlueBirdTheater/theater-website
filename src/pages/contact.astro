@@ -32,6 +32,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         label="Address"
         value={`Blue Bird Theatre, ${contact.address.line1}, ${contact.address.city}, ${contact.address.state} ${contact.address.zip}`}
       />
+      {contact.mailingAddress && <InfoRow label="Mailing Address" value={contact.mailingAddress} />}
     </div>
 
     <div class="mt-6 flex gap-4">
@@ -41,10 +42,8 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     </div>
 
     <div class="border-line bg-base-200 mt-10 rounded-lg border p-6">
-      <h2 class="font-heading text-base-content text-lg font-semibold">Send Us a Message</h2>
-      <p class="font-body text-base-content/70 mt-2 text-sm">
-        Questions about a show, a rental inquiry, or anything else — we'll get back to you as soon as we can.
-      </p>
+      <h2 class="font-heading text-base-content text-lg font-semibold">{contact.formHeading}</h2>
+      <p class="font-body text-base-content/70 mt-2 text-sm">{contact.formIntro}</p>
       <form
         name="contact-inquiry"
         method="POST"

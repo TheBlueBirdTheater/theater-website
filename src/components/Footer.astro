@@ -11,6 +11,7 @@ import Icon from "@components/Icon.astro";
 import logo from "@assets/logo.png";
 
 const { data: contact } = (await getEntry("contact", "contact"))!;
+const { data: siteCopy } = (await getEntry("siteCopy", "siteCopy"))!;
 const currentYear = new Date().getFullYear();
 const { line1, city, state, zip } = contact.address;
 const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(`${line1}, ${city}, ${state} ${zip}`)}`;
@@ -41,8 +42,7 @@ const contactIconClass =
         </div>
       </div>
       <p class="max-w-[320px] text-sm text-light-blue-tint">
-        A historic theater in downtown Orangeburg, SC, home to the Orangeburg
-        Part-Time Players since 1981.
+        {siteCopy.footerTagline}
       </p>
     </div>
     <nav data-reveal data-reveal-delay="80">
@@ -121,8 +121,7 @@ const contactIconClass =
       class="mx-auto flex max-w-(--container-max) flex-col gap-2 px-4 py-5 text-eyebrow text-light-blue-tint sm:flex-row sm:justify-between"
     >
       <span
-        >© 1981–{currentYear} Orangeburg Part-Time Players, the 501(c)(3) nonprofit
-        that operates the Blue Bird Theatre.</span
+        >© 1981–{currentYear} Orangeburg Part-Time Players, {siteCopy.footerCopyrightNote}</span
       >
       <div class="flex gap-5">
         <a href="/privacy/" class={linkClass}>Privacy Policy</a>

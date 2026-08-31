@@ -2,17 +2,19 @@
 import { Image } from 'astro:assets';
 import Button from '@components/Button.astro';
 import heroImage from '@assets/images/bluebird-side-silhouette.png';
+import { getEntry } from 'astro:content';
+
+const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
 ---
 
 <section class="mx-auto grid min-h-dvh max-w-(--container-max) content-center gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-20">
   <div>
-    <p class="hero-anim-1 font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Est. 1981</p>
+    <p class="hero-anim-1 font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">{siteCopy.heroEyebrow}</p>
     <h1 class="hero-anim-2 font-heading text-base-content mt-4 text-display leading-[1.08] font-semibold tracking-[-0.01em] sm:text-display-lg">
-      Orangeburg's Home for Live Theater
+      {siteCopy.heroTitle}
     </h1>
     <p class="hero-anim-3 font-body text-base-content mt-4 max-w-130 text-lead">
-      The Blue Bird Theatre has brought community-powered plays, musicals, and live events to downtown Orangeburg,
-      SC since 1981.
+      {siteCopy.heroDescription}
     </p>
     <div class="hero-anim-4 mt-7 flex flex-wrap gap-3">
       <Button href="/shows/" variant="primary" size="lg">See What's On</Button>

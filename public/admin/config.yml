@@ -663,6 +663,13 @@ collections:
                   pattern: ["^\\d{5}(-\\d{4})?$", "Format: 12345 or 12345-6789"],
                 }
           - {
+              label: Mailing Address,
+              name: mailingAddress,
+              widget: string,
+              required: false,
+              hint: 'e.g. "P.O. Box 1291, Orangeburg, SC 29116" — leave blank if the same as the street address above.',
+            }
+          - {
               label: Map Latitude,
               name: mapLat,
               widget: number,
@@ -688,6 +695,20 @@ collections:
             fields:
               - { label: Platform, name: platform, widget: string }
               - { label: URL, name: url, widget: string }
+          - {
+              label: Contact Form Heading,
+              name: formHeading,
+              widget: string,
+              required: false,
+              hint: "Heading above the message form on the Contact page.",
+            }
+          - {
+              label: Contact Form Intro,
+              name: formIntro,
+              widget: text,
+              required: false,
+              hint: "Intro sentence above the message form on the Contact page.",
+            }
 
   - name: history
     label: History
@@ -735,6 +756,33 @@ collections:
               name: donationPlatformUrl,
               widget: string,
               hint: "Third-party giving-page link, e.g. a Givebutter or Classy URL.",
+            }
+          - {
+              label: Page Title,
+              name: pageTitle,
+              widget: string,
+              hint: "Main heading on the Donate page.",
+            }
+          - {
+              label: Amount Helper Text,
+              name: amountHelperText,
+              widget: string,
+              required: false,
+              hint: "Short note above the giving-level buttons.",
+            }
+          - {
+              label: Nonprofit Note,
+              name: nonprofitNote,
+              widget: text,
+              required: false,
+              hint: "Tax-deductible / 501(c)(3) note shown on the Donate page.",
+            }
+          - {
+              label: Cash App Handle,
+              name: cashApp,
+              widget: string,
+              required: false,
+              hint: "Not currently shown on the site — pending confirmation that this handle is still current.",
             }
           - label: Giving Levels
             name: givingLevels
@@ -797,6 +845,40 @@ collections:
         file: src/content/getInvolved/getInvolved.yaml
         fields:
           - { label: Volunteer Sign-Up URL, name: signUpUrl, widget: string }
+          - {
+              label: Page Title,
+              name: pageTitle,
+              widget: string,
+              hint: "Main heading on the standalone Get Involved / Volunteer page.",
+            }
+          - {
+              label: Intro,
+              name: intro,
+              widget: text,
+              required: false,
+              hint: "Lead paragraph on the Get Involved / Volunteer page.",
+            }
+          - {
+              label: Homepage Teaser Eyebrow,
+              name: homeTeaserEyebrow,
+              widget: string,
+            }
+          - {
+              label: Homepage Teaser Title,
+              name: homeTeaserTitle,
+              widget: string,
+              hint: "Heading for the 3-card Get Involved teaser on the homepage.",
+            }
+          - label: Homepage Teaser Cards
+            name: homeTeaserCards
+            widget: list
+            required: false
+            hint: "The 3 homepage teaser cards (Audition / Volunteer / Donate) — a short summary, distinct from the detailed Volunteer Roles below."
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: text }
+              - { label: Link, name: href, widget: string }
+              - { label: Button Label, name: buttonLabel, widget: string }
           - label: Volunteer Roles
             name: roles
             widget: list
@@ -837,6 +919,24 @@ collections:
               widget: text,
               hint: "Opening paragraph on the Rentals page.",
             }
+          - {
+              label: Homepage Teaser Eyebrow,
+              name: teaserEyebrow,
+              widget: string,
+            }
+          - {
+              label: Homepage Teaser Title,
+              name: teaserTitle,
+              widget: string,
+              hint: "Heading for the Rentals teaser section on the homepage.",
+            }
+          - {
+              label: Inquiry Form Intro,
+              name: formIntro,
+              widget: text,
+              required: false,
+              hint: "Intro sentence above the rental-inquiry form.",
+            }
           - { label: Capacity, name: capacity, widget: string, hint: 'e.g. "300 seats"' }
           - {
               label: Stage Dimensions,
@@ -856,6 +956,32 @@ collections:
               - { label: Name, name: name, widget: string, hint: 'e.g. "Half-Day Rental"' }
               - { label: Rate, name: rate, widget: string, hint: 'e.g. "$250"' }
               - { label: Description, name: description, widget: text, required: false }
+
+  - name: siteCopy
+    label: Site-Wide Copy
+    files:
+      - name: siteCopy
+        label: Site-Wide Copy
+        file: src/content/siteCopy/siteCopy.yaml
+        fields:
+          - { label: Homepage Hero Eyebrow, name: heroEyebrow, widget: string }
+          - { label: Homepage Hero Title, name: heroTitle, widget: string }
+          - { label: Homepage Hero Description, name: heroDescription, widget: text }
+          - { label: Footer Tagline, name: footerTagline, widget: text }
+          - {
+              label: Footer Copyright Note,
+              name: footerCopyrightNote,
+              widget: string,
+              hint: 'Appended after "© 1981–{year} Orangeburg Part-Time Players, " in the footer.',
+            }
+          - { label: Newsletter Eyebrow, name: newsletterEyebrow, widget: string }
+          - { label: Newsletter Title, name: newsletterTitle, widget: string }
+          - { label: Newsletter Description, name: newsletterDescription, widget: text }
+          - {
+              label: "Venue Info Strip Title (homepage)",
+              name: venueInfoStripTitle,
+              widget: string,
+            }
 
   - name: extras
     label: Extra Page Copy
@@ -889,3 +1015,17 @@ collections:
                   widget: string,
                 }
               - { label: Contact Email, name: contactEmail, widget: string }
+              - {
+                  label: Homepage Banner Title,
+                  name: bannerTitle,
+                  widget: string,
+                  hint: "Heading for the Junior OPTP banner on the homepage.",
+                }
+          - label: "Audition Sign-Up Coming Soon (page)"
+            name: auditionSignUpSoon
+            widget: object
+            required: false
+            hint: "Shown at /auditions/sign-up-soon when a show/event has no sign-up link yet."
+            fields:
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: text }

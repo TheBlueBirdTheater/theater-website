@@ -11,3 +11,5 @@ mailingAddress: "P.O. Box 1291, Orangeburg, SC 29116"
 socials:
   - platform: Facebook
     url: "https://www.facebook.com/BluebirdtheatreOrangeburgSC"
+formHeading: "Send Us a Message"
+formIntro: "Questions about a show, a rental inquiry, or anything else — we'll get back to you as soon as we can."

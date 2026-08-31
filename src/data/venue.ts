@@ -18,6 +18,7 @@ export interface VenueContact {
   phone: string;
   email: string;
   address: PostalAddressInput;
+  mailingAddress?: string;
   mapLat?: number;
   mapLng?: number;
   socials: { platform: string; url: string }[];
@@ -36,6 +37,7 @@ export async function getVenueContact(): Promise<VenueContact> {
       addressRegion: contact.address.state,
       postalCode: contact.address.zip,
     },
+    mailingAddress: contact.mailingAddress,
     mapLat: contact.mapLat,
     mapLng: contact.mapLng,
     socials: contact.socials,

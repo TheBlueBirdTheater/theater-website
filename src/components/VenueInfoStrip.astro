@@ -9,10 +9,11 @@ const contact = await getVenueContact();
 const parkingFaq = await getEntry('faqs', 'venue-parking');
 const showtimesFaq = await getEntry('faqs', 'tickets-showtimes');
 const ticketCostFaq = await getEntry('faqs', 'tickets-cost');
+const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
 ---
 
 <section class="mx-auto max-w-(--container-max) px-4 py-16" data-reveal>
-  <SectionHeading eyebrow="Know Before You Go" title="Everything you need to know before curtain" />
+  <SectionHeading eyebrow="Know Before You Go" title={siteCopy.venueInfoStripTitle} />
   <div class="mt-8 grid gap-6 sm:grid-cols-2">
     <InfoRow
       label="Address"

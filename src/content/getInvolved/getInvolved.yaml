@@ -1,6 +1,21 @@
-slug: getInvolved
 signUpUrl: "https://www.facebook.com/BluebirdtheatreOrangeburgSC"
+pageTitle: "OPTP runs on volunteers"
 intro: "Each production at the Blue Bird is a labor of love, and volunteers keep the show going. No experience is necessary, and there is a place for every interest, both on stage and behind the scenes."
+homeTeaserEyebrow: "Get Involved"
+homeTeaserTitle: "There's a role for you at the Blue Bird"
+homeTeaserCards:
+  - title: Audition
+    description: "Join the cast or crew of an upcoming production — no experience necessary."
+    href: /auditions/
+    buttonLabel: Auditions
+  - title: Volunteer
+    description: "Help backstage, front-of-house, or behind the scenes at the Blue Bird."
+    href: /volunteer/
+    buttonLabel: Volunteer
+  - title: Donate
+    description: "Support the nonprofit that keeps this historic stage alive."
+    href: /donate/
+    buttonLabel: Donate
 roles:
   - title: Ushering and Seating
     description: "Welcome patrons, hand out programs, and help guests find their seats before the show and at intermission."

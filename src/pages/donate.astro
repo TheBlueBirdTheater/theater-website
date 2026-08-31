@@ -5,10 +5,12 @@ import SectionHeading from '@components/SectionHeading.astro';
 import Button from '@components/Button.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
+import { getVenueContact } from '@data/venue';
 
 const valueProps = await getCollection('valueProps');
 const { data: donate } = (await getEntry('donate', 'donate'))!;
-const { givingLevels, sponsorshipTiers, donationPlatformUrl } = donate;
+const { givingLevels, sponsorshipTiers, donationPlatformUrl, pageTitle, amountHelperText, nonprofitNote } = donate;
+const contact = await getVenueContact();
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -20,7 +22,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
-    <SectionHeading eyebrow="Support Us" title="Keep the curtain up at the Blue Bird" align="center" />
+    <SectionHeading eyebrow="Support Us" title={pageTitle} align="center" />
     <div class="mt-6 grid gap-6 sm:grid-cols-3">
       {valueProps.map((vp, i) => (
         <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
@@ -35,7 +37,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <div class="mx-auto max-w-250 px-4 pb-14">
     <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Giving Levels</p>
-    <p class="font-body text-base-content/70 mt-1 text-sm">Select an amount as a starting point — you'll choose the final amount on the giving platform.</p>
+    <p class="font-body text-base-content/70 mt-1 text-sm">{amountHelperText}</p>
     <div class="mt-6 grid gap-6 sm:grid-cols-3" data-amount-group>
       {givingLevels.map((level, i) => {
         const isPatron = i === givingLevels.length - 1 && givingLevels.length > 1;
@@ -114,6 +116,15 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </div>
     </div>
   </section>
+
+  <div class="mx-auto max-w-250 px-4 py-14 text-center">
+    {nonprofitNote && <p class="font-body text-base-content/70 text-sm">{nonprofitNote}</p>}
+    {contact.mailingAddress && (
+      <p class="font-body text-base-content/70 mt-2 text-sm">
+        Prefer to give by mail? Send a check to {contact.mailingAddress}.
+      </p>
+    )}
+  </div>
 
   <script>
     const group = document.querySelector<HTMLElement>('[data-amount-group]');
