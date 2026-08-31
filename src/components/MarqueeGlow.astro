@@ -19,21 +19,26 @@ const { class: className } = Astro.props as Props;
   async function initMarqueeGlow() {
     const canvas = document.querySelector<HTMLCanvasElement>('[data-marquee-glow]');
     const container = canvas?.parentElement;
-    if (!canvas || !container) return;
+    if (!canvas || !container) {
+      console.warn('[MarqueeGlow] canvas or container not found', { canvas, container });
+      return;
+    }
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let THREE: typeof import('three');
     try {
       THREE = await import('three');
-    } catch {
+    } catch (err) {
+      console.error('[MarqueeGlow] failed to import three', err);
       return;
     }
 
     let renderer: InstanceType<typeof THREE.WebGLRenderer>;
     try {
       renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    } catch {
+    } catch (err) {
+      console.error('[MarqueeGlow] failed to create WebGLRenderer', err);
       return;
     }
 
@@ -43,6 +48,7 @@ const { class: className } = Astro.props as Props;
 
     function resize() {
       const { clientWidth: w, clientHeight: h } = container!;
+      console.log('[MarqueeGlow] resize', { w, h });
       if (w === 0 || h === 0) return;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(w, h, false);
@@ -92,6 +98,7 @@ const { class: className } = Astro.props as Props;
     const points = new THREE.Points(geometry, material);
     scene.add(points);
 
+    console.log('[MarqueeGlow] initialized, rendering first frame');
     resize();
     renderer.render(scene, camera);
 
