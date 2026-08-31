@@ -468,6 +468,19 @@ const extras = defineCollection({
   }),
 });
 
+/**
+ * Technical fallback/integration values an editor may need to change without touching code —
+ * distinct from `siteCopy`, which is marketing copy. Currently just the Ludus ticketing
+ * fallback link; a natural home for similar fallback values added later.
+ */
+const siteSettings = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/siteSettings', generateId: literalFilenameId }),
+  schema: z.object({
+    /** Ticket link used when a show/event has no ludusShowId set — Ludus's events listing, not a specific show. */
+    ludusFallbackUrl: z.string(),
+  }),
+});
+
 const siteCopy = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/siteCopy', generateId: literalFilenameId }),
   schema: z.object({
@@ -504,4 +517,5 @@ export const collections = {
   events,
   archivedEvents,
   siteCopy,
+  siteSettings,
 };

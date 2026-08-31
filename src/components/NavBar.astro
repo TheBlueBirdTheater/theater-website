@@ -69,9 +69,12 @@ const isVenueInfoActive = venueInfoLinks.some((link) => isActive(link.href));
             </li>
           ))
         }
-        <li class="group relative shrink-0">
+        <li class="group relative shrink-0" data-venue-info-dropdown>
           <button
             type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="venue-info-menu"
             class:list={[
               "nav-link font-body text-sm font-medium whitespace-nowrap",
               isVenueInfoActive ? "text-primary" : "text-base-content",
@@ -80,9 +83,9 @@ const isVenueInfoActive = venueInfoLinks.some((link) => isActive(link.href));
             Venue Info
           </button>
           <div
-            class="invisible absolute top-full left-0 z-10 w-44 pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+            class="invisible absolute top-full left-0 z-10 w-44 pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 [.is-open>&]:visible [.is-open>&]:opacity-100"
           >
-            <ul class="menu bg-base-100 rounded-box p-2 shadow">
+            <ul id="venue-info-menu" class="menu bg-base-100 rounded-box p-2 shadow">
               {
                 venueInfoLinks.map((link) => (
                   <li>
@@ -195,3 +198,40 @@ const isVenueInfoActive = venueInfoLinks.some((link) => isActive(link.href));
     </div>
   </div>
 </header>
+
+<script>
+  function initVenueInfoDropdown() {
+    const wrapper = document.querySelector<HTMLElement>('[data-venue-info-dropdown]');
+    const trigger = wrapper?.querySelector<HTMLButtonElement>('button');
+    if (!wrapper || !trigger) return;
+
+    const close = () => {
+      wrapper.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    };
+
+    const open = () => {
+      wrapper.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+    };
+
+    trigger.addEventListener('click', () => {
+      if (wrapper.classList.contains('is-open')) close();
+      else open();
+    });
+
+    wrapper.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && wrapper.classList.contains('is-open')) {
+        close();
+        trigger.focus();
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!wrapper.classList.contains('is-open')) return;
+      if (!wrapper.contains(event.target as Node)) close();
+    });
+  }
+
+  initVenueInfoDropdown();
+</script>

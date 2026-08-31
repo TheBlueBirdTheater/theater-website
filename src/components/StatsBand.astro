@@ -11,7 +11,7 @@ const items = statsEntry?.data.items ?? [];
       {items.map((item) => (
         <div>
           <p class="font-heading text-secondary-accessible text-stat font-semibold">
-            <span data-count-to={item.value} data-count-suffix={item.suffix ?? ''}>0</span>
+            <span data-count-to={item.value} data-count-suffix={item.suffix ?? ''}>{item.value}{item.suffix ?? ''}</span>
           </p>
           <p class="font-body text-light-blue-tint mt-1 text-sm">{item.label}</p>
         </div>

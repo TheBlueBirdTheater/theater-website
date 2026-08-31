@@ -17,6 +17,11 @@ interface Props {
 
 const { next, isPast, title, kind, ticketUrl, ticketPrice } = Astro.props as Props;
 const targetUtc = !isPast && next ? toUtcInstant(next) : null;
+
+const diffMs = targetUtc ? Math.max(targetUtc.getTime() - Date.now(), 0) : 0;
+const initialDays = Math.floor(diffMs / 86400000);
+const initialHours = Math.floor((diffMs % 86400000) / 3600000);
+const initialMinutes = Math.floor((diffMs % 3600000) / 60000);
 ---
 
 {targetUtc && next && (
@@ -40,17 +45,17 @@ const targetUtc = !isPast && next ? toUtcInstant(next) : null;
           </Button>
         )}
       </div>
-      <div class="hidden items-end gap-4" data-countdown data-countdown-target={targetUtc.toISOString()}>
+      <div class="flex items-end gap-4" data-countdown data-countdown-target={targetUtc.toISOString()}>
         <div class="flex flex-col items-center">
-          <span class="countdown font-mono text-3xl"><span data-countdown-days style="--value:0;">0</span></span>
+          <span class="countdown font-mono text-3xl"><span data-countdown-days style={`--value:${initialDays};`}>{initialDays}</span></span>
           <span class="text-tag tracking-[0.09em] uppercase opacity-80">Days</span>
         </div>
         <div class="flex flex-col items-center">
-          <span class="countdown font-mono text-3xl"><span data-countdown-hours style="--value:0;">0</span></span>
+          <span class="countdown font-mono text-3xl"><span data-countdown-hours style={`--value:${initialHours};`}>{initialHours}</span></span>
           <span class="text-tag tracking-[0.09em] uppercase opacity-80">Hrs</span>
         </div>
         <div class="flex flex-col items-center">
-          <span class="countdown font-mono text-3xl"><span data-countdown-minutes style="--value:0;">0</span></span>
+          <span class="countdown font-mono text-3xl"><span data-countdown-minutes style={`--value:${initialMinutes};`}>{initialMinutes}</span></span>
           <span class="text-tag tracking-[0.09em] uppercase opacity-80">Min</span>
         </div>
       </div>

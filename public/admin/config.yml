@@ -63,6 +63,21 @@ collections:
               hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the homepage. Leave blank to use the site's generic default share image.",
             }
 
+  - name: siteSettings
+    label: Site Settings
+    files:
+      - name: siteSettings
+        label: Site Settings
+        file: src/content/siteSettings/siteSettings.yaml
+        fields:
+          - {
+              label: Ludus Tickets Fallback URL,
+              name: ludusFallbackUrl,
+              widget: string,
+              pattern: ["^https?://", "Must start with http:// or https://"],
+              hint: "Where a show or event's 'Get Tickets' button sends people when that specific show doesn't have a Ludus Show ID set yet. Defaults to your Ludus events listing page — only change this if your Ludus account URL changes.",
+            }
+
   - name: shows
     label: Shows
     folder: src/content/shows

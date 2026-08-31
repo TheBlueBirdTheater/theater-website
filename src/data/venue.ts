@@ -43,3 +43,14 @@ export async function getVenueContact(): Promise<VenueContact> {
     socials: contact.socials,
   };
 }
+
+/**
+ * Ticket link for a show/event: a specific Ludus show page when it has its own `ludusShowId`,
+ * otherwise the CMS-editable fallback (`siteSettings.ludusFallbackUrl`) — Ludus's events
+ * listing by default, so the link is never dead even before a show's ID is set.
+ */
+export async function getLudusTicketUrl(ludusShowId?: string): Promise<string> {
+  if (ludusShowId) return `https://${LUDUS_SUBDOMAIN}.ludus.com/${ludusShowId}`;
+  const { data: siteSettings } = (await getEntry('siteSettings', 'siteSettings'))!;
+  return siteSettings.ludusFallbackUrl;
+}
