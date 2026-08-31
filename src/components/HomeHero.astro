@@ -23,12 +23,12 @@ const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
     </div>
   </div>
   <div class="hero-anim-poster hero-spotlight relative">
-    <MarqueeGlow class="pointer-events-none absolute inset-0 z-[-1]" />
+    <MarqueeGlow class="pointer-events-none absolute inset-0 z-0" />
     <Image
       src={heroImage}
       alt="Illustrated silhouette of the Blue Bird Theatre marquee"
       format="webp"
-      class="aspect-square w-full object-contain"
+      class="relative z-10 aspect-square w-full object-contain"
     />
     <div class="mt-4 flex justify-center gap-3" aria-hidden="true">
       <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
