@@ -50,22 +50,27 @@ const { class: className } = Astro.props as Props;
       camera.updateProjectionMatrix();
     }
 
+    // Against a light cream page background, additive blending barely shows up
+    // (it only really brightens dark backgrounds) — so this draws an opaque
+    // warm-brass bulb core with a soft falloff, composited normally, so the
+    // color itself is what reads, not an added brightness.
     function createGlowTexture() {
       const size = 128;
       const c = document.createElement('canvas');
       c.width = c.height = size;
       const ctx = c.getContext('2d')!;
       const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-      gradient.addColorStop(0, 'rgba(245, 201, 155, 0.9)');
-      gradient.addColorStop(0.4, 'rgba(224, 165, 90, 0.35)');
-      gradient.addColorStop(1, 'rgba(224, 165, 90, 0)');
+      gradient.addColorStop(0, 'rgba(196, 120, 46, 1)');
+      gradient.addColorStop(0.25, 'rgba(196, 120, 46, 0.9)');
+      gradient.addColorStop(0.6, 'rgba(212, 150, 80, 0.4)');
+      gradient.addColorStop(1, 'rgba(212, 150, 80, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, size, size);
       return new THREE.CanvasTexture(c);
     }
 
     const glowTexture = createGlowTexture();
-    const count = 7;
+    const count = 11;
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 8;
@@ -76,11 +81,10 @@ const { class: className } = Astro.props as Props;
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     const material = new THREE.PointsMaterial({
-      size: 3.5,
+      size: 5.5,
       map: glowTexture,
       transparent: true,
-      opacity: 0.5,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.85,
       depthWrite: false,
       sizeAttenuation: true,
     });
@@ -104,7 +108,7 @@ const { class: className } = Astro.props as Props;
     const start = performance.now();
     const animate = (now: number) => {
       const t = (now - start) / 1000;
-      material.opacity = 0.35 + Math.sin(t * 0.6) * 0.15;
+      material.opacity = 0.65 + Math.sin(t * 0.6) * 0.2;
       points.rotation.z = Math.sin(t * 0.05) * 0.05;
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
