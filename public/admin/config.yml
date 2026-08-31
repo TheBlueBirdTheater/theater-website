@@ -21,7 +21,39 @@ publish_mode: editorial_workflow
 media_folder: public/images/uploads
 public_folder: /images/uploads
 
+# Sidebar order below follows the site's own navigation flow (Home -> Shows -> Auditions ->
+# Volunteer -> About -> Rentals -> Contact -> Donate) rather than alphabetical/creation order,
+# and groups each page's settings collection next to the content collection that feeds it —
+# e.g. Donate Page Settings sits beside Value Propositions, which is the collection that page
+# actually pulls its value-prop cards from. Keep new collections near the page they belong to
+# rather than appending them at the bottom.
 collections:
+  - name: siteCopy
+    label: Site-Wide Copy
+    files:
+      - name: siteCopy
+        label: Site-Wide Copy
+        file: src/content/siteCopy/siteCopy.yaml
+        fields:
+          - { label: Homepage Hero Eyebrow, name: heroEyebrow, widget: string }
+          - { label: Homepage Hero Title, name: heroTitle, widget: string }
+          - { label: Homepage Hero Description, name: heroDescription, widget: text }
+          - { label: Footer Tagline, name: footerTagline, widget: text }
+          - {
+              label: Footer Copyright Note,
+              name: footerCopyrightNote,
+              widget: string,
+              hint: 'Appended after "© 1981–{year} Orangeburg Part-Time Players, " in the footer.',
+            }
+          - { label: Newsletter Eyebrow, name: newsletterEyebrow, widget: string }
+          - { label: Newsletter Title, name: newsletterTitle, widget: string }
+          - { label: Newsletter Description, name: newsletterDescription, widget: text }
+          - {
+              label: "Venue Info Strip Title (homepage)",
+              name: venueInfoStripTitle,
+              widget: string,
+            }
+
   - name: shows
     label: Shows
     folder: src/content/shows
@@ -291,72 +323,6 @@ collections:
           required: false,
           hint: "When on, this entry is hidden from the site entirely (listings, its own page, and the sitemap) without deleting it.",
         }
-
-  - name: team
-    label: Board & Staff
-    folder: src/content/team
-    create: true
-    slug: "{{slug}}"
-    extension: yaml
-    format: yaml
-    fields:
-      - { label: Name, name: name, widget: string }
-      - { label: Role, name: role, widget: string }
-      - label: Group
-        name: group
-        widget: select
-        options: [board, staff]
-      - { label: Bio, name: bio, widget: text, required: false }
-      - {
-          label: Photo,
-          name: photoUrl,
-          widget: image,
-          required: false,
-          media_folder: /src/assets/images/team,
-          public_folder: ../../assets/images/team,
-        }
-
-  - name: faqs
-    label: FAQs
-    folder: src/content/faqs
-    create: true
-    slug: "{{slug}}"
-    extension: yaml
-    format: yaml
-    fields:
-      - { label: Question, name: question, widget: string }
-      - { label: Answer, name: answer, widget: text }
-      - { label: Category, name: category, widget: string, required: false }
-
-  - name: valueProps
-    label: Value Propositions
-    folder: src/content/valueProps
-    create: true
-    slug: "{{slug}}"
-    extension: yaml
-    format: yaml
-    fields:
-      - { label: Title, name: title, widget: string }
-      - { label: Description, name: description, widget: text }
-      - {
-          label: Icon,
-          name: icon,
-          widget: string,
-          required: false,
-          hint: "Freeform label — not currently rendered on the site.",
-        }
-
-  - name: testimonials
-    label: Testimonials
-    folder: src/content/testimonials
-    create: true
-    slug: "{{slug}}"
-    extension: yaml
-    format: yaml
-    fields:
-      - { label: Quote, name: quote, widget: text }
-      - { label: Author, name: author, widget: string }
-      - { label: Role, name: role, widget: string, required: false }
 
   - name: events
     label: Other Events
@@ -640,202 +606,52 @@ collections:
         }
       - { label: Caption, name: caption, widget: string, required: false }
 
-  - name: contact
-    label: Contact Info
+  - name: extras
+    label: Extra Page Copy
     files:
-      - name: contact
-        label: Contact Info
-        file: src/content/contact/contact.yaml
+      - name: extras
+        label: Extra Page Copy
+        file: src/content/extras/extras.yaml
         fields:
-          - { label: Phone, name: phone, widget: string }
-          - { label: Email, name: email, widget: string }
-          - label: Address
-            name: address
+          - {
+              label: "Also at the Blue Bird (Shows page)",
+              name: alsoAtTheBlueBird,
+              widget: text,
+            }
+          - label: Adult OPTP (Auditions page)
+            name: adultOptp
             widget: object
             fields:
-              - { label: Street Address, name: line1, widget: string }
-              - { label: City, name: city, widget: string }
-              - { label: State, name: state, widget: string }
-              - {
-                  label: ZIP,
-                  name: zip,
-                  widget: string,
-                  pattern: ["^\\d{5}(-\\d{4})?$", "Format: 12345 or 12345-6789"],
-                }
-          - {
-              label: Mailing Address,
-              name: mailingAddress,
-              widget: string,
-              required: false,
-              hint: 'e.g. "P.O. Box 1291, Orangeburg, SC 29116" — leave blank if the same as the street address above.',
-            }
-          - {
-              label: Map Latitude,
-              name: mapLat,
-              widget: number,
-              value_type: float,
-              min: -90,
-              max: 90,
-              required: false,
-              hint: "Used for the venue map embed. Leave blank to hide the map.",
-            }
-          - {
-              label: Map Longitude,
-              name: mapLng,
-              widget: number,
-              value_type: float,
-              min: -180,
-              max: 180,
-              required: false,
-              hint: "Used for the venue map embed. Leave blank to hide the map.",
-            }
-          - label: Social Links
-            name: socials
-            widget: list
+              - { label: Description, name: description, widget: text }
+              - { label: Audition Window, name: auditionWindow, widget: string }
+              - { label: Contact Email, name: contactEmail, widget: string }
+          - label: Junior OPTP (Auditions page)
+            name: juniorOptp
+            widget: object
             fields:
-              - { label: Platform, name: platform, widget: string }
-              - { label: URL, name: url, widget: string }
-          - {
-              label: Contact Form Heading,
-              name: formHeading,
-              widget: string,
-              required: false,
-              hint: "Heading above the message form on the Contact page.",
-            }
-          - {
-              label: Contact Form Intro,
-              name: formIntro,
-              widget: text,
-              required: false,
-              hint: "Intro sentence above the message form on the Contact page.",
-            }
-
-  - name: history
-    label: History
-    files:
-      - name: history
-        label: Building & Company History
-        file: src/content/history/history.yaml
-        fields:
-          - {
-              label: Intro,
-              name: intro,
-              widget: text,
-              hint: "Homepage teaser + About page opening line.",
-            }
-          - label: Milestones
-            name: milestones
-            widget: list
-            fields:
+              - { label: Age Range, name: ageRange, widget: string }
+              - { label: Description, name: description, widget: text }
+              - { label: Audition Window, name: auditionWindow, widget: string }
               - {
-                  label: Year,
-                  name: year,
+                  label: Performance Window,
+                  name: performanceWindow,
                   widget: string,
-                  pattern: ["^\\d{4}$", "Format: 4-digit year, e.g. 1916"],
                 }
-              - { label: Heading, name: heading, widget: string }
-              - { label: Body, name: body, widget: text }
+              - { label: Contact Email, name: contactEmail, widget: string }
               - {
-                  label: Image,
-                  name: imageUrl,
-                  widget: image,
-                  required: false,
-                  media_folder: /src/assets/images/history,
-                  public_folder: ../../assets/images/history,
-                }
-
-  - name: donate
-    label: Donate Page Settings
-    files:
-      - name: donate
-        label: Donate Page Settings
-        file: src/content/donate/donate.yaml
-        fields:
-          - {
-              label: Donation Platform URL,
-              name: donationPlatformUrl,
-              widget: string,
-              hint: "Third-party giving-page link, e.g. a Givebutter or Classy URL.",
-            }
-          - {
-              label: Page Title,
-              name: pageTitle,
-              widget: string,
-              hint: "Main heading on the Donate page.",
-            }
-          - {
-              label: Amount Helper Text,
-              name: amountHelperText,
-              widget: string,
-              required: false,
-              hint: "Short note above the giving-level buttons.",
-            }
-          - {
-              label: Nonprofit Note,
-              name: nonprofitNote,
-              widget: text,
-              required: false,
-              hint: "Tax-deductible / 501(c)(3) note shown on the Donate page.",
-            }
-          - {
-              label: Cash App Handle,
-              name: cashApp,
-              widget: string,
-              required: false,
-              hint: "Not currently shown on the site — pending confirmation that this handle is still current.",
-            }
-          - label: Giving Levels
-            name: givingLevels
-            widget: list
-            fields:
-              - { label: Name, name: name, widget: string }
-              - {
-                  label: Amount,
-                  name: amount,
+                  label: Homepage Banner Title,
+                  name: bannerTitle,
                   widget: string,
-                  hint: 'e.g. "$25+"',
+                  hint: "Heading for the Junior OPTP banner on the homepage.",
                 }
-              - label: Perks
-                name: perks
-                widget: list
-                field: { label: Perk, name: value, widget: string }
-          - label: Sponsorship Tiers
-            name: sponsorshipTiers
-            widget: list
+          - label: "Audition Sign-Up Coming Soon (page)"
+            name: auditionSignUpSoon
+            widget: object
+            required: false
+            hint: "Shown at /auditions/sign-up-soon when a show/event has no sign-up link yet."
             fields:
-              - { label: Name, name: name, widget: string }
-              - { label: Amount, name: amount, widget: string }
-              - label: Benefits
-                name: benefits
-                widget: list
-                field: { label: Benefit, name: value, widget: string }
-
-  - name: stats
-    label: Organization Stats
-    files:
-      - name: stats
-        label: Organization Stats
-        file: src/content/stats/stats.yaml
-        fields:
-          - label: Stats
-            name: items
-            widget: list
-            hint: "Numbers shown in the homepage/about stats band. Order controls display order."
-            fields:
-              - { label: Number, name: value, widget: number, value_type: int }
-              - {
-                  label: Suffix,
-                  name: suffix,
-                  widget: string,
-                  required: false,
-                  hint: 'e.g. "+" or "%"',
-                }
-              - {
-                  label: Label,
-                  name: label,
-                  widget: string,
-                  hint: 'e.g. "Community Productions"',
-                }
+              - { label: Title, name: title, widget: string }
+              - { label: Description, name: description, widget: text }
 
   - name: getInvolved
     label: Get Involved Page Settings
@@ -906,6 +722,103 @@ collections:
               - { label: Title, name: title, widget: string }
               - { label: Description, name: description, widget: text }
 
+  - name: history
+    label: History
+    files:
+      - name: history
+        label: Building & Company History
+        file: src/content/history/history.yaml
+        fields:
+          - {
+              label: Intro,
+              name: intro,
+              widget: text,
+              hint: "Homepage teaser + About page opening line.",
+            }
+          - label: Milestones
+            name: milestones
+            widget: list
+            fields:
+              - {
+                  label: Year,
+                  name: year,
+                  widget: string,
+                  pattern: ["^\\d{4}$", "Format: 4-digit year, e.g. 1916"],
+                }
+              - { label: Heading, name: heading, widget: string }
+              - { label: Body, name: body, widget: text }
+              - {
+                  label: Image,
+                  name: imageUrl,
+                  widget: image,
+                  required: false,
+                  media_folder: /src/assets/images/history,
+                  public_folder: ../../assets/images/history,
+                }
+
+  - name: team
+    label: Board & Staff
+    folder: src/content/team
+    create: true
+    slug: "{{slug}}"
+    extension: yaml
+    format: yaml
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Role, name: role, widget: string }
+      - label: Group
+        name: group
+        widget: select
+        options: [board, staff]
+      - { label: Bio, name: bio, widget: text, required: false }
+      - {
+          label: Photo,
+          name: photoUrl,
+          widget: image,
+          required: false,
+          media_folder: /src/assets/images/team,
+          public_folder: ../../assets/images/team,
+        }
+
+  - name: testimonials
+    label: Testimonials
+    folder: src/content/testimonials
+    create: true
+    slug: "{{slug}}"
+    extension: yaml
+    format: yaml
+    fields:
+      - { label: Quote, name: quote, widget: text }
+      - { label: Author, name: author, widget: string }
+      - { label: Role, name: role, widget: string, required: false }
+
+  - name: stats
+    label: Organization Stats
+    files:
+      - name: stats
+        label: Organization Stats
+        file: src/content/stats/stats.yaml
+        fields:
+          - label: Stats
+            name: items
+            widget: list
+            hint: "Numbers shown in the homepage/about stats band. Order controls display order."
+            fields:
+              - { label: Number, name: value, widget: number, value_type: int }
+              - {
+                  label: Suffix,
+                  name: suffix,
+                  widget: string,
+                  required: false,
+                  hint: 'e.g. "+" or "%"',
+                }
+              - {
+                  label: Label,
+                  name: label,
+                  widget: string,
+                  hint: 'e.g. "Community Productions"',
+                }
+
   - name: rentals
     label: Rentals Page Settings
     files:
@@ -957,75 +870,168 @@ collections:
               - { label: Rate, name: rate, widget: string, hint: 'e.g. "$250"' }
               - { label: Description, name: description, widget: text, required: false }
 
-  - name: siteCopy
-    label: Site-Wide Copy
+  - name: contact
+    label: Contact Info
     files:
-      - name: siteCopy
-        label: Site-Wide Copy
-        file: src/content/siteCopy/siteCopy.yaml
+      - name: contact
+        label: Contact Info
+        file: src/content/contact/contact.yaml
         fields:
-          - { label: Homepage Hero Eyebrow, name: heroEyebrow, widget: string }
-          - { label: Homepage Hero Title, name: heroTitle, widget: string }
-          - { label: Homepage Hero Description, name: heroDescription, widget: text }
-          - { label: Footer Tagline, name: footerTagline, widget: text }
+          - { label: Phone, name: phone, widget: string }
+          - { label: Email, name: email, widget: string }
+          - label: Address
+            name: address
+            widget: object
+            fields:
+              - { label: Street Address, name: line1, widget: string }
+              - { label: City, name: city, widget: string }
+              - { label: State, name: state, widget: string }
+              - {
+                  label: ZIP,
+                  name: zip,
+                  widget: string,
+                  pattern: ["^\\d{5}(-\\d{4})?$", "Format: 12345 or 12345-6789"],
+                }
           - {
-              label: Footer Copyright Note,
-              name: footerCopyrightNote,
+              label: Mailing Address,
+              name: mailingAddress,
               widget: string,
-              hint: 'Appended after "© 1981–{year} Orangeburg Part-Time Players, " in the footer.',
+              required: false,
+              hint: 'e.g. "P.O. Box 1291, Orangeburg, SC 29116" — leave blank if the same as the street address above.',
             }
-          - { label: Newsletter Eyebrow, name: newsletterEyebrow, widget: string }
-          - { label: Newsletter Title, name: newsletterTitle, widget: string }
-          - { label: Newsletter Description, name: newsletterDescription, widget: text }
           - {
-              label: "Venue Info Strip Title (homepage)",
-              name: venueInfoStripTitle,
+              label: Map Latitude,
+              name: mapLat,
+              widget: number,
+              value_type: float,
+              min: -90,
+              max: 90,
+              required: false,
+              hint: "Used for the venue map embed. Leave blank to hide the map.",
+            }
+          - {
+              label: Map Longitude,
+              name: mapLng,
+              widget: number,
+              value_type: float,
+              min: -180,
+              max: 180,
+              required: false,
+              hint: "Used for the venue map embed. Leave blank to hide the map.",
+            }
+          - label: Social Links
+            name: socials
+            widget: list
+            fields:
+              - { label: Platform, name: platform, widget: string }
+              - { label: URL, name: url, widget: string }
+          - {
+              label: Contact Form Heading,
+              name: formHeading,
               widget: string,
+              required: false,
+              hint: "Heading above the message form on the Contact page.",
+            }
+          - {
+              label: Contact Form Intro,
+              name: formIntro,
+              widget: text,
+              required: false,
+              hint: "Intro sentence above the message form on the Contact page.",
             }
 
-  - name: extras
-    label: Extra Page Copy
+  - name: faqs
+    label: FAQs
+    folder: src/content/faqs
+    create: true
+    slug: "{{slug}}"
+    extension: yaml
+    format: yaml
+    fields:
+      - { label: Question, name: question, widget: string }
+      - { label: Answer, name: answer, widget: text }
+      - { label: Category, name: category, widget: string, required: false }
+
+  - name: donate
+    label: Donate Page Settings
     files:
-      - name: extras
-        label: Extra Page Copy
-        file: src/content/extras/extras.yaml
+      - name: donate
+        label: Donate Page Settings
+        file: src/content/donate/donate.yaml
         fields:
           - {
-              label: "Also at the Blue Bird (Shows page)",
-              name: alsoAtTheBlueBird,
-              widget: text,
+              label: Donation Platform URL,
+              name: donationPlatformUrl,
+              widget: string,
+              hint: "Third-party giving-page link, e.g. a Givebutter or Classy URL.",
             }
-          - label: Adult OPTP (Auditions page)
-            name: adultOptp
-            widget: object
+          - {
+              label: Page Title,
+              name: pageTitle,
+              widget: string,
+              hint: "Main heading on the Donate page.",
+            }
+          - {
+              label: Amount Helper Text,
+              name: amountHelperText,
+              widget: string,
+              required: false,
+              hint: "Short note above the giving-level buttons.",
+            }
+          - {
+              label: Nonprofit Note,
+              name: nonprofitNote,
+              widget: text,
+              required: false,
+              hint: "Tax-deductible / 501(c)(3) note shown on the Donate page.",
+            }
+          - {
+              label: Cash App Handle,
+              name: cashApp,
+              widget: string,
+              required: false,
+              hint: "Not currently shown on the site — pending confirmation that this handle is still current.",
+            }
+          - label: Giving Levels
+            name: givingLevels
+            widget: list
             fields:
-              - { label: Description, name: description, widget: text }
-              - { label: Audition Window, name: auditionWindow, widget: string }
-              - { label: Contact Email, name: contactEmail, widget: string }
-          - label: Junior OPTP (Auditions page)
-            name: juniorOptp
-            widget: object
-            fields:
-              - { label: Age Range, name: ageRange, widget: string }
-              - { label: Description, name: description, widget: text }
-              - { label: Audition Window, name: auditionWindow, widget: string }
+              - { label: Name, name: name, widget: string }
               - {
-                  label: Performance Window,
-                  name: performanceWindow,
+                  label: Amount,
+                  name: amount,
                   widget: string,
+                  hint: 'e.g. "$25+"',
                 }
-              - { label: Contact Email, name: contactEmail, widget: string }
-              - {
-                  label: Homepage Banner Title,
-                  name: bannerTitle,
-                  widget: string,
-                  hint: "Heading for the Junior OPTP banner on the homepage.",
-                }
-          - label: "Audition Sign-Up Coming Soon (page)"
-            name: auditionSignUpSoon
-            widget: object
-            required: false
-            hint: "Shown at /auditions/sign-up-soon when a show/event has no sign-up link yet."
+              - label: Perks
+                name: perks
+                widget: list
+                field: { label: Perk, name: value, widget: string }
+          - label: Sponsorship Tiers
+            name: sponsorshipTiers
+            widget: list
             fields:
-              - { label: Title, name: title, widget: string }
-              - { label: Description, name: description, widget: text }
+              - { label: Name, name: name, widget: string }
+              - { label: Amount, name: amount, widget: string }
+              - label: Benefits
+                name: benefits
+                widget: list
+                field: { label: Benefit, name: value, widget: string }
+
+  - name: valueProps
+    label: Value Propositions
+    folder: src/content/valueProps
+    create: true
+    slug: "{{slug}}"
+    extension: yaml
+    format: yaml
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Description, name: description, widget: text }
+      - {
+          label: Icon,
+          name: icon,
+          widget: string,
+          required: false,
+          hint: "Freeform label — not currently rendered on the site.",
+        }
