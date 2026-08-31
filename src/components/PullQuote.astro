@@ -1,0 +1,30 @@
+---
+interface Props {
+  quote: string;
+  attribution?: string;
+  onNavy?: boolean;
+}
+
+const { quote, attribution, onNavy = false } = Astro.props as Props;
+---
+
+<figure class:list={['border-l-4 pl-6', onNavy ? 'border-secondary' : 'border-primary']}>
+  <p
+    class:list={[
+      'font-heading text-display-sm leading-snug font-medium italic',
+      onNavy ? 'text-primary-content' : 'text-base-content',
+    ]}
+  >
+    {quote}
+  </p>
+  {attribution && (
+    <figcaption
+      class:list={[
+        'font-body mt-3 text-sm font-semibold tracking-[0.02em] uppercase',
+        onNavy ? 'text-secondary-accessible' : 'text-primary',
+      ]}
+    >
+      {attribution}
+    </figcaption>
+  )}
+</figure>

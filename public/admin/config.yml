@@ -317,6 +317,13 @@ collections:
           required: false,
           hint: 'Only needed if this show is NOT an Orangeburg Part-Time Players production. Use "Junior Orangeburg Part-Time Players" for the youth program (tags the show "JR Production"), or another group name for a guest production — e.g. a guest dance recital or comedy night hosted at the Blue Bird Theatre.',
         }
+      - {
+          label: Director,
+          name: director,
+          widget: string,
+          required: false,
+          hint: 'e.g. Coe Dantzler — leave blank if not yet cast/confirmed.',
+        }
       - label: Cast
         name: cast
         widget: list

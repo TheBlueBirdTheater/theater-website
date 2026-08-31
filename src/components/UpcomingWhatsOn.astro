@@ -9,11 +9,13 @@ interface Props {
   eyebrow?: string;
   title?: string;
   count?: number;
+  /** Skips the N soonest items — used on the homepage to avoid repeating the item already shown in FeaturedProduction. */
+  skip?: number;
 }
 
-const { eyebrow = 'Coming Up', title = 'Next at the Blue Bird', count = 3 } = Astro.props as Props;
+const { eyebrow = 'Coming Up', title = 'Next at the Blue Bird', count = 3, skip = 0 } = Astro.props as Props;
 
-const whatsOn = await getUpcomingWhatsOn(count);
+const whatsOn = (await getUpcomingWhatsOn(count + skip)).slice(skip);
 ---
 
 <section class="mx-auto max-w-(--container-max) px-4 py-14 md:py-16">

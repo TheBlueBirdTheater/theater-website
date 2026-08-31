@@ -1,0 +1,54 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import PullQuote from '@components/PullQuote.astro';
+
+type Milestone = CollectionEntry<'history'>['data']['milestones'][number];
+
+interface Props {
+  milestones: Milestone[];
+  /** Pulls one milestone out as the large chapter-opener feature above the rest — matched by its `year`. */
+  excludeYear?: string;
+}
+
+const { milestones, excludeYear } = Astro.props as Props;
+
+const featured = excludeYear ? milestones.find((m) => m.year === excludeYear) : undefined;
+const chapters = milestones.filter((m) => m !== featured);
+---
+
+<div class="mx-auto max-w-(--container-max) px-4 py-16">
+  {featured && (
+    <div class="grid gap-10 md:grid-cols-2 md:items-center" data-reveal>
+      {featured.imageUrl ? (
+        <Image
+          src={featured.imageUrl}
+          alt={featured.heading}
+          format="webp"
+          class="border-line aspect-square w-full rounded-lg border object-cover shadow-card"
+        />
+      ) : (
+        <div class="border-line bg-base-200 text-base-content/70 font-body flex aspect-square items-center justify-center rounded-lg border text-sm">
+          Archival photo
+        </div>
+      )}
+      <div>
+        <p class="font-heading text-primary text-display-lg leading-none font-bold">{featured.year}</p>
+        <h3 class="font-heading text-base-content mt-2 text-display-sm font-semibold">{featured.heading}</h3>
+        <div class="mt-5">
+          <PullQuote quote={featured.body} />
+        </div>
+      </div>
+    </div>
+  )}
+
+  <div class:list={['grid gap-x-10 gap-y-12 sm:grid-cols-2', featured && 'mt-16']}>
+    {chapters.map((milestone, i) => (
+      <div class:list={['flex flex-col gap-2', i % 2 === 1 && 'sm:mt-10']} data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+        <p class="font-heading text-primary text-display-sm leading-none font-bold">{milestone.year}</p>
+        <h3 class="font-heading text-base-content mt-1 text-callout font-semibold">{milestone.heading}</h3>
+        <p class="font-body text-base-content/80 mt-1">{milestone.body}</p>
+      </div>
+    ))}
+  </div>
+</div>

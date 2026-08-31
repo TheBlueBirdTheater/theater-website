@@ -4,6 +4,7 @@ import Schema from '@components/Schema.astro';
 import NewsletterSignup from '@components/NewsletterSignup.astro';
 import HomeHero from '@components/HomeHero.astro';
 import UpcomingWhatsOn from '@components/UpcomingWhatsOn.astro';
+import FeaturedProduction from '@components/FeaturedProduction.astro';
 import GetInvolvedGrid from '@components/GetInvolvedGrid.astro';
 import VenueInfoStrip from '@components/VenueInfoStrip.astro';
 import JuniorOptpBanner from '@components/JuniorOptpBanner.astro';
@@ -81,7 +82,8 @@ const featuredEventSchema = (() => {
 
   <HomeHero />
   <StatsBand />
-  <UpcomingWhatsOn />
+  {featured && <FeaturedProduction item={featured} />}
+  <UpcomingWhatsOn skip={featured ? 1 : 0} />
   <GetInvolvedGrid />
   <VenueInfoStrip />
   <JuniorOptpBanner />

@@ -1,0 +1,116 @@
+---
+/**
+ * Purely decorative warm ambient glow behind the homepage hero illustration —
+ * evokes the marquee at dusk. Progressive enhancement only: aria-hidden,
+ * carries no information, and the hero is fully legible without it (no JS,
+ * no WebGL, or prefers-reduced-motion all degrade to a plain transparent
+ * canvas sitting behind the real illustration).
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props as Props;
+---
+
+<canvas data-marquee-glow aria-hidden="true" class:list={['h-full w-full', className]}></canvas>
+
+<script>
+  async function initMarqueeGlow() {
+    const canvas = document.querySelector<HTMLCanvasElement>('[data-marquee-glow]');
+    const container = canvas?.parentElement;
+    if (!canvas || !container) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let THREE: typeof import('three');
+    try {
+      THREE = await import('three');
+    } catch {
+      return;
+    }
+
+    let renderer: InstanceType<typeof THREE.WebGLRenderer>;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    } catch {
+      return;
+    }
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    camera.position.z = 10;
+
+    function resize() {
+      const { clientWidth: w, clientHeight: h } = container!;
+      if (w === 0 || h === 0) return;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+
+    function createGlowTexture() {
+      const size = 128;
+      const c = document.createElement('canvas');
+      c.width = c.height = size;
+      const ctx = c.getContext('2d')!;
+      const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      gradient.addColorStop(0, 'rgba(245, 201, 155, 0.9)');
+      gradient.addColorStop(0.4, 'rgba(224, 165, 90, 0.35)');
+      gradient.addColorStop(1, 'rgba(224, 165, 90, 0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+      return new THREE.CanvasTexture(c);
+    }
+
+    const glowTexture = createGlowTexture();
+    const count = 7;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 8;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 4;
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 3.5,
+      map: glowTexture,
+      transparent: true,
+      opacity: 0.5,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      sizeAttenuation: true,
+    });
+
+    const points = new THREE.Points(geometry, material);
+    scene.add(points);
+
+    resize();
+    renderer.render(scene, camera);
+
+    const observer = new ResizeObserver(() => {
+      resize();
+      renderer.render(scene, camera);
+    });
+    observer.observe(container);
+
+    // A single static frame is enough for reduced-motion users — the point
+    // positions themselves already read as an ambient glow without motion.
+    if (prefersReducedMotion) return;
+
+    const start = performance.now();
+    const animate = (now: number) => {
+      const t = (now - start) / 1000;
+      material.opacity = 0.35 + Math.sin(t * 0.6) * 0.15;
+      points.rotation.z = Math.sin(t * 0.05) * 0.05;
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }
+
+  initMarqueeGlow();
+</script>

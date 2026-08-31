@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Button from '@components/Button.astro';
+import MarqueeGlow from '@components/MarqueeGlow.astro';
 import heroImage from '@assets/images/bluebird-side-silhouette.png';
 import { getEntry } from 'astro:content';
 
@@ -21,7 +22,8 @@ const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
       <Button href="/tickets/" variant="secondary" size="lg">Get Tickets</Button>
     </div>
   </div>
-  <div class="hero-anim-poster hero-spotlight">
+  <div class="hero-anim-poster hero-spotlight relative">
+    <MarqueeGlow class="pointer-events-none absolute inset-0 -z-10" />
     <Image
       src={heroImage}
       alt="Illustrated silhouette of the Blue Bird Theatre marquee"

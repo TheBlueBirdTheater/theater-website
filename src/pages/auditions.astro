@@ -28,6 +28,30 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <SectionHeading eyebrow="Get Involved" title="Auditions" align="center" level="h1" />
   </div>
 
+  <div class="mx-auto max-w-250 px-4 pb-20">
+    <SectionHeading eyebrow="Right Now" title="Auditioning Now" />
+    {auditioningNow.length > 0 ? (
+      <div class="mt-8 grid gap-8 md:grid-cols-2" data-reveal-delay="0">
+        {auditioningNow.map((listing, i) => (
+          <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+            <AuditionNotice
+              title={listing.title}
+              href={listing.href}
+              readMoreHref={listing.href}
+              auditions={listing}
+              fallbackContactEmail={contact.email}
+            />
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="font-body text-base-content mt-4">
+        No auditions are currently open — check back soon, or explore how auditions generally work for
+        Adult and Junior OPTP below.
+      </p>
+    )}
+  </div>
+
   <div class="mx-auto grid max-w-250 gap-8 px-4 pb-20 md:grid-cols-2">
     <div data-reveal data-reveal-delay="0">
       <DivisionAuditionPanel
@@ -49,25 +73,6 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       />
     </div>
   </div>
-
-  {auditioningNow.length > 0 && (
-    <div class="mx-auto max-w-250 px-4 pb-20">
-      <SectionHeading eyebrow="Right Now" title="Auditioning Now" />
-      <div class="mt-8 grid gap-8 md:grid-cols-2">
-        {auditioningNow.map((listing, i) => (
-          <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
-            <AuditionNotice
-              title={listing.title}
-              href={listing.href}
-              readMoreHref={listing.href}
-              auditions={listing}
-              fallbackContactEmail={contact.email}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  )}
 
   {auditionFaqs.length > 0 && (
     <div class="mx-auto max-w-250 px-4 pb-20">

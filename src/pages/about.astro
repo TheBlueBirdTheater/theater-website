@@ -1,11 +1,11 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
-import { Image } from 'astro:assets';
 import SectionHeading from '@components/SectionHeading.astro';
 import PersonCard from '@components/PersonCard.astro';
 import GalleryPreview from '@components/GalleryPreview.astro';
 import StatsBand from '@components/StatsBand.astro';
+import HistoryTimeline from '@components/HistoryTimeline.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
@@ -14,9 +14,6 @@ const history = historyEntry!.data;
 const team = await getCollection('team');
 const boardMembers = team.filter((person) => person.data.group === 'board');
 const artisticStaff = team.filter((person) => person.data.group === 'staff');
-const foundingMilestone =
-  history.milestones.find((milestone) => milestone.year === '1981') ?? history.milestones[0];
-const timelineMilestones = history.milestones.filter((milestone) => milestone !== foundingMilestone);
 
 const breadcrumbSchema = buildBreadcrumbSchema([
   { name: 'Home', url: '/' },
@@ -38,41 +35,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <StatsBand />
 
-  <div class="mx-auto grid max-w-(--container-max) gap-12 px-4 py-14 md:grid-cols-2 md:items-center" data-reveal>
-    {foundingMilestone?.imageUrl ? (
-      <Image
-        src={foundingMilestone.imageUrl}
-        alt={foundingMilestone.heading}
-        format="webp"
-        class="border-line rounded-lg aspect-square w-full border object-cover shadow-card"
-      />
-    ) : (
-      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-square items-center justify-center border text-sm">
-        Archival photo
-      </div>
-    )}
-    <div>
-      <h3 class="font-heading text-base-content text-2xl font-semibold">{foundingMilestone?.heading}</h3>
-      <p class="font-body text-base-content mt-4">{foundingMilestone?.body}</p>
-    </div>
+  <div class="mx-auto max-w-(--container-narrow) px-4 pt-14 text-center">
+    <SectionHeading eyebrow="The Building" title="The Blue Bird Theatre" align="center" />
   </div>
-
-  <section class="bg-primary">
-    <div class="mx-auto max-w-(--container-max) px-4 py-16">
-      <SectionHeading eyebrow="The Building" title="The Blue Bird Theatre" onNavy />
-      <div class="mt-8 grid gap-8 sm:grid-cols-2">
-        {
-          timelineMilestones.map((milestone, i) => (
-            <div class="border-secondary border-l-2 pl-5" data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
-              <p class="font-heading text-secondary-accessible font-semibold">{milestone.year}</p>
-              <p class="font-heading text-primary-content mt-1 text-callout font-semibold">{milestone.heading}</p>
-              <p class="font-body text-light-blue-tint mt-1">{milestone.body}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
+  <HistoryTimeline milestones={history.milestones} excludeYear="1981" />
 
   <GalleryPreview />
 

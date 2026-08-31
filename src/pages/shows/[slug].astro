@@ -114,6 +114,9 @@ const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
         {data.title}
       </h1>
       {data.subtitle && <p class="font-body text-base-content/70 mt-2 text-lead italic">{data.subtitle}</p>}
+      {data.director && (
+        <p class="font-body text-base-content/70 mt-2 text-sm font-medium">Directed by {data.director}</p>
+      )}
       <p class="font-body text-base-content mt-4">{data.synopsis}</p>
 
       <div class="mt-7">

@@ -1,0 +1,84 @@
+---
+import type { WhatsOnItem } from '@utils/whatsOn';
+import { Image } from 'astro:assets';
+import Badge from '@components/Badge.astro';
+import Button from '@components/Button.astro';
+import { formatDateRange, formatEventDates } from '@utils/dates';
+import { getShowStatus, getEventStatus } from '@utils/shows';
+
+interface Props {
+  item: WhatsOnItem;
+}
+
+const { item } = Astro.props as Props;
+
+const view =
+  item.kind === 'show'
+    ? {
+        title: item.entry.data.title,
+        subtitle: item.entry.data.subtitle as string | undefined,
+        synopsis: item.entry.data.synopsis,
+        posterImage: item.entry.data.posterImage,
+        posterAlt: item.entry.data.posterAlt,
+        href: `/shows/${item.entry.id}/`,
+        status: getShowStatus(item.entry),
+        dateLabel: formatDateRange(item.entry.data.runDates),
+        presenter: item.entry.data.performingGroup ?? 'Orangeburg Part-Time Players',
+        ticketUrl: item.entry.data.ticketUrl as string | undefined,
+        ticketPrice: item.entry.data.ticketPrice,
+      }
+    : {
+        title: item.entry.data.title,
+        subtitle: undefined as string | undefined,
+        synopsis: item.entry.data.description,
+        posterImage: item.entry.data.image,
+        posterAlt: item.entry.data.imageAlt ?? item.entry.data.title,
+        href: `/events/${item.entry.id}/`,
+        status: getEventStatus(item.entry),
+        dateLabel: formatEventDates(item.entry.data.showDates),
+        presenter: item.entry.data.host,
+        ticketUrl: item.entry.data.ticketUrl,
+        ticketPrice: item.entry.data.ticketPrice,
+      };
+---
+
+<section class="mx-auto max-w-(--container-max) px-4 py-14 md:py-16" data-reveal>
+  <p class="font-body text-primary mb-4 text-eyebrow font-semibold tracking-[0.09em] uppercase">Next on Stage</p>
+  <div class="grid gap-10 md:grid-cols-[0.85fr_1.15fr] md:items-center">
+    <div class="border-line relative aspect-[3/4] overflow-hidden rounded-lg border shadow-card">
+      {view.posterImage ? (
+        <Image
+          src={view.posterImage}
+          alt={view.posterAlt}
+          format="webp"
+          class="h-full w-full object-cover"
+          loading="lazy"
+        />
+      ) : (
+        <div class="bg-base-200 text-base-content/70 font-body flex h-full w-full items-center justify-center text-sm">
+          Poster coming soon
+        </div>
+      )}
+    </div>
+    <div>
+      <Badge status={view.status} />
+      <h2 class="font-heading text-base-content mt-4 text-display leading-[1.05] font-semibold tracking-[-0.01em] sm:text-display-lg">
+        {view.title}
+      </h2>
+      {view.subtitle && <p class="font-body text-base-content/70 mt-2 text-lead italic">{view.subtitle}</p>}
+      <p class="font-body text-base-content mt-5 max-w-130 text-lead">{view.synopsis}</p>
+      <p class="font-body text-base-content mt-5 text-sm font-medium">
+        {view.dateLabel}
+        {view.presenter && ` · Presented by ${view.presenter}`}
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        {view.ticketUrl && (
+          <Button href={view.ticketUrl} variant="primary" size="lg">
+            {view.ticketPrice ? `Get Tickets · ${view.ticketPrice}` : 'Get Tickets'}
+          </Button>
+        )}
+        <Button href={view.href} variant={view.ticketUrl ? 'secondary' : 'primary'} size="lg">Learn More</Button>
+      </div>
+    </div>
+  </div>
+</section>

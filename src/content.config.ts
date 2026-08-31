@@ -146,6 +146,8 @@ const showSchema = ({ image }: SchemaContext) =>
      * the show "JR Production" instead of "Guest Production" on ShowCard.
      */
     performingGroup: z.string().optional(),
+    /** Director credit, surfaced editorially near the title on the show's own page. Not auto-derived from `crew`. */
+    director: z.string().optional(),
     cast: z.array(z.string()).optional(),
     crew: z.array(z.string()).optional(),
     /** Hides this entry from the site (sitemap, listings, and its own page) without deleting it. */
