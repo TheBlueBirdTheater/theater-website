@@ -3,6 +3,17 @@ import { glob, type Loader } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 /**
+ * glob()'s default id generation runs filenames through github-slugger, which
+ * lowercases them (`siteCopy.yaml` -> id `sitecopy`). For singleton
+ * collections addressed by a hardcoded getEntry(collection, id) call
+ * elsewhere, that silently breaks the lookup unless the filename is already
+ * all-lowercase. This keeps the id as the literal filename instead.
+ */
+function literalFilenameId({ entry }: { entry: string }): string {
+  return entry.replace(/\.[^/.]+$/, '');
+}
+
+/**
  * Same as `glob()`, but for collections that are legitimately empty at times
  * (e.g. no auditions posted, no testimonials collected yet). Suppresses the
  * loader's "No files found matching ..." warning; all other logging passes through.
@@ -280,7 +291,7 @@ const stats = defineCollection({
 });
 
 const getInvolved = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/getInvolved' }),
+  loader: glob({ pattern: '*.yaml', base: './src/content/getInvolved', generateId: literalFilenameId }),
   schema: z.object({
     signUpUrl: z.string(),
     /** Heading for the standalone Get Involved / Volunteer page. */
@@ -446,7 +457,7 @@ const extras = defineCollection({
 });
 
 const siteCopy = defineCollection({
-  loader: glob({ pattern: '*.yaml', base: './src/content/siteCopy' }),
+  loader: glob({ pattern: '*.yaml', base: './src/content/siteCopy', generateId: literalFilenameId }),
   schema: z.object({
     heroEyebrow: z.string(),
     heroTitle: z.string(),
