@@ -40,10 +40,9 @@ const initialMinutes = Math.floor((diffMs % 3600000) / 60000);
           <p class="font-body text-sm">{formatTime(next.time!)}</p>
         </noscript>
         {ticketUrl && (
-          <Button href={ticketUrl} variant="inverse" size="sm" class="mt-2">
-            {ticketPrice ? `Get Tickets · ${ticketPrice}` : 'Get Tickets'}
-          </Button>
+          <Button href={ticketUrl} variant="inverse" size="sm" class="mt-2">Get Tickets</Button>
         )}
+        {ticketPrice && <p class="font-body mt-1 text-xs opacity-80">{ticketPrice}</p>}
       </div>
       <div class="flex items-end gap-4" data-countdown data-countdown-target={targetUtc.toISOString()}>
         <div class="flex flex-col items-center">

@@ -71,11 +71,10 @@ const view =
         {view.dateLabel}
         {view.presenter && ` · Presented by ${view.presenter}`}
       </p>
+      {view.ticketPrice && <p class="font-body text-base-content/70 mt-1 text-sm">{view.ticketPrice}</p>}
       <div class="mt-7 flex flex-wrap gap-3">
         {view.ticketUrl && (
-          <Button href={view.ticketUrl} variant="primary" size="lg">
-            {view.ticketPrice ? `Get Tickets · ${view.ticketPrice}` : 'Get Tickets'}
-          </Button>
+          <Button href={view.ticketUrl} variant="primary" size="lg">Get Tickets</Button>
         )}
         <Button href={view.href} variant={view.ticketUrl ? 'secondary' : 'primary'} size="lg">Learn More</Button>
       </div>
