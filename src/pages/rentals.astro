@@ -22,6 +22,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   title="Rentals"
   description="Rent the Blue Bird Theatre for your concert, recital, pageant, or community event in downtown Orangeburg, SC."
   image={rentals.ogImage}
+  imageAlt="Blue Bird Theatre, home of the Orangeburg Part-Time Players in Orangeburg, SC"
 >
   <Schema schema={breadcrumbSchema} />
 
@@ -96,6 +97,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
               id="rental-inquiry-name"
               type="text"
               name="name"
+              autocomplete="name"
               required
               class="input border-line text-base-content rounded-md"
             />
@@ -106,6 +108,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
               id="rental-inquiry-email"
               type="email"
               name="email"
+              autocomplete="email"
               required
               class="input border-line text-base-content rounded-md"
             />

@@ -12,9 +12,12 @@ const headings = (props.headings ?? []).filter((h) => h.depth === 2);
 ---
 
 <BaseLayout frontmatter={page}>
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-base-100 focus:px-4 focus:py-2 focus:text-base-content focus:shadow-card">
+    Skip to content
+  </a>
   <NavBar />
   <div class="mx-auto grid max-w-(--container-max) gap-8 px-4 py-10 md:grid-cols-[1fr_240px]">
-    <main class="prose max-w-none">
+    <main id="main-content" class="prose max-w-none">
       <h1 class="font-heading text-base-content">{page.title}</h1>
       <slot />
     </main>

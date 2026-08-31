@@ -21,6 +21,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   title="Contact"
   description="Contact info for the Blue Bird Theatre, plus answers to common questions about tickets, parking, and more."
   image={contact.ogImage}
+  imageAlt="Blue Bird Theatre, home of the Orangeburg Part-Time Players in Orangeburg, SC"
 >
   <Schema schema={breadcrumbSchema} />
 
@@ -68,6 +69,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
               id="contact-inquiry-name"
               type="text"
               name="name"
+              autocomplete="name"
               required
               class="input border-line text-base-content rounded-md"
             />
@@ -78,6 +80,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
               id="contact-inquiry-email"
               type="email"
               name="email"
+              autocomplete="email"
               required
               class="input border-line text-base-content rounded-md"
             />

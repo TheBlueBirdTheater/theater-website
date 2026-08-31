@@ -22,9 +22,11 @@
     "astro": "^7.2.10",
     "daisyui": "^5.6.18",
     "tailwindcss": "^4.3.3",
+    "three": "^0.185.1",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "@types/three": "^0.185.4",
     "decap-server": "^3.2.4"
   }
 }
