@@ -9,7 +9,7 @@ import { getVenueContact } from '@data/venue';
 
 const valueProps = await getCollection('valueProps');
 const { data: donate } = (await getEntry('donate', 'donate'))!;
-const { givingLevels, sponsorshipTiers, donationPlatformUrl, pageTitle, amountHelperText, nonprofitNote } = donate;
+const { givingLevels, sponsorshipTiers, donationPlatformUrl, pageTitle, amountHelperText, nonprofitNote, ogImage } = donate;
 const contact = await getVenueContact();
 
 const breadcrumbSchema = buildBreadcrumbSchema([
@@ -18,7 +18,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 ]);
 ---
 
-<DefaultLayout title="Support Us" description="Support the Blue Bird Theatre by donating to the Orangeburg Part-Time Players, the nonprofit that operates it.">
+<DefaultLayout title="Support Us" description="Support the Blue Bird Theatre by donating to the Orangeburg Part-Time Players, the nonprofit that operates it." image={ogImage}>
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">

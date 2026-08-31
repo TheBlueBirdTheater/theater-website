@@ -14,8 +14,10 @@ import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, 
 import { getUpcomingWhatsOn } from '@utils/whatsOn';
 import { toVenueIsoString } from '@utils/showings';
 import { getVenueContact } from '@data/venue';
+import { getEntry } from 'astro:content';
 
 const contact = await getVenueContact();
+const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
 
 const theaterSchema = buildTheaterVenueSchema({
   name: THEATRE_NAME,
@@ -71,6 +73,7 @@ const featuredEventSchema = (() => {
 <DefaultLayout
   title="Home"
   description="Blue Bird Theatre is a historic community theater in Orangeburg, SC, home to the Orangeburg Part-Time Players."
+  image={siteCopy.ogImage}
 >
   <Schema
     schema={featuredEventSchema ? [theaterSchema, performingGroupSchema, featuredEventSchema] : [theaterSchema, performingGroupSchema]}

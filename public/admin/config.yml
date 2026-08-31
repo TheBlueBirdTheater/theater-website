@@ -53,6 +53,15 @@ collections:
               name: venueInfoStripTitle,
               widget: string,
             }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the homepage. Leave blank to use the site's generic default share image.",
+            }
 
   - name: shows
     label: Shows
@@ -652,6 +661,15 @@ collections:
             fields:
               - { label: Title, name: title, widget: string }
               - { label: Description, name: description, widget: text }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the Auditions page. Leave blank to use the site's generic default share image.",
+            }
 
   - name: getInvolved
     label: Get Involved Page Settings
@@ -721,6 +739,15 @@ collections:
             fields:
               - { label: Title, name: title, widget: string }
               - { label: Description, name: description, widget: text }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the Volunteer page. Leave blank to use the site's generic default share image.",
+            }
 
   - name: history
     label: History
@@ -755,6 +782,15 @@ collections:
                   media_folder: /src/assets/images/history,
                   public_folder: ../../assets/images/history,
                 }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the About page. Leave blank to use the site's generic default share image.",
+            }
 
   - name: team
     label: Board & Staff
@@ -869,6 +905,15 @@ collections:
               - { label: Name, name: name, widget: string, hint: 'e.g. "Half-Day Rental"' }
               - { label: Rate, name: rate, widget: string, hint: 'e.g. "$250"' }
               - { label: Description, name: description, widget: text, required: false }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the Rentals page. Leave blank to use the site's generic default share image.",
+            }
 
   - name: contact
     label: Contact Info
@@ -938,6 +983,15 @@ collections:
               widget: text,
               required: false,
               hint: "Intro sentence above the message form on the Contact page.",
+            }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the Contact page. Leave blank to use the site's generic default share image.",
             }
 
   - name: faqs
@@ -1017,6 +1071,15 @@ collections:
                 name: benefits
                 widget: list
                 field: { label: Benefit, name: value, widget: string }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the Donate page. Leave blank to use the site's generic default share image.",
+            }
 
   - name: valueProps
     label: Value Propositions

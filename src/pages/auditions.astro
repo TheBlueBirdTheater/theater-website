@@ -11,7 +11,7 @@ import { getCollection, getEntry } from 'astro:content';
 
 const auditioningNow = await getAuditioningNow();
 const { data: extras } = (await getEntry('extras', 'extras'))!;
-const { adultOptp, juniorOptp } = extras;
+const { adultOptp, juniorOptp, ogImage } = extras;
 const contact = await getVenueContact();
 const auditionFaqs = await getCollection('faqs', ({ data }) => data.category === 'Auditions');
 
@@ -21,7 +21,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 ]);
 ---
 
-<DefaultLayout title="Auditions" description="Audition dates, requirements, and sign-up info for OPTP productions.">
+<DefaultLayout title="Auditions" description="Audition dates, requirements, and sign-up info for OPTP productions." image={ogImage}>
   <Schema schema={breadcrumbSchema} />
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">

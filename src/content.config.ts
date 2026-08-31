@@ -226,6 +226,8 @@ const contact = defineCollection({
     /** Heading/intro above the Contact page's message form. */
     formHeading: z.string().optional(),
     formIntro: z.string().optional(),
+    /** Social-share image for the Contact page. Falls back to the site default when omitted. */
+    ogImage: z.string().optional(),
   }),
 });
 
@@ -242,6 +244,8 @@ const history = defineCollection({
           imageUrl: image().optional(),
         })
       ),
+      /** Social-share image for the About page. Falls back to the site default when omitted. */
+      ogImage: z.string().optional(),
     }),
 });
 
@@ -273,6 +277,8 @@ const donate = defineCollection({
         benefits: z.array(z.string()),
       })
     ),
+    /** Social-share image for the Donate page. Falls back to the site default when omitted. */
+    ogImage: z.string().optional(),
   }),
 });
 
@@ -325,6 +331,8 @@ const getInvolved = defineCollection({
         description: z.string(),
       })
     ),
+    /** Social-share image for the Volunteer page. Falls back to the site default when omitted. */
+    ogImage: z.string().optional(),
   }),
 });
 
@@ -424,6 +432,8 @@ const rentals = defineCollection({
           })
         )
         .optional(),
+      /** Social-share image for the Rentals page. Falls back to the site default when omitted. */
+      ogImage: z.string().optional(),
     }),
 });
 
@@ -453,6 +463,8 @@ const extras = defineCollection({
         description: z.string(),
       })
       .optional(),
+    /** Social-share image for the Auditions page. Falls back to the site default when omitted. */
+    ogImage: z.string().optional(),
   }),
 });
 
@@ -469,6 +481,8 @@ const siteCopy = defineCollection({
     newsletterTitle: z.string(),
     newsletterDescription: z.string(),
     venueInfoStripTitle: z.string(),
+    /** Social-share image for the Home page. Falls back to the site default when omitted. */
+    ogImage: z.string().optional(),
   }),
 });
 
