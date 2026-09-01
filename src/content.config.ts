@@ -41,6 +41,43 @@ function optionalGlob(options: Parameters<typeof glob>[0]): Loader {
 }
 
 /**
+ * Matches the bracketed placeholder convention used throughout this repo while content is
+ * pending (e.g. `[CAPACITY, e.g. 300 seats]`, `[ADULT OPTP AUDITION DESCRIPTION]`) — a run of
+ * text starting with an uppercase letter, wrapped in square brackets. Real prose essentially
+ * never matches this shape, so false positives are effectively a non-issue.
+ */
+const PLACEHOLDER_PATTERN = /\[[A-Z][^[\]]{2,}\]/;
+
+/**
+ * Wraps any object schema so every string field is recursively checked for unresolved
+ * [PLACEHOLDER] text at build/dev-server time — this is what actually shipped to production
+ * this sprint (Rentals, Auditions), so it's enforced here rather than left to review. Astro
+ * already runs Zod validation on every `astro dev`/`astro build`, so this needs no separate
+ * script or npm-script wiring; a violation fails the build with the offending file and field path.
+ */
+function rejectPlaceholders<T extends z.ZodTypeAny>(schema: T): T {
+  return schema.superRefine((value, ctx) => {
+    const walk = (node: unknown, path: (string | number)[]) => {
+      if (typeof node === 'string') {
+        const match = node.match(PLACEHOLDER_PATTERN);
+        if (match) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unresolved placeholder text ${JSON.stringify(match[0])} — replace with real content before this can ship.`,
+            path,
+          });
+        }
+      } else if (Array.isArray(node)) {
+        node.forEach((item, i) => walk(item, [...path, i]));
+      } else if (node && typeof node === 'object') {
+        for (const [key, val] of Object.entries(node)) walk(val, [...path, key]);
+      }
+    };
+    walk(value, []);
+  }) as unknown as T;
+}
+
+/**
  * YAML implicitly types unquoted date-like scalars (e.g. `2026-10-08`) as
  * timestamps, so a CMS re-save of a `string` field can turn it into a JS
  * Date. Accept both and normalize back to the ISO date string.
@@ -107,7 +144,7 @@ const seasonField = z.string().regex(/^\d{4}$/, 'Format: 4-digit year, e.g. 2026
 
 /** Shared by the live `shows` collection and the `archivedShows` collection it eventually feeds. */
 const showSchema = ({ image }: SchemaContext) =>
-  z.object({
+  rejectPlaceholders(z.object({
     title: z.string(),
     subtitle: z.string().optional(),
     synopsis: z.string(),
@@ -152,7 +189,7 @@ const showSchema = ({ image }: SchemaContext) =>
     crew: z.array(z.string()).optional(),
     /** Hides this entry from the site (sitemap, listings, and its own page) without deleting it. */
     draft: z.boolean().optional(),
-  });
+  }));
 
 const shows = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/shows' }),
@@ -168,45 +205,45 @@ const archivedShows = defineCollection({
 const team = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/team' }),
   schema: ({ image }) =>
-    z.object({
+    rejectPlaceholders(z.object({
       name: z.string(),
       role: z.string(),
       group: z.enum(['board', 'staff']),
       bio: z.string().optional(),
       photoUrl: image().optional(),
-    }),
+    })),
 });
 
 const faqs = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/faqs' }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     question: z.string(),
     answer: z.string(),
     category: z.string().optional(),
-  }),
+  })),
 });
 
 const valueProps = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/valueProps' }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     title: z.string(),
     description: z.string(),
     icon: z.string().optional(),
-  }),
+  })),
 });
 
 const testimonials = defineCollection({
   loader: optionalGlob({ pattern: '*.yaml', base: './src/content/testimonials' }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     quote: z.string(),
     author: z.string(),
     role: z.string().optional(),
-  }),
+  })),
 });
 
 const contact = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/contact' }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     phone: z.string(),
     email: z.string(),
     address: z.object({
@@ -230,13 +267,13 @@ const contact = defineCollection({
     formIntro: z.string().optional(),
     /** Social-share image for the Contact page. Falls back to the site default when omitted. */
     ogImage: z.string().optional(),
-  }),
+  })),
 });
 
 const history = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/history' }),
   schema: ({ image }) =>
-    z.object({
+    rejectPlaceholders(z.object({
       intro: z.string(),
       milestones: z.array(
         z.object({
@@ -248,12 +285,12 @@ const history = defineCollection({
       ),
       /** Social-share image for the About page. Falls back to the site default when omitted. */
       ogImage: z.string().optional(),
-    }),
+    })),
 });
 
 const donate = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/donate' }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     donationPlatformUrl: z.string(),
     pageTitle: z.string(),
     amountHelperText: z.string().optional(),
@@ -291,12 +328,12 @@ const donate = defineCollection({
       .optional(),
     /** Social-share image for the Donate page. Falls back to the site default when omitted. */
     ogImage: z.string().optional(),
-  }),
+  })),
 });
 
 const stats = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/stats' }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     items: z.array(
       z.object({
         value: z.number(),
@@ -305,12 +342,12 @@ const stats = defineCollection({
         label: z.string(),
       })
     ),
-  }),
+  })),
 });
 
 const getInvolved = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/getInvolved', generateId: literalFilenameId }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     signUpUrl: z.string(),
     /** Heading for the standalone Get Involved / Volunteer page. */
     pageTitle: z.string(),
@@ -345,12 +382,12 @@ const getInvolved = defineCollection({
     ),
     /** Social-share image for the Volunteer page. Falls back to the site default when omitted. */
     ogImage: z.string().optional(),
-  }),
+  })),
 });
 
 /** Shared by the live `events` collection and the `archivedEvents` collection it eventually feeds. */
 const eventSchema = ({ image }: SchemaContext) =>
-  z.object({
+  rejectPlaceholders(z.object({
     title: z.string(),
     description: z.string(),
     /** Short (~155-char) search/social description. Falls back to a truncated description when omitted. */
@@ -393,7 +430,7 @@ const eventSchema = ({ image }: SchemaContext) =>
     ...auditionInfoFields,
     /** Hides this entry from the site (sitemap, listings, and its own page) without deleting it. */
     draft: z.boolean().optional(),
-  });
+  }));
 
 const events = defineCollection({
   loader: optionalGlob({ pattern: '*.yaml', base: './src/content/events' }),
@@ -409,17 +446,17 @@ const archivedEvents = defineCollection({
 const gallery = defineCollection({
   loader: optionalGlob({ pattern: '*.yaml', base: './src/content/gallery' }),
   schema: ({ image }) =>
-    z.object({
+    rejectPlaceholders(z.object({
       photo: image(),
       alt: z.string(),
       caption: z.string().optional(),
-    }),
+    })),
 });
 
 const rentals = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/rentals' }),
   schema: ({ image }) =>
-    z.object({
+    rejectPlaceholders(z.object({
       intro: z.string(),
       /** Eyebrow/title for the homepage teaser (RentalsTeaser) that links to this page. */
       teaserEyebrow: z.string(),
@@ -458,12 +495,12 @@ const rentals = defineCollection({
         .optional(),
       /** Social-share image for the Rentals page. Falls back to the site default when omitted. */
       ogImage: z.string().optional(),
-    }),
+    })),
 });
 
 const extras = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/extras' }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     alsoAtTheBlueBird: z.string(),
     /** General audition info for the adult company, shown on the Auditions page alongside Junior OPTP. */
     adultOptp: z.object({
@@ -489,7 +526,7 @@ const extras = defineCollection({
       .optional(),
     /** Social-share image for the Auditions page. Falls back to the site default when omitted. */
     ogImage: z.string().optional(),
-  }),
+  })),
 });
 
 /**
@@ -499,15 +536,15 @@ const extras = defineCollection({
  */
 const siteSettings = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/siteSettings', generateId: literalFilenameId }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     /** Ticket link used when a show/event has no ludusShowId set — Ludus's events listing, not a specific show. */
     ludusFallbackUrl: z.string(),
-  }),
+  })),
 });
 
 const siteCopy = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/siteCopy', generateId: literalFilenameId }),
-  schema: z.object({
+  schema: rejectPlaceholders(z.object({
     heroEyebrow: z.string(),
     heroTitle: z.string(),
     heroDescription: z.string(),
@@ -520,7 +557,7 @@ const siteCopy = defineCollection({
     venueInfoStripTitle: z.string(),
     /** Social-share image for the Home page. Falls back to the site default when omitted. */
     ogImage: z.string().optional(),
-  }),
+  })),
 });
 
 export const collections = {

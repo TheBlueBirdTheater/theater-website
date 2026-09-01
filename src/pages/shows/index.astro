@@ -46,6 +46,17 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     />
   )}
 
+  <nav aria-label="Jump to section" class="border-line border-b">
+    <div class="mx-auto flex max-w-(--container-max) gap-6 overflow-x-auto px-4 py-3">
+      <a href="#current-season" class="nav-link font-body text-base-content text-sm font-medium whitespace-nowrap">This Season</a>
+      {past.length > 0 && (
+        <a href="#past-this-season" class="nav-link font-body text-base-content text-sm font-medium whitespace-nowrap">Past This Season</a>
+      )}
+      <a href="#next-season" class="nav-link font-body text-base-content text-sm font-medium whitespace-nowrap">Coming {nextSeason}</a>
+      <a href="#explore-more" class="nav-link font-body text-base-content text-sm font-medium whitespace-nowrap">Explore More</a>
+    </div>
+  </nav>
+
   <div id="current-season" class="mx-auto max-w-(--container-max) scroll-mt-(--nav-height) px-4 py-14">
     <SectionHeading eyebrow={`${currentSeason} Season`} title="What's On at the Blue Bird" level="h1" />
     <p class="font-body text-base-content mt-4 max-w-160">{extras.alsoAtTheBlueBird}</p>
