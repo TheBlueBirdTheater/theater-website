@@ -46,7 +46,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     />
   )}
 
-  <div class="mx-auto max-w-(--container-max) px-4 py-14">
+  <div id="current-season" class="mx-auto max-w-(--container-max) scroll-mt-(--nav-height) px-4 py-14">
     <SectionHeading eyebrow={`${currentSeason} Season`} title="What's On at the Blue Bird" level="h1" />
     <p class="font-body text-base-content mt-4 max-w-160">{extras.alsoAtTheBlueBird}</p>
     {upcoming.length > 0 ? (
@@ -67,7 +67,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   </div>
 
   {past.length > 0 && (
-    <div class="mx-auto max-w-(--container-max) px-4 py-14">
+    <div id="past-this-season" class="mx-auto max-w-(--container-max) scroll-mt-(--nav-height) px-4 py-14">
       <SectionHeading eyebrow="This Season" title="Past This Season" />
       <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         {past.map((item, i) => (
@@ -79,7 +79,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     </div>
   )}
 
-  <div class="mx-auto max-w-(--container-max) px-4 py-14">
+  <div id="next-season" class="mx-auto max-w-(--container-max) scroll-mt-(--nav-height) px-4 py-14">
     <SectionHeading eyebrow="Looking Ahead" title={`Coming ${nextSeason} Season`} />
     {nextSeasonShows.length > 0 || nextSeasonEvents.length > 0 ? (
       <div class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -101,7 +101,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     )}
   </div>
 
-  <section class="bg-base-200">
+  <section id="explore-more" class="bg-base-200 scroll-mt-(--nav-height)">
     <div class="mx-auto max-w-(--container-max) px-4 py-16">
       <p class="font-body text-base-content max-w-160">
         Curious what we've staged in seasons past?{' '}
