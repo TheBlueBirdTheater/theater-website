@@ -230,7 +230,11 @@
 }
 
 .hover-lift:hover,
-.hover-lift:focus-visible {
+.hover-lift:focus-visible,
+/* :focus-within covers ShowCard's expandable variant, where .hover-lift sits on a wrapping
+   <div> around the actual focusable <a> — :focus-visible alone never fires there since the
+   div itself is never the focus target, so keyboard users would otherwise get no lift at all. */
+.hover-lift:focus-within {
   transform: translateY(-4px);
   box-shadow: var(--shadow-raised);
 }

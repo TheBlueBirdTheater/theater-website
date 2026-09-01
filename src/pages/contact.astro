@@ -8,7 +8,10 @@ import VenueMap from '@components/VenueMap.astro';
 import { buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry } from 'astro:content';
 
-const faqs = await getCollection('faqs');
+// Location/parking/rental/relationship FAQs now live on /visit/ — exclude them here so the
+// same facts aren't maintained in two places (a single edit to the FAQ entry updates both
+// pages' rendering, but only Visit needs to own the "venue" framing).
+const faqs = await getCollection('faqs', ({ id }) => !id.startsWith('venue-'));
 const { data: contact } = (await getEntry('contact', 'contact'))!;
 
 const breadcrumbSchema = buildBreadcrumbSchema([
@@ -107,6 +110,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <h2 class="font-body text-primary text-eyebrow mt-14 font-semibold tracking-[0.09em] uppercase">
       Frequently Asked Questions
     </h2>
+    <p class="font-body text-base-content/70 mt-2 text-sm">
+      Planning a visit — parking, directions, accessibility? See <a href="/visit/" class="link link-primary">Visit the Blue Bird</a>.
+    </p>
     <div class="mt-4 space-y-3" data-reveal>
       {faqs.map((faq) => (
         <details class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
