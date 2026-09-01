@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
-import { SITE_URL } from './src/data/site-url.ts';
+import { SITE_URL } from './src/data/site-url';
 
 // https://astro.build/config
 export default defineConfig({

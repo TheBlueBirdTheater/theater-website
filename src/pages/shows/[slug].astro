@@ -5,6 +5,7 @@ import Breadcrumb from '@components/Breadcrumb.astro';
 import { Image } from 'astro:assets';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
+import ImagePlaceholder from '@components/ImagePlaceholder.astro';
 import ShareButton from '@components/ShareButton.astro';
 import InfoRow from '@components/InfoRow.astro';
 import Divider from '@components/Divider.astro';
@@ -107,9 +108,7 @@ const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
         class="border-line w-full min-w-0 self-start rounded-lg border shadow-card"
       />
     ) : (
-      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
-        Poster coming soon
-      </div>
+      <ImagePlaceholder label="Poster coming soon" bordered class="aspect-video w-full min-w-0" />
     )}
     <div>
       <Badge status={getShowStatus(show)} />

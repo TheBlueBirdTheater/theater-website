@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { Image } from 'astro:assets';
+import ImagePlaceholder from '@components/ImagePlaceholder.astro';
 
 type Milestone = CollectionEntry<'history'>['data']['milestones'][number];
 
@@ -27,9 +28,7 @@ const chapters = milestones.filter((m) => m !== featured);
           class="border-line aspect-square w-full rounded-lg border object-cover shadow-card"
         />
       ) : (
-        <div class="border-line bg-base-200 text-base-content/70 font-body flex aspect-square items-center justify-center rounded-lg border text-sm">
-          Archival photo
-        </div>
+        <ImagePlaceholder label="Archival photo" bordered class="aspect-square" />
       )}
       <div>
         <p class="font-heading text-primary text-display-lg leading-none font-bold">{featured.year}</p>

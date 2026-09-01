@@ -170,6 +170,21 @@
   }
 }
 
+/* One bulb's flash within a shared-duration loop — each .marquee-glow-dot
+   uses this same keyframe with a different `animation-delay`, so at any
+   moment only one (or a couple, mid-transition) bulb is bright. Staggered
+   across bulbs in physical order, that reads as a single light chasing
+   around the sign's trim, exactly like a real marquee chaser. */
+@keyframes marquee-chase {
+  0% {
+    opacity: 1;
+  }
+  8%,
+  100% {
+    opacity: 0.15;
+  }
+}
+
 @keyframes lightbox-fade {
   from {
     opacity: 0;
@@ -308,6 +323,10 @@ body:has(header[data-navbar] details[open]) {
   .marquee-glow-spot {
     animation: marquee-pulse 2.4s ease-in-out infinite;
   }
+
+  .marquee-glow-dot {
+    animation: marquee-chase 2.2s linear infinite;
+  }
 }
 
 /* Static baseline for marquee dots — the animation above (when it applies)
@@ -321,12 +340,12 @@ body:has(header[data-navbar] details[open]) {
    via inline top/left/width/height percentages, sized relative to the
    illustration's own box. Static baseline mirrors marquee-dot's pattern.
 
-   The illustration has a fully opaque baked-in background, so there's no
-   way for these to sit literally behind it and still be visible — instead
-   `mix-blend-mode: screen` optically merges the glow with the artwork's own
-   navy/white pixels underneath, reading as light coming from within/behind
-   it rather than a flat colored sticker on top. Don't "fix" this by moving
-   these behind the image in stacking order; that makes them invisible.
+   These sit BEHIND the illustration in paint order (see HomeHero.astro) —
+   the illustration itself carries `mix-blend-multiply`, which makes its
+   white/cream areas act as see-through (so these glows shine through the
+   window panes and the sign's dot trim) while its solid navy linework
+   stays fully opaque on top. Don't add a blend mode here too; the image is
+   what does the compositing work.
 
    `ellipse` (not `circle`) matters here: several of these boxes are far
    from square (e.g. a wide, short strip along the sign's bottom edge), and
@@ -340,7 +359,27 @@ body:has(header[data-navbar] details[open]) {
   opacity: 0.7;
   border-radius: 9999px;
   background: radial-gradient(ellipse, rgba(255, 193, 7, 0.85) 0%, rgba(255, 179, 0, 0.4) 45%, transparent 75%);
-  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* One small bulb glow — used in a set along the sign's bulb trim (see
+   HomeHero.astro), each positioned by its exact center point via `left`/
+   `top` with a negative margin recentering this fixed 14px box on that
+   point, rather than the width/height-percentage boxes .marquee-glow-spot
+   uses. A fixed pixel size (not a percentage) is deliberate: these are
+   meant to look like individual small bulbs, not scale with the whole
+   illustration. Static baseline (medium-bright, non-zero) is what shows
+   without JS and for reduced-motion users; the chase animation above is
+   what staggers them into a moving sequence for everyone else. Sits behind
+   the illustration exactly like .marquee-glow-spot, for the same reason. */
+.marquee-glow-dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  margin: -7px;
+  opacity: 0.6;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 193, 7, 0.95) 0%, rgba(255, 179, 0, 0.5) 55%, transparent 80%);
   pointer-events: none;
 }
 

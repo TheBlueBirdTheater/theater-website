@@ -6,6 +6,25 @@ import heroImage from '@assets/images/bluebird-side-silhouette.png';
 import { getEntry } from 'astro:content';
 
 const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
+
+// Chase order: down the sign's left-edge bulb trim, then across its bottom
+// row — matches the physical order of the dots in the illustration itself
+// (src/assets/images/bluebird-side-silhouette.png) so the lit bulb appears
+// to travel around the sign's trim like a real marquee chaser light.
+const chaseDots = [
+  { left: 37.7, top: 53.1 },
+  { left: 37.7, top: 55.6 },
+  { left: 37.7, top: 58.1 },
+  { left: 37.7, top: 60.6 },
+  { left: 40.1, top: 61.3 },
+  { left: 43.4, top: 61.3 },
+  { left: 46.6, top: 61.3 },
+  { left: 49.8, top: 61.3 },
+  { left: 53.1, top: 61.3 },
+  { left: 56.3, top: 61.3 },
+  { left: 59.6, top: 61.3 },
+];
+const chaseStepMs = 200;
 ---
 
 <section class="mx-auto grid min-h-dvh max-w-(--container-max) content-center gap-14 px-4 py-14 md:grid-cols-[1.1fr_0.9fr] md:items-center md:py-20">
@@ -24,20 +43,31 @@ const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
   </div>
   <div class="hero-anim-poster hero-spotlight relative">
     <MarqueeGlow class="pointer-events-none absolute inset-0 z-0" />
-    <div class="relative z-10 mx-auto aspect-square w-4/5">
+    <div class="relative z-10 aspect-square w-full">
+      {/* Warm glows meant to shine through the marquee sign's bulb trim and
+          the window — positioned as percentages of the illustration's own
+          box, matched by eye against the artwork. These sit BEHIND the
+          image in paint order (DOM-first, and the image below is `relative`
+          so both participate in the same stacking level, where DOM order
+          decides who's on top) — the image's own `mix-blend-multiply` is
+          what makes its white/cream areas act as see-through so these show
+          through the window panes and sign dots, while its solid navy
+          linework stays fully opaque on top. */}
+      {chaseDots.map((dot, i) => (
+        <div
+          class="marquee-glow-dot"
+          style={`left: ${dot.left}%; top: ${dot.top}%; animation-delay: ${i * chaseStepMs}ms;`}
+          aria-hidden="true"
+        />
+      ))}
+      <div class="marquee-glow-spot" style="left: 67.5%; top: 19%; width: 6%; height: 15%;" aria-hidden="true"></div>
+      <div class="marquee-glow-spot" style="left: 73.5%; top: 19%; width: 6%; height: 15%; animation-delay: 400ms;" aria-hidden="true"></div>
       <Image
         src={heroImage}
         alt="Illustrated silhouette of the Blue Bird Theatre marquee"
         format="webp"
-        class="h-full w-full object-contain"
+        class="relative mix-blend-multiply h-full w-full object-contain"
       />
-      {/* Warm glow spots layered over the marquee sign's bulb trim and the
-          window in the illustration — positioned as percentages of the
-          illustration's own box, matched by eye against the artwork. */}
-      <div class="marquee-glow-spot" style="left: 34%; top: 51%; width: 6%; height: 11%;" aria-hidden="true"></div>
-      <div class="marquee-glow-spot" style="left: 39%; top: 59%; width: 21%; height: 5%; animation-delay: 400ms;" aria-hidden="true"></div>
-      <div class="marquee-glow-spot" style="left: 67.5%; top: 19%; width: 6%; height: 15%; animation-delay: 800ms;" aria-hidden="true"></div>
-      <div class="marquee-glow-spot" style="left: 73.5%; top: 19%; width: 6%; height: 15%; animation-delay: 1200ms;" aria-hidden="true"></div>
     </div>
     <div class="mt-4 flex justify-center gap-3" aria-hidden="true">
       <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>

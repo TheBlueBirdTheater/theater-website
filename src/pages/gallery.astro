@@ -3,6 +3,7 @@ import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
 import Icon from '@components/Icon.astro';
+import IconButton from '@components/IconButton.astro';
 import { Image, getImage } from 'astro:assets';
 import { faXmark, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { buildBreadcrumbSchema } from '@utils/schema';
@@ -61,32 +62,17 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   {photos.length > 0 && (
     <dialog id="gallery-lightbox" data-lightbox aria-label="Gallery photo — full size">
-      <button
-        type="button"
-        data-lightbox-close
-        aria-label="Close"
-        class="btn btn-circle btn-sm bg-base-100 text-base-content border-none absolute top-3 right-3 z-10"
-      >
+      <IconButton data-lightbox-close aria-label="Close" class="absolute top-3 right-3 z-10">
         <Icon icon={faXmark} class="h-4 w-4" />
-      </button>
+      </IconButton>
       {photos.length > 1 && (
         <>
-          <button
-            type="button"
-            data-gallery-prev
-            aria-label="Previous photo"
-            class="btn btn-circle btn-sm bg-base-100 text-base-content border-none absolute top-1/2 left-3 z-10 -translate-y-1/2"
-          >
+          <IconButton data-gallery-prev aria-label="Previous photo" class="absolute top-1/2 left-3 z-10 -translate-y-1/2">
             <Icon icon={faChevronLeft} class="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            data-gallery-next
-            aria-label="Next photo"
-            class="btn btn-circle btn-sm bg-base-100 text-base-content border-none absolute top-1/2 right-3 z-10 -translate-y-1/2"
-          >
+          </IconButton>
+          <IconButton data-gallery-next aria-label="Next photo" class="absolute top-1/2 right-3 z-10 -translate-y-1/2">
             <Icon icon={faChevronRight} class="h-4 w-4" />
-          </button>
+          </IconButton>
         </>
       )}
       <img data-gallery-img alt="" class="max-h-[90vh] max-w-[90vw] rounded-lg object-contain" />

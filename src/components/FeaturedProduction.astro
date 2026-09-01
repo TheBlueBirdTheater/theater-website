@@ -3,6 +3,7 @@ import type { WhatsOnItem } from '@utils/whatsOn';
 import { Image } from 'astro:assets';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
+import ImagePlaceholder from '@components/ImagePlaceholder.astro';
 import { formatDateRange, formatEventDates } from '@utils/dates';
 import { getShowStatus, getEventStatus } from '@utils/shows';
 
@@ -55,9 +56,7 @@ const view =
           loading="lazy"
         />
       ) : (
-        <div class="bg-base-200 text-base-content/70 font-body flex h-full w-full items-center justify-center text-sm">
-          Poster coming soon
-        </div>
+        <ImagePlaceholder label="Poster coming soon" class="h-full w-full" />
       )}
     </div>
     <div>

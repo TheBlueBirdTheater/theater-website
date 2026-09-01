@@ -76,19 +76,18 @@ const { class: className } = Astro.props as Props;
     const glowTexture = createGlowTexture();
 
     // Hand-placed, not random, in normalized [-1, 1] orthographic space.
-    // The illustration itself has an opaque background and only fills the
-    // center ~80% of this container (see HomeHero.astro), so these sit near
-    // its edges/corners — straddling the boundary so roughly half of each
-    // soft blur bleeds into the visible margin instead of being fully
-    // covered. With an orthographic camera, three.js's point-size shader
-    // ignores attenuation entirely and treats `size` as a raw pixel
-    // diameter — so this needs to be large (hundreds of px), not a small
-    // world-unit value.
+    // The illustration (see HomeHero.astro) is `mix-blend-multiply`, so its
+    // own cream/white padding around the artwork acts as see-through — these
+    // sit near the top corners, where that padding is, so they read as an
+    // ambient glow around the building rather than a literal light source.
+    // Deliberately top-only: a bottom pair here read as a distracting solid
+    // band across the bottom edge rather than a subtle corner glow. With an
+    // orthographic camera, three.js's point-size shader ignores attenuation
+    // entirely and treats `size` as a raw pixel diameter — so this needs to
+    // be large (hundreds of px), not a small world-unit value.
     const spots: [number, number, number][] = [
       [0.85, 0.8, 0],
       [-0.8, 0.85, 0.1],
-      [0.75, -0.85, -0.1],
-      [-0.85, -0.75, 0],
     ];
     const positions = new Float32Array(spots.flat());
     const geometry = new THREE.BufferGeometry();

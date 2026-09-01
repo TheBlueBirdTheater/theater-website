@@ -1,0 +1,23 @@
+---
+interface Props {
+  /** Text shown in the placeholder — e.g. "Poster coming soon", "Map coming soon", a formatted date. */
+  label: string;
+  /** Adds the border+radius treatment used for standalone blocks (poster/map slots) — omit for a placeholder filling a card's image area, which already has its own border. */
+  bordered?: boolean;
+  class?: string;
+  style?: string;
+}
+
+const { label, bordered = false, class: className, style } = Astro.props as Props;
+---
+
+<div
+  class:list={[
+    'bg-base-200 text-base-content/70 font-body flex items-center justify-center text-sm',
+    bordered && 'border-line rounded-lg border',
+    className,
+  ]}
+  style={style}
+>
+  {label}
+</div>

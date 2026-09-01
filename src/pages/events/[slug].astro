@@ -4,6 +4,7 @@ import Schema from '@components/Schema.astro';
 import Breadcrumb from '@components/Breadcrumb.astro';
 import { Image } from 'astro:assets';
 import Button from '@components/Button.astro';
+import ImagePlaceholder from '@components/ImagePlaceholder.astro';
 import ShareButton from '@components/ShareButton.astro';
 import InfoRow from '@components/InfoRow.astro';
 import VenueMap from '@components/VenueMap.astro';
@@ -105,9 +106,7 @@ const breadcrumbSchema = buildBreadcrumbSchema(breadcrumbItems);
         class="border-line w-full min-w-0 self-start rounded-lg border shadow-card"
       />
     ) : (
-      <div class="border-line rounded-lg bg-base-200 text-base-content/70 font-body flex aspect-video w-full min-w-0 items-center justify-center border text-sm">
-        {formatEventDates(data.showDates)}
-      </div>
+      <ImagePlaceholder label={formatEventDates(data.showDates)} bordered class="aspect-video w-full min-w-0" />
     )}
     <div>
       <h1 class="font-heading text-base-content text-display leading-[1.08] font-semibold tracking-[-0.01em]">

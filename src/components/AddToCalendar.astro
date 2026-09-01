@@ -1,6 +1,7 @@
 ---
 import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons';
 import Icon from '@components/Icon.astro';
+import Button from '@components/Button.astro';
 import { toUtcInstant, type Showing } from '@utils/showings';
 import { formatTime } from '@utils/dates';
 
@@ -60,8 +61,8 @@ const payload = {
           </div>
         )}
         <div class="flex flex-col gap-2">
-          <button type="button" class="btn btn-sm btn-outline" data-atc-google>Google Calendar</button>
-          <button type="button" class="btn btn-sm btn-outline" data-atc-ics>Download .ics</button>
+          <Button type="button" variant="secondary" size="sm" data-atc-google>Google Calendar</Button>
+          <Button type="button" variant="secondary" size="sm" data-atc-ics>Download .ics</Button>
         </div>
       </div>
     </details>
