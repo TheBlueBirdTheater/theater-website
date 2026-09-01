@@ -5,9 +5,11 @@ interface Props {
   href?: string;
   type?: 'button' | 'submit';
   class?: string;
+  /** Forwarded as-is to the rendered element — lets callers hook up data-* attributes for their own scripts. */
+  [key: `data-${string}`]: string | undefined;
 }
 
-const { variant = 'primary', size = 'md', href, type = 'button', class: className } = Astro.props as Props;
+const { variant = 'primary', size = 'md', href, type = 'button', class: className, ...rest } = Astro.props as Props;
 
 const variantClasses = {
   primary: 'btn-primary hover:bg-navy-hover active:bg-navy-press',
@@ -29,6 +31,7 @@ const Tag = href ? 'a' : 'button';
   href={href}
   type={href ? undefined : type}
   class:list={['btn', variantClasses[variant], sizeClasses[size], className]}
+  {...rest}
 >
   <slot />
 </Tag>

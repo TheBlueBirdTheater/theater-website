@@ -45,8 +45,9 @@ const contactIconClass =
         {siteCopy.footerTagline}
       </p>
     </div>
-    <nav data-reveal data-reveal-delay="80">
+    <nav data-reveal data-reveal-delay="80" aria-labelledby="footer-nav-explore">
       <h3
+        id="footer-nav-explore"
         class="font-body mb-3.5 text-eyebrow font-semibold tracking-[0.09em] text-secondary-accessible uppercase"
       >
         Explore
@@ -55,25 +56,29 @@ const contactIconClass =
         <a href="/" class={linkClass}>Home</a>
         <a href="/shows/" class={linkClass}>Current Season</a>
         <a href="/tickets/" class={linkClass}>Tickets</a>
+        <a href="/visit/" class={linkClass}>Visit</a>
         <a href="/rentals/" class={linkClass}>Rentals</a>
         <a href="/contact/" class={linkClass}>Contact &amp; FAQ</a>
       </div>
     </nav>
-    <nav data-reveal data-reveal-delay="160">
+    <nav data-reveal data-reveal-delay="160" aria-labelledby="footer-nav-involved">
       <h3
+        id="footer-nav-involved"
         class="font-body mb-3.5 text-eyebrow font-semibold tracking-[0.09em] text-secondary-accessible uppercase"
       >
         Get Involved
       </h3>
       <div class="flex flex-col gap-2">
         <a href="/about/" class={linkClass}>About &amp; History</a>
+        <a href="/junior-optp/" class={linkClass}>Junior OPTP</a>
         <a href="/auditions/" class={linkClass}>Auditions</a>
         <a href="/volunteer/" class={linkClass}>Volunteering</a>
         <a href="/donate/" class={linkClass}>Donate</a>
       </div>
     </nav>
-    <nav data-reveal data-reveal-delay="240">
+    <nav data-reveal data-reveal-delay="240" aria-labelledby="footer-nav-contact">
       <h3
+        id="footer-nav-contact"
         class="font-body text-eyebrow font-semibold tracking-[0.09em] text-secondary-accessible uppercase"
       >
         Contact

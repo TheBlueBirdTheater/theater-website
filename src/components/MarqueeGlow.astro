@@ -54,18 +54,20 @@ const { class: className } = Astro.props as Props;
 
     // Against a light cream page background, additive blending barely shows up
     // (it only really brightens dark backgrounds) — so this draws an opaque
-    // warm-brass bulb core with a soft falloff, composited normally, so the
-    // color itself is what reads, not an added brightness.
+    // bright-yellow bulb core with a soft falloff, composited normally, so
+    // the color itself is what reads, not an added brightness. Same palette
+    // as the .marquee-glow-spot CSS overlays on the illustration itself
+    // (src/styles/app.css), so the two glow systems read as one motif.
     function createGlowTexture() {
       const size = 128;
       const c = document.createElement('canvas');
       c.width = c.height = size;
       const ctx = c.getContext('2d')!;
       const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-      gradient.addColorStop(0, 'rgba(196, 120, 46, 0.9)');
-      gradient.addColorStop(0.3, 'rgba(196, 120, 46, 0.55)');
-      gradient.addColorStop(0.65, 'rgba(212, 150, 80, 0.22)');
-      gradient.addColorStop(1, 'rgba(212, 150, 80, 0)');
+      gradient.addColorStop(0, 'rgba(255, 193, 7, 0.9)');
+      gradient.addColorStop(0.3, 'rgba(255, 193, 7, 0.55)');
+      gradient.addColorStop(0.65, 'rgba(255, 179, 0, 0.22)');
+      gradient.addColorStop(1, 'rgba(255, 179, 0, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, size, size);
       return new THREE.CanvasTexture(c);

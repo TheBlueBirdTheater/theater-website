@@ -33,3 +33,16 @@ sponsorshipTiers:
       - "Recognition as a sponsor across the full season"
       - "Premium logo placement in all show programs and on Blue Bird screens"
       - "Recognition on our website and social media throughout the year"
+otherWaysToGive:
+  sponsorProduction:
+    heading: "Sponsor a Production"
+    body: "Individuals, families, and organizations can sponsor a single show — your support goes directly toward that production's costumes, sets, and staging. Contact us to talk through what sponsoring a production looks like."
+  inKind:
+    heading: "In-Kind Support"
+    body: "We sometimes need production materials, costumes, props, printing, or professional services. Because what we need changes throughout the season, please contact us before making an in-kind donation."
+  employerMatching:
+    heading: "Employer Matching"
+    body: "Some employers match charitable contributions. Check with your employer to see whether your gift to Orangeburg Part-Time Players may qualify."
+  legacyGiving:
+    heading: "Legacy & Planned Giving"
+    body: "Interested in including OPTP in your long-term charitable plans? Contact us to start a conversation."

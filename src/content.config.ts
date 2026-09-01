@@ -274,6 +274,21 @@ const donate = defineCollection({
         benefits: z.array(z.string()),
       })
     ),
+    /**
+     * Additional giving paths beyond the primary levels/sponsorship above. Each entry is
+     * optional so an item can simply be omitted from content until it's operationally
+     * ready (e.g. no recurring-gift copy until the donation platform actually supports it)
+     * rather than shipping with placeholder text.
+     */
+    otherWaysToGive: z
+      .object({
+        sponsorProduction: z.object({ heading: z.string(), body: z.string(), ctaHref: z.string().optional() }).optional(),
+        inKind: z.object({ heading: z.string(), body: z.string() }).optional(),
+        employerMatching: z.object({ heading: z.string(), body: z.string() }).optional(),
+        legacyGiving: z.object({ heading: z.string(), body: z.string() }).optional(),
+        memorialGifts: z.object({ heading: z.string(), body: z.string() }).optional(),
+      })
+      .optional(),
     /** Social-share image for the Donate page. Falls back to the site default when omitted. */
     ogImage: z.string().optional(),
   }),
@@ -412,7 +427,17 @@ const rentals = defineCollection({
       /** Intro sentence above the rental-inquiry form. */
       formIntro: z.string().optional(),
       capacity: z.string(),
-      stageDimensions: z.string(),
+      /** Physical stage dimensions — omit rather than estimate; not every venue fact is verified. */
+      stageDimensions: z.string().optional(),
+      /** Short verified facts shown at the top of the page (e.g. capacity, building age, location) — replaces a rigid capacity/dimensions/amenities trio. */
+      topFacts: z
+        .array(
+          z.object({
+            value: z.string(),
+            label: z.string(),
+          })
+        )
+        .optional(),
       amenities: z.array(z.string()).optional(),
       rateTiers: z.array(
         z.object({
@@ -421,6 +446,8 @@ const rentals = defineCollection({
           description: z.string().optional(),
         })
       ),
+      /** Note shown below the rate tiers for needs a flat rate doesn't cover — not itself a tier. */
+      additionalNeedsNote: z.string().optional(),
       photos: z
         .array(
           z.object({

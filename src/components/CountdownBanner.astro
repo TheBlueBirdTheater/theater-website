@@ -22,6 +22,8 @@ const diffMs = targetUtc ? Math.max(targetUtc.getTime() - Date.now(), 0) : 0;
 const initialDays = Math.floor(diffMs / 86400000);
 const initialHours = Math.floor((diffMs % 86400000) / 3600000);
 const initialMinutes = Math.floor((diffMs % 3600000) / 60000);
+const dayLabel = (n: number) => (n === 1 ? 'Day' : 'Days');
+const hourLabel = (n: number) => (n === 1 ? 'Hr' : 'Hrs');
 ---
 
 {targetUtc && next && (
@@ -36,22 +38,26 @@ const initialMinutes = Math.floor((diffMs % 3600000) / 60000);
         <p class="font-body text-caption font-semibold">
           {title ? `${title} — ` : ''}{next.label ? `${next.label}: ` : 'Next showing: '}{formatDate(next.date)}
         </p>
-        <noscript>
-          <p class="font-body text-sm">{formatTime(next.time!)}</p>
-        </noscript>
+        {next.time && (
+          <noscript>
+            <p class="font-body text-sm">{formatTime(next.time)}</p>
+          </noscript>
+        )}
         {ticketUrl && (
           <Button href={ticketUrl} variant="inverse" size="sm" class="mt-2">Get Tickets</Button>
         )}
         {ticketPrice && <p class="font-body mt-1 text-xs opacity-80">{ticketPrice}</p>}
       </div>
-      <div class="flex items-end gap-4" data-countdown data-countdown-target={targetUtc.toISOString()}>
+      {/* aria-hidden: the line above already states the date/showing in plain accessible text;
+         this ticking numeric readout is a decorative restatement, not an update worth announcing. */}
+      <div class="flex items-end gap-4" data-countdown data-countdown-target={targetUtc.toISOString()} aria-hidden="true">
         <div class="flex flex-col items-center">
           <span class="countdown font-mono text-3xl"><span data-countdown-days style={`--value:${initialDays};`}>{initialDays}</span></span>
-          <span class="text-tag tracking-[0.09em] uppercase opacity-80">Days</span>
+          <span class="text-tag tracking-[0.09em] uppercase opacity-80" data-countdown-days-label>{dayLabel(initialDays)}</span>
         </div>
         <div class="flex flex-col items-center">
           <span class="countdown font-mono text-3xl"><span data-countdown-hours style={`--value:${initialHours};`}>{initialHours}</span></span>
-          <span class="text-tag tracking-[0.09em] uppercase opacity-80">Hrs</span>
+          <span class="text-tag tracking-[0.09em] uppercase opacity-80" data-countdown-hours-label>{hourLabel(initialHours)}</span>
         </div>
         <div class="flex flex-col items-center">
           <span class="countdown font-mono text-3xl"><span data-countdown-minutes style={`--value:${initialMinutes};`}>{initialMinutes}</span></span>
@@ -81,10 +87,16 @@ const initialMinutes = Math.floor((diffMs % 3600000) / 60000);
       el.textContent = String(value);
       el.style.setProperty('--value', String(value));
     };
+    const setLabel = (selector: string, value: number, singular: string, plural: string) => {
+      const el = root.querySelector<HTMLElement>(selector);
+      if (el) el.textContent = value === 1 ? singular : plural;
+    };
 
     setUnit('[data-countdown-days]', days);
     setUnit('[data-countdown-hours]', hours);
     setUnit('[data-countdown-minutes]', minutes);
+    setLabel('[data-countdown-days-label]', days, 'Day', 'Days');
+    setLabel('[data-countdown-hours-label]', hours, 'Hr', 'Hrs');
     return true;
   }
 

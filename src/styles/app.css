@@ -91,6 +91,10 @@
      built-in max-w-max (max-content) utility if promoted to the --container-* namespace. */
   --container-max: 1200px;
   --container-narrow: 760px;
+  /* Rendered height of header[data-navbar] (sticky, z-20) — kept as one token so anything that
+     needs to offset for it (currently just #main-content below) stays in sync if the navbar's
+     own padding/height ever changes. */
+  --nav-height: 88px;
 }
 
 @layer base {
@@ -98,10 +102,20 @@
      interactive elements fall back to (inconsistent, sometimes invisible) browser defaults. */
   a:focus-visible,
   button:focus-visible,
-  summary:focus-visible {
+  summary:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
     border-radius: 2px;
+  }
+
+  /* Without this, activating "Skip to content" scrolls #main-content's top edge flush with the
+     viewport top, but header[data-navbar] is sticky and renders over that same region — the
+     first focused/visible content inside <main> ends up hidden behind the nav bar. */
+  #main-content {
+    scroll-margin-top: var(--nav-height);
   }
 }
 
@@ -206,13 +220,6 @@
   box-shadow: var(--shadow-raised);
 }
 
-/* Selected state for the donate amount picker — outline only, so selecting
-   an amount never changes the card's box size (no layout shift). */
-[data-amount-option].is-selected {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
 /* Buttons */
 .btn {
   transition:
@@ -297,12 +304,44 @@ body:has(header[data-navbar] details[open]) {
   .marquee-dot:nth-child(even) {
     animation-delay: 600ms;
   }
+
+  .marquee-glow-spot {
+    animation: marquee-pulse 2.4s ease-in-out infinite;
+  }
 }
 
 /* Static baseline for marquee dots — the animation above (when it applies)
    takes over from this same value, so there's no flash/jump either way. */
 .marquee-dot {
   opacity: 0.7;
+}
+
+/* Small warm glows layered over specific spots on the hero illustration
+   itself (the marquee sign's bulb trim, the window) — positioned per-instance
+   via inline top/left/width/height percentages, sized relative to the
+   illustration's own box. Static baseline mirrors marquee-dot's pattern.
+
+   The illustration has a fully opaque baked-in background, so there's no
+   way for these to sit literally behind it and still be visible — instead
+   `mix-blend-mode: screen` optically merges the glow with the artwork's own
+   navy/white pixels underneath, reading as light coming from within/behind
+   it rather than a flat colored sticker on top. Don't "fix" this by moving
+   these behind the image in stacking order; that makes them invisible.
+
+   `ellipse` (not `circle`) matters here: several of these boxes are far
+   from square (e.g. a wide, short strip along the sign's bottom edge), and
+   a circular gradient sized to a non-square box fades at a different rate
+   on each axis than the box's own rounded-full clip — leaving a visible
+   hard edge where the flat, not-yet-transparent part of the circle meets
+   the clip. An ellipse gradient scales independently per axis and always
+   fades out smoothly to its own box's edges. */
+.marquee-glow-spot {
+  position: absolute;
+  opacity: 0.7;
+  border-radius: 9999px;
+  background: radial-gradient(ellipse, rgba(255, 193, 7, 0.85) 0%, rgba(255, 179, 0, 0.4) 45%, transparent 75%);
+  mix-blend-mode: screen;
+  pointer-events: none;
 }
 
 /* Hero spotlight gradient — purely decorative, no motion involved */

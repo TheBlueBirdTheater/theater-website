@@ -2,7 +2,6 @@
 import DefaultLayout from '@layouts/DefaultLayout.astro';
 import Schema from '@components/Schema.astro';
 import SectionHeading from '@components/SectionHeading.astro';
-import InfoRow from '@components/InfoRow.astro';
 import Button from '@components/Button.astro';
 import PosterLightbox from '@components/PosterLightbox.astro';
 import { Image } from 'astro:assets';
@@ -30,14 +29,20 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     <SectionHeading title="Rent the Blue Bird Theatre" level="h1" />
     <p class="font-body text-base-content mt-4 text-lead">{rentals.intro}</p>
 
-    <div class="mt-8 grid gap-6 sm:grid-cols-2">
-      <InfoRow label="Capacity" value={rentals.capacity} />
-      <InfoRow label="Stage Dimensions" value={rentals.stageDimensions} />
-    </div>
+    {rentals.topFacts && rentals.topFacts.length > 0 && (
+      <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+        {rentals.topFacts.map((fact) => (
+          <div>
+            <p class="font-heading text-primary text-stat font-semibold leading-none">{fact.value}</p>
+            <p class="font-body text-base-content/70 mt-1.5 text-eyebrow tracking-[0.09em] uppercase">{fact.label}</p>
+          </div>
+        ))}
+      </div>
+    )}
 
     {rentals.amenities && rentals.amenities.length > 0 && (
       <div class="mt-8">
-        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Amenities</p>
+        <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Amenities</h2>
         <ul class="font-body text-base-content mt-3 list-inside list-disc space-y-1">
           {rentals.amenities.map((amenity) => <li>{amenity}</li>)}
         </ul>
@@ -46,7 +51,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
     {rentals.photos && rentals.photos.length > 0 && (
       <div class="mt-10">
-        <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">The Venue</p>
+        <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">The Venue</h2>
         <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
           {rentals.photos.map((photo, i) => (
             <PosterLightbox id={`rental-photo-${i}`} src={photo.photo} alt={photo.alt}>
@@ -64,7 +69,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
     )}
 
     <div class="mt-10">
-      <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Rates</p>
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Rates</h2>
       <div class="mt-4 grid gap-6 sm:grid-cols-2">
         {rentals.rateTiers.map((tier) => (
           <div class="border-line bg-base-100 rounded-lg border p-6 shadow-card">
@@ -74,6 +79,9 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           </div>
         ))}
       </div>
+      {rentals.additionalNeedsNote && (
+        <p class="font-body text-base-content/70 mt-4 text-sm">{rentals.additionalNeedsNote}</p>
+      )}
     </div>
 
     <div class="border-line bg-base-200 mt-10 rounded-lg border p-6">
@@ -87,9 +95,13 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         name="rental-inquiry"
         method="POST"
         data-netlify="true"
+        data-netlify-honeypot="bot-field"
         class="mt-5 flex flex-col gap-4"
       >
         <input type="hidden" name="form-name" value="rental-inquiry" />
+        <p class="hidden" aria-hidden="true">
+          <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="flex flex-col gap-1.5">
             <label for="rental-inquiry-name" class="font-body text-base-content text-sm font-medium">Name</label>
@@ -114,17 +126,108 @@ const breadcrumbSchema = buildBreadcrumbSchema([
             />
           </div>
         </div>
-        <div class="flex flex-col gap-1.5">
-          <label for="rental-inquiry-date" class="font-body text-base-content text-sm font-medium">Event Date(s)</label>
-          <input
-            id="rental-inquiry-date"
-            type="text"
-            name="event-date"
-            class="input border-line text-base-content rounded-md"
-          />
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-phone" class="font-body text-base-content text-sm font-medium">Phone</label>
+            <input
+              id="rental-inquiry-phone"
+              type="tel"
+              name="phone"
+              autocomplete="tel"
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-org" class="font-body text-base-content text-sm font-medium">Organization <span class="text-base-content/70 font-normal">(optional)</span></label>
+            <input
+              id="rental-inquiry-org"
+              type="text"
+              name="organization"
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
         </div>
         <div class="flex flex-col gap-1.5">
-          <label for="rental-inquiry-message" class="font-body text-base-content text-sm font-medium">Tell us about your event</label>
+          <label for="rental-inquiry-event-type" class="font-body text-base-content text-sm font-medium">Event Type</label>
+          <select
+            id="rental-inquiry-event-type"
+            name="event-type"
+            class="select border-line text-base-content rounded-md"
+          >
+            <option value="Concert">Concert</option>
+            <option value="Dance recital">Dance recital</option>
+            <option value="Pageant">Pageant</option>
+            <option value="Comedy show">Comedy show</option>
+            <option value="Community event">Community event</option>
+            <option value="Meeting">Meeting</option>
+            <option value="Celebration">Celebration</option>
+            <option value="Wedding">Wedding</option>
+            <option value="Birthday">Birthday</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-date" class="font-body text-base-content text-sm font-medium">Preferred Date</label>
+            <input
+              id="rental-inquiry-date"
+              type="date"
+              name="preferred-date"
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-alt-date" class="font-body text-base-content text-sm font-medium">Alternate Date <span class="text-base-content/70 font-normal">(optional)</span></label>
+            <input
+              id="rental-inquiry-alt-date"
+              type="date"
+              name="alternate-date"
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-attendance" class="font-body text-base-content text-sm font-medium">Estimated Attendance</label>
+            <input
+              id="rental-inquiry-attendance"
+              type="number"
+              name="attendance"
+              min="1"
+              class="input border-line text-base-content rounded-md"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label for="rental-inquiry-duration" class="font-body text-base-content text-sm font-medium">Approximate Duration</label>
+            <select
+              id="rental-inquiry-duration"
+              name="duration"
+              class="select border-line text-base-content rounded-md"
+            >
+              <option value="Half day (up to 4 hours)">Half day (up to 4 hours)</option>
+              <option value="Full day (up to 8 hours)">Full day (up to 8 hours)</option>
+              <option value="Multi-day">Multi-day</option>
+              <option value="Not sure yet">Not sure yet</option>
+            </select>
+          </div>
+        </div>
+        <fieldset class="flex flex-col gap-2">
+          <legend class="font-body text-base-content text-sm font-medium">What will you need?</legend>
+          <label class="font-body text-base-content flex items-center gap-2 text-sm">
+            <input type="checkbox" name="needs" value="Sound" class="checkbox checkbox-sm" /> Sound
+          </label>
+          <label class="font-body text-base-content flex items-center gap-2 text-sm">
+            <input type="checkbox" name="needs" value="Microphones" class="checkbox checkbox-sm" /> Microphones
+          </label>
+          <label class="font-body text-base-content flex items-center gap-2 text-sm">
+            <input type="checkbox" name="needs" value="Lighting" class="checkbox checkbox-sm" /> Lighting
+          </label>
+          <label class="font-body text-base-content flex items-center gap-2 text-sm">
+            <input type="checkbox" name="needs" value="Backstage space" class="checkbox checkbox-sm" /> Backstage space
+          </label>
+        </fieldset>
+        <div class="flex flex-col gap-1.5">
+          <label for="rental-inquiry-message" class="font-body text-base-content text-sm font-medium">Additional Details</label>
           <textarea
             id="rental-inquiry-message"
             name="message"

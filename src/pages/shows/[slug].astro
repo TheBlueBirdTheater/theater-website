@@ -16,7 +16,7 @@ import AuditionNotice from '@components/AuditionNotice.astro';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { getVenueContact, getLudusTicketUrl } from '@data/venue';
+import { getVenueContact } from '@data/venue';
 import { formatDate, formatTime } from '@utils/dates';
 import { getShowStatus } from '@utils/shows';
 import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
@@ -44,7 +44,10 @@ const { data } = show;
 
 const contact = await getVenueContact();
 const performingGroup = data.performingGroup ?? OPTP_NAME;
-const ticketUrl = await getLudusTicketUrl(data.ludusShowId);
+// Authoritative ticket link for this show — matches every other surface (homepage, ShowCard,
+// Tickets page) that reads data.ticketUrl directly. Don't reintroduce a Ludus fallback here
+// unless/until ludusShowId is actually populated and confirmed as the live ticketing provider.
+const ticketUrl = data.ticketUrl;
 
 const venueAddress = `${data.venue}, ${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`;
 

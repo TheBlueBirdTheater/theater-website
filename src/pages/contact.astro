@@ -59,9 +59,13 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         name="contact-inquiry"
         method="POST"
         data-netlify="true"
+        data-netlify-honeypot="bot-field"
         class="mt-5 flex flex-col gap-4"
       >
         <input type="hidden" name="form-name" value="contact-inquiry" />
+        <p class="hidden" aria-hidden="true">
+          <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+        </p>
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="flex flex-col gap-1.5">
             <label for="contact-inquiry-name" class="font-body text-base-content text-sm font-medium">Name</label>
@@ -100,7 +104,10 @@ const breadcrumbSchema = buildBreadcrumbSchema([
       </form>
     </div>
 
-    <div class="mt-14 space-y-3" data-reveal>
+    <h2 class="font-body text-primary text-eyebrow mt-14 font-semibold tracking-[0.09em] uppercase">
+      Frequently Asked Questions
+    </h2>
+    <div class="mt-4 space-y-3" data-reveal>
       {faqs.map((faq) => (
         <details class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
           <summary class="font-body text-base-content collapse-title font-semibold">{faq.data.question}</summary>

@@ -1,6 +1,7 @@
 ---
 import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
 import Icon from '@components/Icon.astro';
+import Button from '@components/Button.astro';
 
 interface Props {
   title: string;
@@ -9,23 +10,21 @@ interface Props {
 }
 
 const { title, size = 'md', class: className } = Astro.props as Props;
-
-const sizeClasses = {
-  sm: 'btn-sm',
-  md: '',
-  lg: 'btn-lg',
-};
 ---
 
-<button
+<Button
   type="button"
-  class:list={['btn btn-outline btn-primary gap-2', sizeClasses[size], className]}
+  variant="secondary"
+  size={size}
+  class:list={['gap-2', className]}
   data-share-button
   data-share-title={title}
 >
   <Icon icon={faShareNodes} class="h-4 w-4" />
-  <span data-share-label>Share</span>
-</button>
+  {/* aria-live: announces the "Link copied!" confirmation on the clipboard-fallback path
+     (used when the Web Share API isn't available) to screen-reader users too. */}
+  <span data-share-label aria-live="polite">Share</span>
+</Button>
 
 <script>
   const buttons = document.querySelectorAll<HTMLButtonElement>('[data-share-button]');

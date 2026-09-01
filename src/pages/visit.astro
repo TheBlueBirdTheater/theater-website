@@ -1,0 +1,90 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import InfoRow from '@components/InfoRow.astro';
+import VenueMap from '@components/VenueMap.astro';
+import Button from '@components/Button.astro';
+import { buildBreadcrumbSchema } from '@utils/schema';
+import { getEntry, getCollection } from 'astro:content';
+import { getVenueContact, THEATRE_NAME } from '@data/venue';
+
+const contact = await getVenueContact();
+const parkingFaq = await getEntry('faqs', 'venue-parking');
+const showtimesFaq = await getEntry('faqs', 'tickets-showtimes');
+const venueFaqs = await getCollection('faqs', ({ id }) => id.startsWith('venue-'));
+
+const venueAddress = `${THEATRE_NAME}, ${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`;
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Visit', url: '/visit/' },
+]);
+---
+
+<DefaultLayout
+  title="Visit"
+  description="Plan your visit to the Blue Bird Theatre in downtown Orangeburg, SC — address, parking, accessibility, and what to expect."
+>
+  <Schema schema={breadcrumbSchema} />
+
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
+    <SectionHeading title="Visit the Blue Bird" level="h1" />
+    <p class="font-body text-base-content mt-4 text-lead">
+      Practical details for getting to the Blue Bird Theatre, parking downtown, and knowing what to expect once you're here.
+    </p>
+
+    <div class="mt-8 grid gap-4.5 sm:grid-cols-2">
+      <InfoRow label="Address" value={`${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`} />
+      <InfoRow label="Phone" value={contact.phone} href={`tel:${contact.phone}`} />
+    </div>
+
+    <div class="mt-7">
+      <VenueMap address={venueAddress} lat={contact.mapLat} lng={contact.mapLng} />
+    </div>
+
+    <div class="mt-10">
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Parking</h2>
+      {parkingFaq && <p class="font-body text-base-content mt-2">{parkingFaq.data.answer}</p>}
+    </div>
+
+    <div class="mt-8">
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">What to Expect</h2>
+      {showtimesFaq && <p class="font-body text-base-content mt-2">{showtimesFaq.data.answer}</p>}
+      <p class="font-body text-base-content mt-2">
+        Doors-open time varies by show — check your show's own page for its exact time. Concessions are typically available in the lobby before the show and during intermission.
+      </p>
+    </div>
+
+    <div class="mt-8">
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Accessibility</h2>
+      <p class="font-body text-base-content mt-2">
+        If you have an accessibility need — seating, hearing, or otherwise — contact us ahead of your visit at{' '}
+        <a href={`tel:${contact.phone}`} class="link link-primary">{contact.phone}</a> or{' '}
+        <a href={`mailto:${contact.email}`} class="link link-primary">{contact.email}</a> and we'll do our best to accommodate you.
+        Individual shows may list additional accessibility notes on their own pages.
+      </p>
+    </div>
+
+    <div class="mt-10 flex flex-wrap gap-3">
+      <Button href="/tickets/" variant="primary">See Upcoming Tickets</Button>
+      <Button href="/contact/" variant="secondary">Contact the Box Office</Button>
+    </div>
+
+    {venueFaqs.length > 0 && (
+      <div class="mt-14">
+        <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
+          First-Time Visitor FAQ
+        </h2>
+        <div class="mt-4 space-y-3" data-reveal>
+          {venueFaqs.map((faq) => (
+            <details class="collapse-arrow border-line bg-base-100 collapse rounded-lg border">
+              <summary class="font-body text-base-content collapse-title font-semibold">{faq.data.question}</summary>
+              <div class="collapse-content"><p class="font-body text-base-content/70">{faq.data.answer}</p></div>
+            </details>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</DefaultLayout>

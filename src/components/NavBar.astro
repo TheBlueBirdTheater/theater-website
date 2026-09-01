@@ -14,6 +14,8 @@ const navLinks = [
 
 const venueInfoLinks = [
   { href: "/about/", label: "About" },
+  { href: "/visit/", label: "Visit" },
+  { href: "/junior-optp/", label: "Junior OPTP" },
   { href: "/rentals/", label: "Rentals" },
   { href: "/contact/", label: "Contact" },
 ];
@@ -83,7 +85,7 @@ const isVenueInfoActive = venueInfoLinks.some((link) => isActive(link.href));
             Venue Info
           </button>
           <div
-            class="invisible absolute top-full left-0 z-10 w-44 pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 [.is-open>&]:visible [.is-open>&]:opacity-100"
+            class="invisible absolute top-full left-0 z-10 w-48 pt-2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100 [.is-open>&]:visible [.is-open>&]:opacity-100"
           >
             <ul id="venue-info-menu" class="menu bg-base-100 rounded-box p-2 shadow">
               {

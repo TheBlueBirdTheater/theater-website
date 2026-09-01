@@ -3,13 +3,13 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import { SITE_URL } from './src/data/site-url.ts';
 
 // https://astro.build/config
 export default defineConfig({
-  // Netlify sets `URL` at build time to the site's primary domain (custom domain if one is
-  // attached, otherwise the *.netlify.app subdomain) — falls back to the optp.org placeholder
-  // (unconfirmed per BRAND/CONTACT spec) when building outside Netlify.
-  site: process.env.URL || 'https://optp.org',
+  // Shared with src/data/venue.ts's SITE_URL (both read src/data/site-url.ts) so the two
+  // can't drift apart — see src/data/site-url.ts for the Netlify `URL` env var behavior.
+  site: SITE_URL,
   output: 'static',
   trailingSlash: 'always',
   integrations: [

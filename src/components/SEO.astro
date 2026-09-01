@@ -15,7 +15,10 @@ const {
 } = Astro.props as Props;
 
 const siteName = 'Blue Bird Theatre';
-const pageTitle = `${title} | ${siteName}`;
+// Every route passes a page-specific title and gets " | Blue Bird Theatre" appended — except
+// the homepage, which needs the brand name first (conventional for a site's own root) and so
+// passes its full title already including the brand name; detect that case and don't double it.
+const pageTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 const canonicalURL = new URL(canonical ?? Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(image, Astro.site);
 const resolvedImageAlt =

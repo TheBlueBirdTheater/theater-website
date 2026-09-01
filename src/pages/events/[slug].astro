@@ -16,7 +16,7 @@ import { isAuditionActive } from '@utils/auditions';
 import { faShirt } from '@fortawesome/free-solid-svg-icons';
 import { buildEventSchema, buildBreadcrumbSchema } from '@utils/schema';
 import { getCollection, getEntry, type CollectionEntry } from 'astro:content';
-import { getVenueContact, getLudusTicketUrl, THEATRE_NAME } from '@data/venue';
+import { getVenueContact, THEATRE_NAME } from '@data/venue';
 import { formatDate, formatEventDates, formatTime } from '@utils/dates';
 import { getNextShowing, toVenueIsoString, type Showing } from '@utils/showings';
 import { formatAccessibilitySummary } from '@utils/accessibility';
@@ -41,7 +41,10 @@ const { event } = Astro.props as Props;
 const { data } = event;
 
 const contact = await getVenueContact();
-const ticketUrl = await getLudusTicketUrl(data.ludusShowId);
+// Authoritative ticket link for this event — matches shows/[slug].astro. `ticketUrl` is
+// optional on events (unlike shows); fall back to the site's own Tickets page rather than a
+// third-party Ludus fallback of unconfirmed accuracy when a host event hasn't set one yet.
+const ticketUrl = data.ticketUrl ?? '/tickets/';
 
 const venueAddress = `${THEATRE_NAME}, ${contact.address.streetAddress}, ${contact.address.addressLocality}, ${contact.address.addressRegion} ${contact.address.postalCode}`;
 

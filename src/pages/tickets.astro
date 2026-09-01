@@ -7,13 +7,20 @@ import InfoRow from '@components/InfoRow.astro';
 import LudusWidget from '@components/LudusWidget.astro';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCurrentShow } from '@utils/shows';
+import { getUpcomingWhatsOn } from '@utils/whatsOn';
 import { getVenueContact } from '@data/venue';
-import { formatDateRange } from '@utils/dates';
+import { formatDateRange, formatEventDates } from '@utils/dates';
 import { toVenueIsoString } from '@utils/showings';
 
 const currentShow = await getCurrentShow();
 const firstRunDate = currentShow?.data.runDates[0];
 const contact = await getVenueContact();
+
+// Every upcoming show/event, so this page never shows just one production while others are
+// actively promoted elsewhere on the site (Home, Shows). A small season (currently under a
+// dozen entries total) makes a generous count effectively "all of them."
+const upcoming = await getUpcomingWhatsOn(20);
+const restOfUpcoming = upcoming.filter((item) => item.entry.id !== currentShow?.id);
 
 const eventSchema = currentShow && firstRunDate
   ? buildEventSchema({
@@ -35,7 +42,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 ]);
 ---
 
-<DefaultLayout title="Tickets" description="Buy tickets to OPTP's current production at the Blue Bird Theatre.">
+<DefaultLayout title="Tickets" description="Buy tickets to upcoming OPTP productions and events at the Blue Bird Theatre in Orangeburg, SC.">
   {eventSchema && <Schema schema={eventSchema} />}
   <Schema schema={breadcrumbSchema} />
 
@@ -50,6 +57,37 @@ const breadcrumbSchema = buildBreadcrumbSchema([
           <InfoRow label="Dates" value={formatDateRange(currentShow.data.runDates)} />
         </div>
         <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Buy Tickets</Button>
+      </div>
+    )}
+
+    {restOfUpcoming.length > 0 && (
+      <div class="mt-10">
+        <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
+          Also On Sale
+        </h2>
+        <ul class="border-line divide-line mt-4 divide-y rounded-lg border">
+          {restOfUpcoming.map((item) => {
+            const title = item.entry.data.title;
+            const href = item.kind === 'show' ? `/shows/${item.entry.id}/` : `/events/${item.entry.id}/`;
+            const dateLabel =
+              item.kind === 'show' ? formatDateRange(item.entry.data.runDates) : formatEventDates(item.entry.data.showDates);
+            const ticketUrl = item.entry.data.ticketUrl;
+            const ticketPrice = item.entry.data.ticketPrice;
+            return (
+              <li class="flex flex-wrap items-center justify-between gap-3 p-5">
+                <div>
+                  <a href={href} class="font-heading text-base-content text-lg font-semibold hover:underline">{title}</a>
+                  <p class="font-body text-base-content/70 mt-1 text-sm">{dateLabel}{ticketPrice ? ` — ${ticketPrice}` : ''}</p>
+                </div>
+                {ticketUrl ? (
+                  <Button href={ticketUrl} variant="secondary">Get Tickets</Button>
+                ) : (
+                  <a href={href} class="font-body text-base-content/70 text-sm font-medium">More details →</a>
+                )}
+              </li>
+            );
+          })}
+        </ul>
       </div>
     )}
 

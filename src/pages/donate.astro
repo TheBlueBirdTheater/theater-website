@@ -9,7 +9,17 @@ import { getVenueContact } from '@data/venue';
 
 const valueProps = await getCollection('valueProps');
 const { data: donate } = (await getEntry('donate', 'donate'))!;
-const { givingLevels, sponsorshipTiers, donationPlatformUrl, pageTitle, amountHelperText, nonprofitNote, cashApp, ogImage } = donate;
+const {
+  givingLevels,
+  sponsorshipTiers,
+  donationPlatformUrl,
+  pageTitle,
+  amountHelperText,
+  nonprofitNote,
+  cashApp,
+  otherWaysToGive,
+  ogImage,
+} = donate;
 const contact = await getVenueContact();
 
 const breadcrumbSchema = buildBreadcrumbSchema([
@@ -23,6 +33,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
 
   <div class="mx-auto max-w-(--container-narrow) px-4 py-16 text-center">
     <SectionHeading eyebrow="Support Us" title={pageTitle} align="center" level="h1" />
+    <h2 class="font-body text-primary text-eyebrow mt-8 font-semibold tracking-[0.09em] uppercase">Why Support Matters</h2>
     <div class="mt-6 grid gap-6 sm:grid-cols-3">
       {valueProps.map((vp, i) => (
         <div data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
@@ -35,20 +46,18 @@ const breadcrumbSchema = buildBreadcrumbSchema([
   </div>
 
   <div class="mx-auto max-w-250 px-4 pb-14">
-    <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Giving Levels</p>
+    <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Giving Levels</h2>
     <p class="font-body text-base-content/70 mt-1 text-sm">{amountHelperText}</p>
-    <div class="mt-6 grid gap-6 sm:grid-cols-3" data-amount-group>
+    <div class="mt-6 grid gap-6 sm:grid-cols-3">
       {givingLevels.map((level, i) => {
         const isPatron = i === givingLevels.length - 1 && givingLevels.length > 1;
         return (
-          <button
-            type="button"
-            data-amount-option
-            aria-pressed="false"
+          <a
+            href={donationPlatformUrl}
             data-reveal
             data-reveal-delay={Math.min(i, 5) * 80}
             class:list={[
-              'hover-lift w-full rounded-lg border-2 p-7 text-left',
+              'hover-lift w-full rounded-lg border-2 p-7 text-left no-underline',
               isPatron
                 ? 'bg-primary text-primary-content border-primary'
                 : 'border-line bg-base-100 shadow-card',
@@ -66,94 +75,95 @@ const breadcrumbSchema = buildBreadcrumbSchema([
             >
               {level.perks.map((perk) => <li>{perk}</li>)}
             </ul>
-          </button>
+          </a>
         );
       })}
-    </div>
-
-    <div class="mt-6">
-      <button
-        type="button"
-        data-other-amount-toggle
-        aria-expanded="false"
-        aria-controls="other-amount-panel"
-        class="link link-primary font-body text-sm font-semibold"
-      >
-        + Other Amount
-      </button>
-      <div class="show-expand" id="other-amount-panel">
-        <div class="pt-4">
-          <label for="other-amount-input" class="font-body text-base-content text-sm font-medium">Enter an amount</label>
-          <input
-            id="other-amount-input"
-            type="number"
-            min="1"
-            step="1"
-            placeholder="$50"
-            class="input border-line text-base-content mt-1.5 block w-full max-w-40 rounded-md"
-          />
-        </div>
-      </div>
     </div>
   </div>
 
   <section class="bg-base-200">
     <div class="mx-auto max-w-250 px-4 py-14">
-      <p class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">
-        Business Sponsorship
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Other Ways to Give</h2>
+      <p class="font-body text-base-content mt-3 max-w-160 text-lead">
+        There are many ways to help keep live theatre thriving in Orangeburg — not every gift has to be a check.
       </p>
-      <div class="mt-6 grid gap-6 sm:grid-cols-2">
-        {sponsorshipTiers.map((tier, i) => (
-          <div class="border-line hover-lift rounded-lg border bg-base-100 p-6.5" data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
-            <h3 class="font-heading text-base-content font-semibold">{tier.name}</h3>
-            <p class="font-body text-primary mt-1 text-sm">{tier.amount}</p>
-            <ul class="font-body text-base-content/70 mt-3 space-y-1">
-              {tier.benefits.map((benefit) => <li>{benefit}</li>)}
-            </ul>
+
+      {otherWaysToGive?.sponsorProduction && (
+        <div class="border-primary bg-base-100 mt-8 rounded-lg border-2 p-7" data-reveal>
+          <h3 class="font-heading text-base-content text-lg font-semibold">{otherWaysToGive.sponsorProduction.heading}</h3>
+          <p class="font-body text-base-content/70 mt-2">{otherWaysToGive.sponsorProduction.body}</p>
+          <a href={otherWaysToGive.sponsorProduction.ctaHref ?? '/contact/'} class="link link-primary mt-3 inline-block font-semibold">
+            Get in touch about sponsoring a show
+          </a>
+        </div>
+      )}
+
+      <div class="mt-10">
+        <h3 class="font-heading text-base-content text-lg font-semibold">Business &amp; Community Sponsorship</h3>
+        <p class="font-body text-base-content/70 mt-2 max-w-160">
+          Blue Bird is a community institution — local businesses and organizations that sponsor a show or a season become part of the productions Orangeburg sees on our stage all year.
+        </p>
+        <div class="mt-6 grid gap-6 sm:grid-cols-2">
+          {sponsorshipTiers.map((tier, i) => (
+            <div class="border-line hover-lift rounded-lg border bg-base-100 p-6.5" data-reveal data-reveal-delay={Math.min(i, 5) * 80}>
+              <h4 class="font-heading text-base-content font-semibold">{tier.name}</h4>
+              <p class="font-body text-primary mt-1 text-sm">{tier.amount}</p>
+              <ul class="font-body text-base-content/70 mt-3 space-y-1">
+                {tier.benefits.map((benefit) => <li>{benefit}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="border-line mt-10 grid gap-8 border-t pt-8 sm:grid-cols-2">
+        {otherWaysToGive?.inKind && (
+          <div>
+            <h3 class="font-heading text-base-content font-semibold">{otherWaysToGive.inKind.heading}</h3>
+            <p class="font-body text-base-content/70 mt-1.5 text-sm">{otherWaysToGive.inKind.body}</p>
           </div>
-        ))}
+        )}
+        <div>
+          <h3 class="font-heading text-base-content font-semibold">Volunteer Your Time</h3>
+          <p class="font-body text-base-content/70 mt-1.5 text-sm">
+            Can't give financially right now? OPTP runs entirely on volunteers — see <a href="/volunteer/" class="link link-primary">ways to get involved</a>.
+          </p>
+        </div>
+        {otherWaysToGive?.employerMatching && (
+          <div>
+            <h3 class="font-heading text-base-content font-semibold">{otherWaysToGive.employerMatching.heading}</h3>
+            <p class="font-body text-base-content/70 mt-1.5 text-sm">{otherWaysToGive.employerMatching.body}</p>
+          </div>
+        )}
+        {otherWaysToGive?.legacyGiving && (
+          <div>
+            <h3 class="font-heading text-base-content font-semibold">{otherWaysToGive.legacyGiving.heading}</h3>
+            <p class="font-body text-base-content/70 mt-1.5 text-sm">{otherWaysToGive.legacyGiving.body}</p>
+          </div>
+        )}
+        {otherWaysToGive?.memorialGifts && (
+          <div>
+            <h3 class="font-heading text-base-content font-semibold">{otherWaysToGive.memorialGifts.heading}</h3>
+            <p class="font-body text-base-content/70 mt-1.5 text-sm">{otherWaysToGive.memorialGifts.body}</p>
+          </div>
+        )}
+        <div>
+          <h3 class="font-heading text-base-content font-semibold">By Mail or Cash App</h3>
+          <ul class="font-body text-base-content/70 mt-1.5 space-y-1 text-sm">
+            {contact.mailingAddress && <li>Send a check to {contact.mailingAddress}.</li>}
+            {cashApp && (
+              <li>
+                Cash App: <a href={`https://cash.app/${cashApp}`} class="link link-primary font-medium">{cashApp}</a> (goes to our treasurer for deposit).
+              </li>
+            )}
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
   <div class="mx-auto max-w-250 px-4 py-14 text-center">
     {nonprofitNote && <p class="font-body text-base-content/70 text-sm">{nonprofitNote}</p>}
-    <p class="font-body text-base-content/70 mt-4 text-sm">Other ways to give:</p>
-    <ul class="font-body text-base-content/70 mt-1 space-y-1 text-sm">
-      {contact.mailingAddress && (
-        <li>By mail: send a check to {contact.mailingAddress}.</li>
-      )}
-      {cashApp && (
-        <li>
-          Cash App: <a href={`https://cash.app/${cashApp}`} class="link link-primary font-medium">{cashApp}</a> (goes to our treasurer for deposit).
-        </li>
-      )}
-    </ul>
+    <Button href="/contact/" variant="secondary" class="mt-6">Questions? Contact Us</Button>
   </div>
-
-  <script>
-    const group = document.querySelector<HTMLElement>('[data-amount-group]');
-    group?.querySelectorAll<HTMLButtonElement>('[data-amount-option]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const alreadySelected = btn.getAttribute('aria-pressed') === 'true';
-        group.querySelectorAll<HTMLButtonElement>('[data-amount-option]').forEach((other) => {
-          other.setAttribute('aria-pressed', 'false');
-          other.classList.remove('is-selected');
-        });
-        if (!alreadySelected) {
-          btn.setAttribute('aria-pressed', 'true');
-          btn.classList.add('is-selected');
-        }
-      });
-    });
-
-    const otherToggle = document.querySelector<HTMLButtonElement>('[data-other-amount-toggle]');
-    otherToggle?.addEventListener('click', () => {
-      const expanded = otherToggle.getAttribute('aria-expanded') === 'true';
-      otherToggle.setAttribute('aria-expanded', String(!expanded));
-      const panelId = otherToggle.getAttribute('aria-controls');
-      const panel = panelId ? document.getElementById(panelId) : null;
-      panel?.classList.toggle('is-expanded', !expanded);
-    });
-  </script>
 </DefaultLayout>

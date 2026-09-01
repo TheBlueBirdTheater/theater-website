@@ -24,12 +24,21 @@ const { data: siteCopy } = (await getEntry('siteCopy', 'siteCopy'))!;
   </div>
   <div class="hero-anim-poster hero-spotlight relative">
     <MarqueeGlow class="pointer-events-none absolute inset-0 z-0" />
-    <Image
-      src={heroImage}
-      alt="Illustrated silhouette of the Blue Bird Theatre marquee"
-      format="webp"
-      class="relative z-10 aspect-square w-full object-contain"
-    />
+    <div class="relative z-10 mx-auto aspect-square w-4/5">
+      <Image
+        src={heroImage}
+        alt="Illustrated silhouette of the Blue Bird Theatre marquee"
+        format="webp"
+        class="h-full w-full object-contain"
+      />
+      {/* Warm glow spots layered over the marquee sign's bulb trim and the
+          window in the illustration — positioned as percentages of the
+          illustration's own box, matched by eye against the artwork. */}
+      <div class="marquee-glow-spot" style="left: 34%; top: 51%; width: 6%; height: 11%;" aria-hidden="true"></div>
+      <div class="marquee-glow-spot" style="left: 39%; top: 59%; width: 21%; height: 5%; animation-delay: 400ms;" aria-hidden="true"></div>
+      <div class="marquee-glow-spot" style="left: 67.5%; top: 19%; width: 6%; height: 15%; animation-delay: 800ms;" aria-hidden="true"></div>
+      <div class="marquee-glow-spot" style="left: 73.5%; top: 19%; width: 6%; height: 15%; animation-delay: 1200ms;" aria-hidden="true"></div>
+    </div>
     <div class="mt-4 flex justify-center gap-3" aria-hidden="true">
       <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
       <span class="marquee-dot bg-primary h-2 w-2 rounded-full"></span>
