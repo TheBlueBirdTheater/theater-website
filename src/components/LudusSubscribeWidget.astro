@@ -22,4 +22,15 @@ const configScript = `
 ---
 
 <script type="text/javascript" set:html={configScript} />
+<script is:inline>
+  // Ludus's widget script assumes `event.data` is always a string and calls
+  // .indexOf() on it with no type check — some browser extensions broadcast
+  // postMessage payloads that aren't strings, which crashes that assumption.
+  // Script tags execute in document order, so this registers its listener
+  // before Ludus's script loads and registers its own, letting it filter
+  // non-string messages out before they ever reach Ludus's handler.
+  window.addEventListener('message', (event) => {
+    if (typeof event.data !== 'string') event.stopImmediatePropagation();
+  });
+</script>
 <script type="text/javascript" src={`https://${LUDUS_SUBDOMAIN}.ludus.com/widget_subscribe.js`} is:inline />
