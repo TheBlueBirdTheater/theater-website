@@ -19,41 +19,37 @@ const { class: className } = Astro.props as Props;
   async function initMarqueeGlow() {
     const canvas = document.querySelector<HTMLCanvasElement>('[data-marquee-glow]');
     const container = canvas?.parentElement;
-    if (!canvas || !container) {
-      console.warn('[MarqueeGlow] canvas or container not found', { canvas, container });
-      return;
-    }
+    if (!canvas || !container) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let THREE: typeof import('three');
     try {
       THREE = await import('three');
-    } catch (err) {
-      console.error('[MarqueeGlow] failed to import three', err);
+    } catch {
       return;
     }
 
     let renderer: InstanceType<typeof THREE.WebGLRenderer>;
     try {
       renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    } catch (err) {
-      console.error('[MarqueeGlow] failed to create WebGLRenderer', err);
+    } catch {
       return;
     }
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-    camera.position.z = 10;
+    // Orthographic, not perspective: a fixed [-1, 1] x [-1, 1] view (independent
+    // of aspect ratio) so hand-placed point positions map predictably onto the
+    // canvas every time, instead of drifting/clustering unpredictably the way
+    // a perspective camera's foreshortening does with a handful of points.
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 10);
+    camera.position.z = 5;
 
     function resize() {
       const { clientWidth: w, clientHeight: h } = container!;
-      console.log('[MarqueeGlow] resize', { w, h });
       if (w === 0 || h === 0) return;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
     }
 
     // Against a light cream page background, additive blending barely shows up
@@ -66,9 +62,9 @@ const { class: className } = Astro.props as Props;
       c.width = c.height = size;
       const ctx = c.getContext('2d')!;
       const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-      gradient.addColorStop(0, 'rgba(196, 120, 46, 1)');
-      gradient.addColorStop(0.25, 'rgba(196, 120, 46, 0.9)');
-      gradient.addColorStop(0.6, 'rgba(212, 150, 80, 0.4)');
+      gradient.addColorStop(0, 'rgba(196, 120, 46, 0.9)');
+      gradient.addColorStop(0.3, 'rgba(196, 120, 46, 0.55)');
+      gradient.addColorStop(0.65, 'rgba(212, 150, 80, 0.22)');
       gradient.addColorStop(1, 'rgba(212, 150, 80, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, size, size);
@@ -76,29 +72,37 @@ const { class: className } = Astro.props as Props;
     }
 
     const glowTexture = createGlowTexture();
-    const count = 11;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 8;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 4;
-    }
+
+    // Hand-placed, not random, in normalized [-1, 1] orthographic space.
+    // The illustration itself has an opaque background and only fills the
+    // center ~80% of this container (see HomeHero.astro), so these sit near
+    // its edges/corners — straddling the boundary so roughly half of each
+    // soft blur bleeds into the visible margin instead of being fully
+    // covered. With an orthographic camera, three.js's point-size shader
+    // ignores attenuation entirely and treats `size` as a raw pixel
+    // diameter — so this needs to be large (hundreds of px), not a small
+    // world-unit value.
+    const spots: [number, number, number][] = [
+      [0.85, 0.8, 0],
+      [-0.8, 0.85, 0.1],
+      [0.75, -0.85, -0.1],
+      [-0.85, -0.75, 0],
+    ];
+    const positions = new Float32Array(spots.flat());
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
     const material = new THREE.PointsMaterial({
-      size: 5.5,
+      size: 300,
       map: glowTexture,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.6,
       depthWrite: false,
-      sizeAttenuation: true,
     });
 
     const points = new THREE.Points(geometry, material);
     scene.add(points);
 
-    console.log('[MarqueeGlow] initialized, rendering first frame');
     resize();
     renderer.render(scene, camera);
 
@@ -115,8 +119,7 @@ const { class: className } = Astro.props as Props;
     const start = performance.now();
     const animate = (now: number) => {
       const t = (now - start) / 1000;
-      material.opacity = 0.65 + Math.sin(t * 0.6) * 0.2;
-      points.rotation.z = Math.sin(t * 0.05) * 0.05;
+      material.opacity = 0.6 + Math.sin(t * 0.6) * 0.2;
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     };
