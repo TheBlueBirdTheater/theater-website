@@ -13,6 +13,8 @@ const auditioningNow = await getAuditioningNow();
 const { data: extras } = (await getEntry('extras', 'extras'))!;
 const { adultOptp, juniorOptp, ogImage } = extras;
 const contact = await getVenueContact();
+const { data: siteSettings } = (await getEntry('siteSettings', 'siteSettings'))!;
+const auditionInterestFormUrl = siteSettings.ludusAuditionInterestFormUrl;
 const auditionFaqs = await getCollection('faqs', ({ data }) => data.category === 'Auditions');
 
 const breadcrumbSchema = buildBreadcrumbSchema([
@@ -40,6 +42,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
               readMoreHref={listing.href}
               auditions={listing}
               fallbackContactEmail={contact.email}
+              fallbackSignUpUrl={auditionInterestFormUrl}
             />
           </div>
         ))}
@@ -60,6 +63,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         description={adultOptp.description}
         auditionWindow={adultOptp.auditionWindow}
         contactEmail={adultOptp.contactEmail}
+        signUpUrl={auditionInterestFormUrl}
       />
     </div>
     <div data-reveal data-reveal-delay="80">
@@ -70,6 +74,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         auditionWindow={juniorOptp.auditionWindow}
         performanceWindow={juniorOptp.performanceWindow}
         contactEmail={juniorOptp.contactEmail}
+        signUpUrl={auditionInterestFormUrl}
       />
     </div>
   </div>

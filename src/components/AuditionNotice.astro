@@ -11,10 +11,13 @@ interface Props {
   readMoreHref?: string;
   auditions: AuditionData;
   fallbackContactEmail?: string;
+  /** Ludus audition-interest Direct Form — used when this listing has no signUpUrl of its own yet. */
+  fallbackSignUpUrl?: string;
 }
 
-const { title, href, readMoreHref, auditions, fallbackContactEmail } = Astro.props as Props;
+const { title, href, readMoreHref, auditions, fallbackContactEmail, fallbackSignUpUrl } = Astro.props as Props;
 const contactEmail = auditions.contactEmail ?? fallbackContactEmail;
+const signUpHref = auditions.signUpUrl ?? fallbackSignUpUrl ?? SIGN_UP_PLACEHOLDER_URL;
 const tba = !auditions.auditionDates || auditions.auditionDates.length === 0;
 ---
 
@@ -49,7 +52,7 @@ const tba = !auditions.auditionDates || auditions.auditionDates.length === 0;
   {auditions.notes && <p class="font-body text-base-content/70 mt-4">{auditions.notes}</p>}
 
   <div class="mt-6 flex flex-wrap items-center gap-3">
-    <Button href={auditions.signUpUrl ?? SIGN_UP_PLACEHOLDER_URL} variant="secondary">
+    <Button href={signUpHref} variant="secondary">
       Sign Up to Audition
     </Button>
     {readMoreHref && <Button href={readMoreHref} variant="ghost">Read More</Button>}

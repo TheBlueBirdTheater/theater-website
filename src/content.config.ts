@@ -275,6 +275,8 @@ const history = defineCollection({
   schema: ({ image }) =>
     rejectPlaceholders(z.object({
       intro: z.string(),
+      /** Formal mission statement, shown as a pull-quote on the About page. */
+      mission: z.string().optional(),
       milestones: z.array(
         z.object({
           year: z.string(),
@@ -539,14 +541,22 @@ const extras = defineCollection({
 
 /**
  * Technical fallback/integration values an editor may need to change without touching code —
- * distinct from `siteCopy`, which is marketing copy. Currently just the Ludus ticketing
- * fallback link; a natural home for similar fallback values added later.
+ * distinct from `siteCopy`, which is marketing copy.
  */
 const siteSettings = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/siteSettings', generateId: literalFilenameId }),
   schema: rejectPlaceholders(z.object({
     /** General Ludus ticketing portal (all events/sections) — linked directly from the Tickets page, not used as a per-show fallback (that's the site's own /tickets/ page instead). */
     ludusFallbackUrl: z.string(),
+    /**
+     * Ludus Direct Form for general audition interest (More -> Forms in the Ludus admin, shared
+     * as a Direct Form so it isn't tied to a specific event) — captures sign-ups into the CRM
+     * even when no specific show has published its own `auditions.signUpUrl` yet. Used as the
+     * fallback on the Auditions page's division panels, the "Auditioning Now" cards, and the
+     * /auditions/sign-up-soon/ page. Left unset until that form actually exists in Ludus —
+     * everything that reads it degrades to the existing mailto/placeholder behavior until then.
+     */
+    ludusAuditionInterestFormUrl: z.string().optional(),
   })),
 });
 
