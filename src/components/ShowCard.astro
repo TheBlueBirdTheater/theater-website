@@ -6,7 +6,7 @@ import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
 import Icon from '@components/Icon.astro';
 import ImagePlaceholder from '@components/ImagePlaceholder.astro';
-import { JR_OPTP_NAME } from '@data/venue';
+import { JR_OPTP_NAME, getTicketUrl } from '@data/venue';
 import { formatDateRange } from '@utils/dates';
 import { getShowStatus } from '@utils/shows';
 
@@ -31,6 +31,7 @@ const presenterLabel = isOptp ? 'OPTP Production' : isJunior ? 'JR Production' :
 const expandId = `show-expand-${show.collection}-${show.id}`;
 const status = getShowStatus(show as CollectionEntry<'shows'>);
 const showBadge = !(status === 'upcoming' && hideUpcomingBadge);
+const ticketUrl = getTicketUrl(data.ludusShowId);
 
 const cardClasses = [
   'bg-base-100 flex flex-col overflow-hidden rounded-lg border shadow-card',
@@ -92,7 +93,7 @@ const badgeClasses = [
         <div class="pt-4">
           <p class="font-body text-base-content/80 text-sm">{data.synopsis}</p>
           {!archived && (
-            <Button href={data.ticketUrl} variant="secondary" size="sm" class="mt-4">Get Tickets</Button>
+            <Button href={ticketUrl} variant="secondary" size="sm" class="mt-4">Get Tickets</Button>
           )}
         </div>
       </div>

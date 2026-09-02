@@ -1,0 +1,34 @@
+name: Bug report
+description: Something on the site isn't working right
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What's wrong
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to...
+        2. Click on...
+    validations:
+      required: false
+  - type: input
+    id: url
+    attributes:
+      label: Page URL
+      placeholder: "e.g. https://optp.org/shows/steel-magnolias/"
+    validations:
+      required: false
+  - type: input
+    id: browser
+    attributes:
+      label: Browser / device
+      placeholder: "e.g. Chrome on Windows, Safari on iPhone"
+    validations:
+      required: false

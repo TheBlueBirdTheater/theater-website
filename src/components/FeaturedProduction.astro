@@ -4,6 +4,7 @@ import { Image } from 'astro:assets';
 import Badge from '@components/Badge.astro';
 import Button from '@components/Button.astro';
 import ImagePlaceholder from '@components/ImagePlaceholder.astro';
+import { getTicketUrl } from '@data/venue';
 import { formatDateRange, formatEventDates } from '@utils/dates';
 import { getShowStatus, getEventStatus } from '@utils/shows';
 
@@ -25,7 +26,7 @@ const view =
         status: getShowStatus(item.entry),
         dateLabel: formatDateRange(item.entry.data.runDates),
         presenter: item.entry.data.performingGroup ?? 'Orangeburg Part-Time Players',
-        ticketUrl: item.entry.data.ticketUrl as string | undefined,
+        ticketUrl: getTicketUrl(item.entry.data.ludusShowId),
         ticketPrice: item.entry.data.ticketPrice,
       }
     : {
@@ -38,7 +39,7 @@ const view =
         status: getEventStatus(item.entry),
         dateLabel: formatEventDates(item.entry.data.showDates),
         presenter: item.entry.data.host,
-        ticketUrl: item.entry.data.ticketUrl,
+        ticketUrl: getTicketUrl(item.entry.data.ludusShowId),
         ticketPrice: item.entry.data.ticketPrice,
       };
 ---

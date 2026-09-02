@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getCurrentSeason } from '@utils/seasons';
 import { getNextShowing, toUtcInstant, type Showing } from '@utils/showings';
+import { getTicketUrl } from '@data/venue';
 
 export type WhatsOnItem =
   | { kind: 'show'; entry: CollectionEntry<'shows'> }
@@ -110,7 +111,7 @@ export async function getNextShowingSiteWide(season: string = getCurrentSeason()
       showTitle: show.data.title,
       showHref: `/shows/${show.id}/`,
       kind: 'show',
-      ticketUrl: show.data.ticketUrl,
+      ticketUrl: getTicketUrl(show.data.ludusShowId),
       ticketPrice: show.data.ticketPrice,
     };
   }
@@ -133,7 +134,7 @@ export async function getNextShowingSiteWide(season: string = getCurrentSeason()
       showTitle: event.data.title,
       showHref: `/events/${event.id}/`,
       kind: 'event',
-      ticketUrl: event.data.ticketUrl,
+      ticketUrl: getTicketUrl(event.data.ludusShowId),
       ticketPrice: event.data.ticketPrice,
     };
   }

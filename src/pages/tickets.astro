@@ -8,13 +8,16 @@ import LudusWidget from '@components/LudusWidget.astro';
 import { buildEventSchema, buildBreadcrumbSchema, OPTP_NAME } from '@utils/schema';
 import { getCurrentShow } from '@utils/shows';
 import { getUpcomingWhatsOn } from '@utils/whatsOn';
-import { getVenueContact } from '@data/venue';
+import { getVenueContact, getTicketUrl } from '@data/venue';
 import { formatDateRange, formatEventDates } from '@utils/dates';
 import { toVenueIsoString } from '@utils/showings';
+import { getEntry } from 'astro:content';
 
 const currentShow = await getCurrentShow();
 const firstRunDate = currentShow?.data.runDates[0];
 const contact = await getVenueContact();
+const { data: siteSettings } = (await getEntry('siteSettings', 'siteSettings'))!;
+const currentShowTicketUrl = currentShow ? getTicketUrl(currentShow.data.ludusShowId) : undefined;
 
 // Every upcoming show/event, so this page never shows just one production while others are
 // actively promoted elsewhere on the site (Home, Shows). A small season (currently under a
@@ -30,7 +33,7 @@ const eventSchema = currentShow && firstRunDate
       venueName: currentShow.data.venue,
       venueAddress: contact.address,
       performerName: currentShow.data.performingGroup ?? OPTP_NAME,
-      offerUrl: currentShow.data.ticketUrl,
+      offerUrl: currentShowTicketUrl,
       offerPrice: currentShow.data.ticketPrice,
       description: currentShow.data.synopsis,
     })
@@ -56,7 +59,11 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         <div class="mt-4">
           <InfoRow label="Dates" value={formatDateRange(currentShow.data.runDates)} />
         </div>
-        <Button href={currentShow.data.ticketUrl} variant="primary" size="lg" class="mt-6">Buy Tickets</Button>
+        {/* Only a real Ludus link is worth a button here — currentShowTicketUrl falling back to
+           "/tickets/" would just point back at the page the visitor is already on. */}
+        {currentShowTicketUrl && currentShowTicketUrl !== '/tickets/' && (
+          <Button href={currentShowTicketUrl} variant="primary" size="lg" class="mt-6">Buy Tickets</Button>
+        )}
       </div>
     )}
 
@@ -71,7 +78,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
             const href = item.kind === 'show' ? `/shows/${item.entry.id}/` : `/events/${item.entry.id}/`;
             const dateLabel =
               item.kind === 'show' ? formatDateRange(item.entry.data.runDates) : formatEventDates(item.entry.data.showDates);
-            const ticketUrl = item.entry.data.ticketUrl;
+            const ticketUrl = getTicketUrl(item.entry.data.ludusShowId);
             const ticketPrice = item.entry.data.ticketPrice;
             return (
               <li class="flex flex-wrap items-center justify-between gap-3 p-5">
@@ -79,7 +86,7 @@ const breadcrumbSchema = buildBreadcrumbSchema([
                   <a href={href} class="font-heading text-base-content text-lg font-semibold hover:underline">{title}</a>
                   <p class="font-body text-base-content/70 mt-1 text-sm">{dateLabel}{ticketPrice ? ` — ${ticketPrice}` : ''}</p>
                 </div>
-                {ticketUrl ? (
+                {ticketUrl !== '/tickets/' ? (
                   <Button href={ticketUrl} variant="secondary">Get Tickets</Button>
                 ) : (
                   <a href={href} class="font-body text-base-content/70 text-sm font-medium">More details →</a>
@@ -90,6 +97,14 @@ const breadcrumbSchema = buildBreadcrumbSchema([
         </ul>
       </div>
     )}
+
+    <div class="border-line bg-base-100 mt-10 rounded-lg border p-6">
+      <h3 class="font-heading text-base-content text-lg font-semibold">Browse everything on sale</h3>
+      <p class="font-body text-base-content mt-2">
+        See every event, class, and pass currently available through our Ludus ticketing portal.
+      </p>
+      <Button href={siteSettings.ludusFallbackUrl} variant="secondary" class="mt-4">Open Ludus Ticketing</Button>
+    </div>
 
     <div class="mt-10">
       <LudusWidget sections="all" />

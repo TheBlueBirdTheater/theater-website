@@ -44,12 +44,15 @@ Consult these guides before working on related tasks:
   [Astro + Decap CMS](https://docs.astro.build/en/guides/cms/decap-cms/) before touching either.
 - Icons: FontAwesome free-solid-svg-icons only, rendered via `src/components/Icon.astro` /
   `src/utils/icon.ts#iconToSvg` as inline SVG. No astro-icon, no sprite system, no React icon libs.
-- Brand constants (colors, theme name) live in `src/styles/app.css`. Several values are still TODO/
-  placeholder pending real brand/content decisions (secondary light-blue hex, production domain
-  `optp.org`, self-hosted fonts in `public/fonts/`, real photography) — search for `TODO` before
-  treating any of these as final.
+- Brand constants (colors, theme name) live in `src/styles/app.css` and are final, not placeholder
+  — there are no `TODO` comments in that file. What's still real-vs-placeholder (production domain,
+  donation platform URL, legal-page boilerplate, photography) is tracked in
+  `.claude/skills/branding` ("What's real vs. still placeholder") — check that list before treating
+  any brand/content detail as final, rather than grepping `app.css` for `TODO`.
 - Never invent real show titles, dates, addresses, or contact details — use the placeholder tokens
-  already established in `src/data/*.ts` (e.g. `[SHOW TITLE]`, `555-000-0000`).
+  already established in `src/data/*.ts` (e.g. `[SHOW TITLE]`, `555-000-0000`). This is enforced at
+  build time: `src/content.config.ts` wraps most collection schemas in `rejectPlaceholders()`, which
+  fails the build/dev server if a field matches a bracketed placeholder pattern like `[SHOW TITLE]`.
 - NPM/npx commands (`npm install`, `npm run build`, `npx astro check`, etc.) are run by the human
   operator in WSL, not executed directly by an agent in this repo — hand off exact commands and wait
   for their output rather than running them yourself.

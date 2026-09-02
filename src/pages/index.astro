@@ -14,7 +14,7 @@ import StatsBand from '@components/StatsBand.astro';
 import { buildPerformingGroupSchema, buildTheaterVenueSchema, buildEventSchema, OPTP_NAME, THEATRE_NAME } from '@utils/schema';
 import { getUpcomingWhatsOn } from '@utils/whatsOn';
 import { toVenueIsoString } from '@utils/showings';
-import { getVenueContact } from '@data/venue';
+import { getVenueContact, getTicketUrl } from '@data/venue';
 import { getEntry } from 'astro:content';
 
 const contact = await getVenueContact();
@@ -47,7 +47,7 @@ const featuredEventSchema = (() => {
       venueName: entry.data.venue,
       venueAddress: contact.address,
       performerName: entry.data.performingGroup ?? OPTP_NAME,
-      offerUrl: entry.data.ticketUrl,
+      offerUrl: getTicketUrl(entry.data.ludusShowId),
       offerPrice: entry.data.ticketPrice,
       description: entry.data.synopsis,
     });
@@ -63,7 +63,7 @@ const featuredEventSchema = (() => {
     venueName: THEATRE_NAME,
     venueAddress: contact.address,
     performerName: entry.data.host,
-    offerUrl: entry.data.ticketUrl,
+    offerUrl: getTicketUrl(entry.data.ludusShowId),
     offerPrice: entry.data.ticketPrice,
     description: entry.data.description,
     imageUrl: entry.data.image?.src,

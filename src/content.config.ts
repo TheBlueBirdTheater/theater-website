@@ -320,9 +320,17 @@ const donate = defineCollection({
     otherWaysToGive: z
       .object({
         sponsorProduction: z.object({ heading: z.string(), body: z.string(), ctaHref: z.string().optional() }).optional(),
+        /** Confirmed supported natively by Ludus at checkout (monthly/quarterly/annual) — no extra site-side setup needed. */
+        monthlyGiving: z.object({ heading: z.string(), body: z.string() }).optional(),
         inKind: z.object({ heading: z.string(), body: z.string() }).optional(),
         employerMatching: z.object({ heading: z.string(), body: z.string() }).optional(),
         legacyGiving: z.object({ heading: z.string(), body: z.string() }).optional(),
+        /**
+         * Confirmed possible via a Ludus Form attached to the donation flow (Fundraising ->
+         * Settings), asking e.g. "In Memory of" / "Family Name for Program" — but that form has
+         * to actually be set up in the Ludus admin first. Only populate this once it's live;
+         * shipping the copy before the form exists would promise something that doesn't work yet.
+         */
         memorialGifts: z.object({ heading: z.string(), body: z.string() }).optional(),
       })
       .optional(),
@@ -537,7 +545,7 @@ const extras = defineCollection({
 const siteSettings = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/siteSettings', generateId: literalFilenameId }),
   schema: rejectPlaceholders(z.object({
-    /** Ticket link used when a show/event has no ludusShowId set — Ludus's events listing, not a specific show. */
+    /** General Ludus ticketing portal (all events/sections) — linked directly from the Tickets page, not used as a per-show fallback (that's the site's own /tickets/ page instead). */
     ludusFallbackUrl: z.string(),
   })),
 });

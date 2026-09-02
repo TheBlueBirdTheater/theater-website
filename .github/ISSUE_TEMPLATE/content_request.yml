@@ -1,0 +1,32 @@
+name: Content update or feature request
+description: New or changed content, or a new feature for the site
+labels: [content]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What content or page needs adding or changing?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why?
+      description: Context that helps whoever picks this up make the right call.
+    validations:
+      required: false
+  - type: textarea
+    id: details
+    attributes:
+      label: Text, dates, or links to include
+      description: >-
+        If this involves a real date, address, or contact detail, provide it here — don't leave it
+        for whoever picks this up to guess or invent one.
+    validations:
+      required: false
+  - type: input
+    id: target-date
+    attributes:
+      label: Target date (optional)
+    validations:
+      required: false

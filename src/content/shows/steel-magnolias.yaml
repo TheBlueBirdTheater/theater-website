@@ -21,6 +21,7 @@ runDates:
     label: Matinee
 venue: Blue Bird Theatre
 ticketUrl: https://www.ticketleap.events/events/bluebirdorangeburg
+ludusShowId: "200543930"
 ticketPrice: $20 adults, $15 students and seniors
 auditions:
   auditionDates:

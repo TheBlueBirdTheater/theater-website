@@ -37,6 +37,9 @@ otherWaysToGive:
   sponsorProduction:
     heading: "Sponsor a Production"
     body: "Individuals, families, and organizations can sponsor a single show — your support goes directly toward that production's costumes, sets, and staging. Contact us to talk through what sponsoring a production looks like."
+  monthlyGiving:
+    heading: "Give Monthly"
+    body: "When you give, you can set your gift to repeat monthly, quarterly, or annually — steady support that helps us plan ahead. You'll get a reminder email before each renewal and can change or cancel it anytime."
   inKind:
     heading: "In-Kind Support"
     body: "We sometimes need production materials, costumes, props, printing, or professional services. Because what we need changes throughout the season, please contact us before making an in-kind donation."
