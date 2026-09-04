@@ -69,3 +69,20 @@ the site's real domain (a custom domain if one is attached, otherwise the `*.net
 subdomain), and `SITE_URL` prefers that over the placeholder. So the placeholder only ever shows up
 in a build that isn't running on Netlify (e.g. building locally) — it's not a sign that anything's
 misconfigured on the live site.
+
+## WebMCP
+
+The site is integrated with [`astro-webmcp`](https://github.com/fabricioctelles/astro-webmcp)
+(`astro.config.mjs`), which exposes the site's public content — page titles, descriptions, and
+navigation — to AI agents in browsers that support the
+[WebMCP](https://developer.chrome.com/docs/ai/webmcp) standard (currently Chrome 149+ behind a flag
+or an Origin Trial). It needs no configuration to work: the manifest it generates at build time
+contains nothing beyond what `sitemap.xml` already exposes to any crawler.
+
+Production activation (so real visitors on Chrome get it without flipping a flag) requires
+registering an [Origin Trial token](https://developer.chrome.com/origintrials/#/register_trial/4163014905550602241)
+for the live domain and setting it as a `WEBMCP_ORIGIN_TRIAL_TOKEN` environment variable in
+Netlify — `BaseLayout.astro` only emits the origin-trial `<meta>` tag when that variable is set, so
+this is skipped for now while the production domain (see above) is still unconfirmed. Once a real
+domain is live, register a token for it and add the env var; tokens are origin-bound and expire
+every 6-12 weeks, so plan to renew it.

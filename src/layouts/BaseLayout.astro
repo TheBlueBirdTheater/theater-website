@@ -20,6 +20,12 @@ const isPreviewDeploy = Boolean(process.env.CONTEXT) && process.env.CONTEXT !== 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {import.meta.env.WEBMCP_ORIGIN_TRIAL_TOKEN && (
+      <meta
+        http-equiv="origin-trial"
+        content={import.meta.env.WEBMCP_ORIGIN_TRIAL_TOKEN}
+      />
+    )}
     <SEO {...page} noindex={page.noindex || isPreviewDeploy} />
     <script is:inline>
       document.documentElement.classList.add('js');

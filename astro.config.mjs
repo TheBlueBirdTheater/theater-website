@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import webmcp from 'astro-webmcp';
 import { SITE_URL } from './src/data/site-url';
 
 // https://astro.build/config
@@ -20,6 +21,7 @@ export default defineConfig({
         return !pathname.startsWith('/admin') && !pathname.includes('zz-test');
       },
     }),
+    webmcp(),
   ],
   vite: {
     plugins: [tailwindcss()],
