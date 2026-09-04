@@ -1,0 +1,74 @@
+---
+import DefaultLayout from '@layouts/DefaultLayout.astro';
+import Schema from '@components/Schema.astro';
+import SectionHeading from '@components/SectionHeading.astro';
+import { Image } from 'astro:assets';
+import logo from '@assets/logo.png';
+import { buildBreadcrumbSchema } from '@utils/schema';
+import { getEntry } from 'astro:content';
+import { getVenueContact } from '@data/venue';
+
+const { data: pressKit } = (await getEntry('pressKit', 'pressKit'))!;
+const contact = await getVenueContact();
+
+const breadcrumbSchema = buildBreadcrumbSchema([
+  { name: 'Home', url: '/' },
+  { name: 'Press Kit', url: '/press-kit/' },
+]);
+---
+
+<DefaultLayout
+  title="Press Kit"
+  description="Boilerplate, fast facts, logo assets, and media contact information for journalists covering the Blue Bird Theatre and the Orangeburg Part-Time Players."
+  image={pressKit.ogImage}
+  imageAlt="Blue Bird Theatre, home of the Orangeburg Part-Time Players in Orangeburg, SC"
+>
+  <Schema schema={breadcrumbSchema} />
+
+  <div class="mx-auto max-w-(--container-narrow) px-4 py-16">
+    <SectionHeading title="Press Kit" level="h1" />
+    <p class="font-body text-base-content mt-4 text-lead">{pressKit.intro}</p>
+
+    <div class="mt-10">
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Boilerplate</h2>
+      <p class="font-body text-base-content mt-3">{pressKit.boilerplate}</p>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Fast Facts</h2>
+      <dl class="border-line bg-base-100 mt-3 grid gap-4 rounded-lg border p-6 shadow-card sm:grid-cols-2">
+        {pressKit.factSheet.map((fact) => (
+          <div>
+            <dt class="font-body text-base-content/70 text-eyebrow tracking-[0.09em] uppercase">{fact.label}</dt>
+            <dd class="font-body text-base-content mt-1">{fact.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Logo</h2>
+      {pressKit.logoNote && <p class="font-body text-base-content/70 mt-2 text-sm">{pressKit.logoNote}</p>}
+      <div class="border-line bg-base-200 mt-4 inline-flex rounded-lg border p-6">
+        <Image src={logo} alt="Blue Bird Theatre logo" width={80} height={120} />
+      </div>
+    </div>
+
+    <div class="mt-10">
+      <h2 class="font-body text-primary text-eyebrow font-semibold tracking-[0.09em] uppercase">Photos</h2>
+      <p class="font-body text-base-content mt-3">{pressKit.photoNote}</p>
+    </div>
+
+    <div class="border-line bg-base-200 mt-10 rounded-lg border p-6">
+      <h2 class="font-heading text-base-content text-lg font-semibold">Media Contact</h2>
+      {pressKit.mediaContactNote && (
+        <p class="font-body text-base-content/70 mt-2 text-sm">{pressKit.mediaContactNote}</p>
+      )}
+      <p class="font-body text-base-content mt-3">
+        <a href={`mailto:${contact.email}`} class="link">{contact.email}</a>
+        {' · '}
+        <a href={`tel:${contact.phone}`} class="link">{contact.phone}</a>
+      </p>
+    </div>
+  </div>
+</DefaultLayout>

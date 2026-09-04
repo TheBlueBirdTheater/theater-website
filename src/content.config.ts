@@ -508,6 +508,27 @@ const rentals = defineCollection({
     })),
 });
 
+const pressKit = defineCollection({
+  loader: glob({ pattern: '*.yaml', base: './src/content/pressKit', generateId: literalFilenameId }),
+  schema: rejectPlaceholders(z.object({
+    intro: z.string(),
+    /** Standard "about the org" paragraph journalists can quote or reprint verbatim. */
+    boilerplate: z.string(),
+    factSheet: z.array(
+      z.object({
+        label: z.string(),
+        value: z.string(),
+      })
+    ),
+    /** Usage note shown above the downloadable logo. */
+    logoNote: z.string().optional(),
+    photoNote: z.string().optional(),
+    mediaContactNote: z.string().optional(),
+    /** Social-share image for the Press Kit page. Falls back to the site default when omitted. */
+    ogImage: z.string().optional(),
+  })),
+});
+
 const extras = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/extras' }),
   schema: rejectPlaceholders(z.object({
@@ -591,6 +612,7 @@ export const collections = {
   stats,
   getInvolved,
   rentals,
+  pressKit,
   extras,
   gallery,
   events,

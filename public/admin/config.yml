@@ -1016,6 +1016,50 @@ collections:
               hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the Contact page. Leave blank to use the site's generic default share image.",
             }
 
+  - name: pressKit
+    label: Press Kit Page Settings
+    files:
+      - name: pressKit
+        label: Press Kit Page Settings
+        file: src/content/pressKit/pressKit.yaml
+        fields:
+          - {
+              label: Intro,
+              name: intro,
+              widget: text,
+              hint: "Opening paragraph on the Press Kit page.",
+            }
+          - {
+              label: Boilerplate,
+              name: boilerplate,
+              widget: text,
+              hint: "Standard \"about the org\" paragraph journalists can quote or reprint verbatim.",
+            }
+          - label: Fast Facts
+            name: factSheet
+            widget: list
+            fields:
+              - { label: Label, name: label, widget: string, hint: 'e.g. "Founded"' }
+              - { label: Value, name: value, widget: string, hint: 'e.g. "1981"' }
+          - {
+              label: Logo Usage Note,
+              name: logoNote,
+              widget: text,
+              required: false,
+              hint: "Usage note shown above the downloadable logo.",
+            }
+          - { label: Photo Note, name: photoNote, widget: text, required: false }
+          - { label: Media Contact Note, name: mediaContactNote, widget: text, required: false }
+          - {
+              label: Social Share Image (OG Image),
+              name: ogImage,
+              widget: image,
+              media_folder: /public/images/og,
+              public_folder: /images/og,
+              required: false,
+              hint: "A 1200×630 image for social shares (Facebook/Twitter link previews) on the Press Kit page. Leave blank to use the site's generic default share image.",
+            }
+
   - name: faqs
     label: FAQs
     folder: src/content/faqs
